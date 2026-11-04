@@ -184,8 +184,8 @@ body.idle .nav{opacity:.18}
     <h1 style="margin-top:.25em"><span class="ka">ტრიგონომეტრიის გამოყენება</span><span class="en">Applications of Trigonometry</span></h1>
   </div>
   <div class="body" style="justify-content:flex-start; gap:1.1em; padding-top:.4em">
-    <p class="lead muted ka">სინუსი და კოსინუსი მხოლოდ სამკუთხედისთვის არ არის. ამ პრეზენტაციაში ვნახავთ, როგორ აღწერენ ისინი იმას, რაც ჩვენ გარშემო ყოველდღე ხდება.</p>
-    <p class="lead muted en">Sine and cosine aren't only about triangles. In this presentation we'll see how they describe things that happen around us every day.</p>
+    <p class="lead muted ka">ტრიგონომეტრიას ძირითადად სამკუთხედებთან ვიყენებთ, მაგრამ სინუსი და კოსინუსი ბევრ სხვა რამესაც აღწერს. ამ პროექტში განვიხილავ, სად გვხვდება ისინი ყოველდღიურ ცხოვრებაში.</p>
+    <p class="lead muted en">We mostly use trigonometry with triangles, but sine and cosine describe a lot of other things too. In this project I look at where they show up in everyday life.</p>
     <ol class="agenda">
       <li><span><span class="ka">ბგერითი და სინათლის ტალღები</span><span class="en">Sound and light waves</span></span></li>
       <li><span><span class="ka">რხევითი მოძრაობა</span><span class="en">Oscillatory motion</span></span></li>
@@ -200,18 +200,18 @@ body.idle .nav{opacity:.18}
 <section class="slide" data-name-ka="საფუძველი" data-name-en="Basics">
   <div class="head">
     <div class="eyebrow"><span class="ka">საფუძველი</span><span class="en">The basics</span></div>
-    <h2><span class="ka">ტალღა წრიდან იბადება</span><span class="en">A wave is born from a circle</span></h2>
+    <h2><span class="ka">სინუსოიდა და წრე</span><span class="en">The sine wave and the circle</span></h2>
   </div>
   <div class="body">
-    <p class="ka">წარმოიდგინეთ ბორბალზე დახატული წერტილი. ბორბალი ბრუნავს და წერტილი ხან ზემოთ ადის, ხან ქვემოთ ჩადის. თუ მის სიმაღლეს დროში დავხატავთ, მივიღებთ ტალღას. ამ ტალღას სინუსოიდა ჰქვია.</p>
-    <p class="en">Imagine a dot drawn on a wheel. As the wheel spins, the dot goes up and down. If we draw its height over time, we get a wave. This wave is called a sine wave.</p>
+    <p class="ka">ავიღოთ წერტილი, რომელიც წრეზე ბრუნავს. ბრუნვისას ის ხან ზემოთაა, ხან ქვემოთ. თუ ყოველ მომენტში მის სიმაღლეს გრაფიკზე მოვნიშნავთ, გამოვა ტალღა, რომელსაც სინუსოიდა ჰქვია.</p>
+    <p class="en">Take a point moving around a circle. As it turns, it is sometimes up and sometimes down. If we mark its height on a graph at every moment, we get a wave called a sine wave.</p>
     <div class="formula"><i>y</i> = <i class="c-sin">A</i> · sin(<i>ω</i><i>t</i> + <i>φ</i>)</div>
     <dl class="defs">
-      <dt>A</dt><dd><span class="ka"><b>ამპლიტუდა</b>: რამდენად მაღლა ადის ტალღა</span><span class="en"><b>amplitude</b>: how high the wave goes</span></dd>
-      <dt>T</dt><dd><span class="ka"><b>პერიოდი</b>: რა დრო სჭირდება ერთ სრულ ბრუნს</span><span class="en"><b>period</b>: how long one full turn takes</span></dd>
-      <dt>f = 1/T</dt><dd><span class="ka"><b>სიხშირე</b>: რამდენჯერ ბრუნავს წამში (ჰერცი, ჰც)</span><span class="en"><b>frequency</b>: turns per second (hertz, Hz)</span></dd>
-      <dt>ω = 2πf</dt><dd><span class="ka"><b>კუთხური სიხშირე</b>: იგივე სიხშირე, რადიანებში</span><span class="en"><b>angular frequency</b>: the same thing, in radians</span></dd>
-      <dt>φ</dt><dd><span class="ka"><b>ფაზა</b>: საიდან იწყებს წერტილი მოძრაობას</span><span class="en"><b>phase</b>: where the dot starts</span></dd>
+      <dt>A</dt><dd><span class="ka"><b>ამპლიტუდა</b>, ტალღის სიმაღლე</span><span class="en"><b>amplitude</b>, the height of the wave</span></dd>
+      <dt>T</dt><dd><span class="ka"><b>პერიოდი</b>, ერთი სრული ბრუნის დრო</span><span class="en"><b>period</b>, the time of one full turn</span></dd>
+      <dt>f = 1/T</dt><dd><span class="ka"><b>სიხშირე</b>, ბრუნების რაოდენობა წამში (ჰც)</span><span class="en"><b>frequency</b>, turns per second (Hz)</span></dd>
+      <dt>ω = 2πf</dt><dd><span class="ka"><b>კუთხური სიხშირე</b></span><span class="en"><b>angular frequency</b></span></dd>
+      <dt>φ</dt><dd><span class="ka"><b>ფაზა</b>, საწყისი მდებარეობა</span><span class="en"><b>phase</b>, the starting position</span></dd>
     </dl>
     <div class="ctls">
       <label for="cA"><span class="ka">ამპლიტუდა</span><span class="en">Amplitude</span> <i>A</i></label>
@@ -224,7 +224,6 @@ body.idle .nav{opacity:.18}
       <input type="range" id="cP" min="0" max="360" step="15" value="0" style="--acc:var(--tri)">
       <output id="oP"></output>
     </div>
-    <p class="simple"><b><span class="ka">მარტივად</span><span class="en">In short</span></b><span><span class="ka">სინუსოიდა არის წრიული მოძრაობა, „გაშლილი“ დროში.</span><span class="en">A sine wave is circular motion "unrolled" over time.</span></span></p>
   </div>
   <div class="viz"><canvas id="cvCircle" aria-label="Unit circle and sine graph"></canvas></div>
 </section>
@@ -236,13 +235,13 @@ body.idle .nav{opacity:.18}
     <h2><span class="ka">ბგერა ჰაერის რხევაა</span><span class="en">Sound is vibrating air</span></h2>
   </div>
   <div class="body">
-    <p class="ka">როცა ვლაპარაკობთ ან მუსიკა უკრავს, ჰაერი ძალიან სწრაფად ირხევა წინ და უკან. ჰაერის ნაწილაკები ერთმანეთს აწვებიან და რხევას გადასცემენ, სანამ ის ჩვენს ყურამდე არ მივა.</p>
-    <p class="en">When we talk or music plays, the air vibrates back and forth very fast. Air particles push on each other and pass the vibration along until it reaches our ears.</p>
+    <p class="ka">როცა ვლაპარაკობთ ან დინამიკი უკრავს, ჰაერის ნაწილაკები წინ და უკან მოძრაობენ და ერთმანეთს გადასცემენ რხევას. ასე აღწევს ბგერა ჩვენს ყურამდე. ჰაერის წნევის ცვლილება დროში სინუსოიდით აღიწერება.</p>
+    <p class="en">When we talk or a speaker plays, air particles move back and forth and pass the vibration to each other. That's how sound reaches our ears. The change in air pressure over time is described by a sine wave.</p>
     <div class="formula"><i>p</i>(<i>t</i>) = <i class="c-sin">A</i> · sin(2π<i class="c-cos">f</i> <i>t</i>)</div>
     <ul class="pts">
-      <li><span class="ka">დიდი სიხშირე <i>f</i> = წვრილი ხმა (ჩიტი), პატარა = ბოხი ხმა (დოლი)</span><span class="en">high frequency <i>f</i> = high-pitched sound (a bird), low = deep sound (a drum)</span></li>
-      <li><span class="ka">დიდი ამპლიტუდა <i>A</i> = ხმამაღალი ბგერა</span><span class="en">big amplitude <i>A</i> = loud sound</span></li>
-      <li><span class="ka"><i>λ</i> = <i>v</i> / <i>f</i>: მანძილი ორ შემჭიდროებას შორის (<i>v</i> ≈ 343 მ/წმ)</span><span class="en"><i>λ</i> = <i>v</i> / <i>f</i>: distance between two squeezed areas (<i>v</i> ≈ 343 m/s)</span></li>
+      <li><span class="ka">რაც მეტია სიხშირე <i>f</i>, მით უფრო წვრილია ხმა</span><span class="en">the higher the frequency <i>f</i>, the higher the pitch</span></li>
+      <li><span class="ka">რაც მეტია ამპლიტუდა <i>A</i>, მით უფრო ხმამაღალია</span><span class="en">the bigger the amplitude <i>A</i>, the louder the sound</span></li>
+      <li><span class="ka"><i>λ</i> = <i>v</i> / <i>f</i> ტალღის სიგრძეა, <i>v</i> ≈ 343 მ/წმ ბგერის სიჩქარე ჰაერში</span><span class="en"><i>λ</i> = <i>v</i> / <i>f</i> is the wavelength, <i>v</i> ≈ 343 m/s is the speed of sound in air</span></li>
     </ul>
     <div class="ctls">
       <div class="full">
@@ -261,7 +260,7 @@ body.idle .nav{opacity:.18}
       <output id="oSV"></output>
     </div>
     <div class="readout" id="sRead"></div>
-    <p class="fact"><span class="ka">ჩვენ გვესმის 20 ჰც-დან 20 000 ჰც-მდე, ძაღლებს კი ბევრად უფრო წვრილი ხმებიც ესმით. ნოტი „ლა“ 440 ჰც-ია და მუსიკოსები ინსტრუმენტებს სწორედ ამ ნოტით აწყობენ.</span><span class="en">We hear from 20 Hz to 20,000 Hz, and dogs can hear much higher sounds. The note A is 440 Hz, and musicians tune their instruments to it.</span></p>
+    <p class="fact"><span class="ka">ადამიანს ესმის დაახლოებით 20-დან 20 000 ჰც-მდე. ნოტი „ლა“ 440 ჰც-ია, ამ ნოტზე აწყობენ ინსტრუმენტებს.</span><span class="en">People hear roughly 20 to 20,000 Hz. The note A is 440 Hz, and instruments are tuned to it.</span></p>
   </div>
   <div class="viz"><canvas id="cvSound" aria-label="Air particles and pressure wave"></canvas><div class="note"><span class="ka">ანიმაცია შენელებულია</span><span class="en">Animation slowed down</span></div></div>
 </section>
@@ -270,14 +269,14 @@ body.idle .nav{opacity:.18}
 <section class="slide" data-name-ka="ცემა" data-name-en="Beats">
   <div class="head">
     <div class="eyebrow"><b>1</b><span class="ka">ბგერითი ტალღები</span><span class="en">Sound waves</span></div>
-    <h2><span class="ka">როცა ორი ბგერა ერთად ჟღერს</span><span class="en">When two tones play together</span></h2>
+    <h2><span class="ka">ცემა: ორი ბგერის შეკრება</span><span class="en">Beats: adding two sounds</span></h2>
   </div>
   <div class="body">
-    <p class="ka">თუ ორი თითქმის ერთნაირი ბგერა ერთად ჟღერს, ისინი ხან ერთმანეთს ეხმარებიან (ხმა ძლიერდება), ხან ერთმანეთს აქრობენ (ხმა სუსტდება). ამიტომ გვესმის „ვაუ-ვაუ“ ხმა. ამას ცემა ჰქვია.</p>
-    <p class="en">When two almost identical tones play together, sometimes they help each other (louder) and sometimes they cancel out (quieter). That's the "wah-wah" you hear. This is called beating.</p>
+    <p class="ka">როცა ერთად ჟღერს ორი ბგერა, რომელთა სიხშირეები ცოტათი განსხვავდება, ხმა ხან ძლიერდება და ხან სუსტდება. ამას ცემა ჰქვია. ამის ახსნა სინუსების ჯამის ფორმულით შეიძლება:</p>
+    <p class="en">When two sounds with slightly different frequencies play together, the sound gets louder and quieter in turns. This is called beating. It can be explained with the sum of sines formula:</p>
     <div class="formula sm">sin <i class="c-sin">α</i> + sin <i class="c-cos">β</i> = 2 · sin<span class="frac"><span><i>α</i> + <i>β</i></span><span>2</span></span> · cos<span class="frac"><span><i>α</i> − <i>β</i></span><span>2</span></span></div>
-    <p class="ka">ეს ფორმულა გაკვეთილზე ვისწავლეთ! ის გვიჩვენებს, რომ ორი სინუსის ჯამი ერთი ტალღაა, რომლის სიძლიერე ნელა იცვლება (cos-ის ნაწილი). ხმა წამში იმდენჯერ ძლიერდება, რამდენითაც განსხვავდება სიხშირეები.</p>
-    <p class="en">We learned this formula in class! It shows that adding two sines gives one wave whose loudness slowly changes (the cos part). The sound swells as many times per second as the two frequencies differ.</p>
+    <p class="ka">მარჯვენა მხარეს cos-ის მამრავლი ნელა იცვლება და ის განსაზღვრავს ხმის სიძლიერეს. ხმა წამში იმდენჯერ ძლიერდება, რამდენი ჰერცითაც განსხვავდება ორი სიხშირე.</p>
+    <p class="en">On the right side, the cos factor changes slowly, and it sets how loud the sound is. The sound gets louder as many times per second as the two frequencies differ in hertz.</p>
     <div class="ctls">
       <div class="full">
         <button class="btn play" id="bPlay" aria-pressed="false"><span class="ka">▶ მოსმენა</span><span class="en">▶ Play</span></button>
@@ -287,7 +286,7 @@ body.idle .nav{opacity:.18}
       <input type="range" id="bD" min="0" max="8" step="0.5" value="2" style="--acc:var(--cos)">
       <output id="oBD"></output>
     </div>
-    <p class="fact"><span class="ka">გიტარისტები ასე აწყობენ სიმებს: უსმენენ ცემას და სიმს ატრიალებენ, სანამ „ვაუ-ვაუ“ არ გაქრება. მაშინ ორივე სიმი ერთნაირად ჟღერს.</span><span class="en">Guitarists tune strings like this: they listen to the beating and turn the peg until the "wah-wah" disappears. Then both strings sound the same.</span></p>
+    <p class="fact"><span class="ka">ამას იყენებენ გიტარის აწყობისას. როცა ცემა აღარ ისმის, ორი სიმი ერთნაირადაა აწყობილი.</span><span class="en">This is used when tuning a guitar. When the beating can't be heard anymore, the two strings are in tune.</span></p>
   </div>
   <div class="viz"><canvas id="cvBeats" aria-label="Two waves and their sum showing beats"></canvas><div class="note"><span class="ka">რხევები გრაფიკზე შენელებულია, ცემის რიტმი რეალურია</span><span class="en">Waves are slowed down on the graph; the beat rhythm is real-time</span></div></div>
 </section>
@@ -299,21 +298,20 @@ body.idle .nav{opacity:.18}
     <h2><span class="ka">სინათლე ელექტრომაგნიტური ტალღაა</span><span class="en">Light is an electromagnetic wave</span></h2>
   </div>
   <div class="body">
-    <p class="ka">სინათლეც ტალღაა, ოღონდ ჰაერი არ სჭირდება და ცარიელ კოსმოსშიც მოძრაობს. მასში ერთად ირხევა ელექტრული (<i>E</i>) და მაგნიტური (<i>B</i>) ველი. სიჩქარე ≈ 300 000 კმ/წმ: წამში დედამიწას 7,5-ჯერ შემოუვლიდა!</p>
-    <p class="en">Light is a wave too, but it doesn't need air and travels even through empty space. Inside it, an electric (<i>E</i>) and a magnetic (<i>B</i>) field vibrate together. Its speed is ≈ 300,000 km/s: it could circle the Earth 7.5 times in one second!</p>
+    <p class="ka">სინათლეც ტალღაა, მაგრამ ბგერისგან განსხვავებით მას ჰაერი არ სჭირდება და ვაკუუმშიც ვრცელდება. მასში ირხევა ელექტრული (<i>E</i>) და მაგნიტური (<i>B</i>) ველი. სინათლის სიჩქარე დაახლოებით 300 000 კმ/წმ-ია.</p>
+    <p class="en">Light is a wave too, but unlike sound it doesn't need air and travels through a vacuum. In it, an electric (<i>E</i>) and a magnetic (<i>B</i>) field oscillate. The speed of light is about 300,000 km/s.</p>
     <div class="formula"><i class="c-sin">E</i> = <i>E</i>₀ · sin(<i>k</i><i>x</i> − <i>ω</i><i>t</i>)</div>
     <dl class="defs">
       <dt>c = λ · f</dt><dd><span class="ka"><b>სიჩქარე</b> = ტალღის სიგრძე × სიხშირე</span><span class="en"><b>speed</b> = wavelength × frequency</span></dd>
     </dl>
-    <p class="ka">ჩვენი თვალი ტალღის სიგრძეს ფერად ხედავს: გრძელი ტალღა წითელია (≈ 700 ნმ), მოკლე იისფერი (≈ 400 ნმ). ცისარტყელა ასე ჩნდება: თეთრი სინათლე სხვადასხვა სიგრძის ტალღებად იშლება.</p>
-    <p class="en">Our eyes see wavelength as colour: long waves are red (≈ 700 nm), short ones are violet (≈ 400 nm). That's how a rainbow forms: white light splits into waves of different lengths.</p>
+    <p class="ka">სინათლის ფერი ტალღის სიგრძეზეა დამოკიდებული. წითელს ყველაზე გრძელი ტალღა აქვს (≈ 700 ნმ), იისფერს ყველაზე მოკლე (≈ 400 ნმ). ცისარტყელაში ეს ფერები ცალ-ცალკე ჩანს. (1 ნმ = 0.000001 მმ)</p>
+    <p class="en">The colour of light depends on its wavelength. Red has the longest wave (≈ 700 nm), violet the shortest (≈ 400 nm). In a rainbow these colours can be seen separately. (1 nm = 0.000001 mm)</p>
     <div class="ctls">
       <label for="lL"><span class="ka">ტალღის სიგრძე</span><span class="en">Wavelength</span> <i>λ</i></label>
       <input type="range" id="lL" min="380" max="750" step="1" value="530">
       <output id="oLL"></output>
     </div>
     <div class="readout" id="lRead"></div>
-    <p class="simple"><b><span class="ka">მარტივად</span><span class="en">In short</span></b><span><span class="ka">ნმ (ნანომეტრი) არის მილიმეტრის მემილიონედი ნაწილი.</span><span class="en">A nanometre (nm) is a millionth of a millimetre.</span></span></p>
   </div>
   <div class="viz"><canvas id="cvLight" aria-label="Electromagnetic wave and visible spectrum"></canvas></div>
 </section>
@@ -322,11 +320,11 @@ body.idle .nav{opacity:.18}
 <section class="slide" data-name-ka="რხევა" data-name-en="Oscillation">
   <div class="head">
     <div class="eyebrow"><b>2</b><span class="ka">რხევითი მოძრაობა</span><span class="en">Oscillatory motion</span></div>
-    <h2><span class="ka">წინ და უკან, ისევ და ისევ</span><span class="en">Back and forth, again and again</span></h2>
+    <h2><span class="ka">ზამბარა და ქანქარა</span><span class="en">Spring and pendulum</span></h2>
   </div>
   <div class="body">
-    <p class="ka">საქანელა, საათის ქანქარა, მანქანის ამორტიზატორი: ყველა წინ და უკან მოძრაობს ერთი ადგილის გარშემო. ამას რხევითი მოძრაობა ჰქვია. თუ ამ მოძრაობას დროში დავხატავთ, ისევ ტალღას მივიღებთ:</p>
-    <p class="en">A swing, a clock pendulum, a car's suspension: they all move back and forth around one spot. This is called oscillatory motion. If we draw this motion over time, we get a wave again:</p>
+    <p class="ka">რხევითი მოძრაობისას სხეული ერთი წერტილის გარშემო წინ და უკან მოძრაობს. მაგალითად, საქანელა, საათის ქანქარა ან ზამბარაზე დაკიდებული ტვირთი. ასეთი მოძრაობის გრაფიკიც ტალღაა:</p>
+    <p class="en">In oscillatory motion, an object moves back and forth around one point. For example a swing, a clock pendulum or a weight hanging on a spring. The graph of this motion is also a wave:</p>
     <div class="formula" id="oFormA"><i>x</i>(<i>t</i>) = <i class="c-sin">A</i> · cos(<i>ω</i><i>t</i>)</div>
     <div class="formula" id="oFormB" hidden><i>x</i>(<i>t</i>) = <i class="c-sin">A</i> · <i>e</i><sup>−<i>βt</i></sup> · cos(<i>ω</i><i>t</i>)</div>
     <div class="tabs">
@@ -335,8 +333,8 @@ body.idle .nav{opacity:.18}
     </div>
     <div class="formula sm only-spring"><i>T</i> = 2π<span class="sqrt">√<span class="rad"><span class="frac"><span><i>m</i></span><span><i>k</i></span></span></span></span></div>
     <div class="formula sm only-pend" hidden><i>T</i> = 2π<span class="sqrt">√<span class="rad"><span class="frac"><span><i>L</i></span><span><i>g</i></span></span></span></span></div>
-    <p class="small muted only-spring"><span class="ka"><i>m</i> — ტვირთის მასა, <i>k</i> — ზამბარის სიმაგრე. მძიმე ტვირთი უფრო ნელა ირხევა, მაგარი ზამბარა კი უფრო სწრაფად.</span><span class="en"><i>m</i> is the mass, <i>k</i> is how stiff the spring is. A heavier mass swings slower, a stiffer spring swings faster.</span></p>
-    <p class="small muted only-pend" hidden><span class="ka"><i>L</i> — ძაფის სიგრძე, <i>g</i> ≈ 9.8 მ/წმ² (დედამიწის მიზიდულობა). გრძელი ქანქარა უფრო ნელა ქანაობს. საინტერესოა, რომ პერიოდი არ არის დამოკიდებული იმაზე, რამდენად ძლიერად გავაქანებთ.</span><span class="en"><i>L</i> is the string length, <i>g</i> ≈ 9.8 m/s² (Earth's gravity). A longer pendulum swings slower. Fun fact: the period doesn't depend on how hard you push it.</span></p>
+    <p class="small muted only-spring"><span class="ka"><i>m</i> ტვირთის მასაა, <i>k</i> ზამბარის სიხისტე. რაც უფრო მძიმეა ტვირთი, მით უფრო ნელა ირხევა.</span><span class="en"><i>m</i> is the mass, <i>k</i> is the spring stiffness. The heavier the mass, the slower it oscillates.</span></p>
+    <p class="small muted only-pend" hidden><span class="ka"><i>L</i> ძაფის სიგრძეა, <i>g</i> ≈ 9.8 მ/წმ². რაც უფრო გრძელია ძაფი, მით უფრო ნელა ქანაობს. პერიოდი არ არის დამოკიდებული იმაზე, რამდენად ძლიერად გავაქანებთ (თუ გადახრა პატარაა).</span><span class="en"><i>L</i> is the string length, <i>g</i> ≈ 9.8 m/s². The longer the string, the slower it swings. The period doesn't depend on how hard we push it (if the swing is small).</span></p>
     <div class="ctls">
       <label for="oM" class="only-spring"><span class="ka">მასა</span><span class="en">Mass</span> <i>m</i></label>
       <input type="range" id="oM" min="0.1" max="2" step="0.05" value="0.5" class="only-spring">
@@ -348,7 +346,7 @@ body.idle .nav{opacity:.18}
       <input type="range" id="oL" min="0.2" max="2" step="0.05" value="1" class="only-pend" hidden style="--acc:var(--cos)">
       <output id="oOL" class="only-pend" hidden></output>
       <div class="full">
-        <label class="chk"><input type="checkbox" id="oD"><span class="ka">ჰაერის წინააღმდეგობა (რხევა თანდათან ქრება)</span><span class="en">Air resistance (the swing slowly dies out)</span></label>
+        <label class="chk"><input type="checkbox" id="oD"><span class="ka">ჰაერის წინააღმდეგობა (რხევა ნელ-ნელა ქრება)</span><span class="en">Air resistance (the oscillation slowly fades)</span></label>
         <button class="btn" id="oReset"><span class="ka">↺ თავიდან</span><span class="en">↺ Restart</span></button>
       </div>
     </div>
@@ -361,11 +359,11 @@ body.idle .nav{opacity:.18}
 <section class="slide" data-name-ka="პროცესები" data-name-en="Processes">
   <div class="head">
     <div class="eyebrow"><b>3</b><span class="ka">პერიოდული პროცესები</span><span class="en">Periodic processes</span></div>
-    <h2><span class="ka">რაც მეორდება, სინუსოიდით აღიწერება</span><span class="en">If it repeats, a sinusoid can describe it</span></h2>
+    <h2><span class="ka">პერიოდული პროცესების მაგალითები</span><span class="en">Examples of periodic processes</span></h2>
   </div>
   <div class="body">
-    <p class="ka">ბევრი რამ ჩვენ გარშემო მეორდება: დღე და ღამე, წელიწადის დროები, დენი როზეტში. ასეთ მოვლენებს სინუსოიდით აღვწერთ. ამისთვის სამი რამ უნდა ვიცოდეთ: <i class="c-tri">D</i> — შუა ხაზი, <i class="c-sin">A</i> — რამდენით შორდება შუა ხაზს, <i class="c-cos">T</i> — რამდენ ხანში მეორდება.</p>
-    <p class="en">Lots of things around us repeat: day and night, the seasons, the electricity in a socket. We can describe them with a sine wave. We only need three things: <i class="c-tri">D</i>, the middle line; <i class="c-sin">A</i>, how far it moves from that line; <i class="c-cos">T</i>, how long until it repeats.</p>
+    <p class="ka">ბევრი პროცესი, რომელიც დროში მეორდება, შეგვიძლია სინუსოიდით აღვწეროთ. ამისთვის გვჭირდება საშუალო მნიშვნელობა <i class="c-tri">D</i>, ამპლიტუდა <i class="c-sin">A</i> და პერიოდი <i class="c-cos">T</i>:</p>
+    <p class="en">Many processes that repeat over time can be described with a sine wave. For that we need the average value <i class="c-tri">D</i>, the amplitude <i class="c-sin">A</i> and the period <i class="c-cos">T</i>:</p>
     <div class="formula sm"><i>y</i>(<i>t</i>) = <i class="c-tri">D</i> + <i class="c-sin">A</i> · sin(<span class="frac"><span>2π<i>t</i></span><span><i class="c-cos">T</i></span></span> + <i>φ</i>)</div>
     <div class="tabs" role="tablist">
       <button class="btn" data-tab="day" aria-pressed="true"><span class="ka">დღის ხანგრძლივობა</span><span class="en">Day length</span></button>
@@ -374,15 +372,15 @@ body.idle .nav{opacity:.18}
     </div>
     <div class="pane" data-pane="day">
       <div class="formula sm"><i>L</i>(<i>t</i>) ≈ <span class="c-tri">12.2</span> + <span class="c-sin">3.0</span> · sin<span class="frac"><span>2π(<i>t</i> − 80)</span><span class="c-cos">365</span></span></div>
-      <p class="small" style="margin-top:.5em"><span class="ka">ზაფხულში დღე გრძელია, ზამთარში მოკლე და ეს ყოველ წელს მეორდება. თბილისში ყველაზე გრძელი დღე 21 ივნისია (≈ 15 სთ 13 წთ), ყველაზე მოკლე კი 21 დეკემბერი (≈ 9 სთ 9 წთ). ჩვენი ფორმულა ზუსტ გამოთვლას 10 წუთამდე ემთხვევა! (<i>t</i> — დღის ნომერი წელიწადში)</span><span class="en">Days are long in summer and short in winter, and it repeats every year. In Tbilisi the longest day is 21 June (≈ 15 h 13 min) and the shortest is 21 December (≈ 9 h 9 min). Our formula matches the exact calculation to within 10 minutes! (<i>t</i> is the day of the year)</span></p>
+      <p class="small" style="margin-top:.5em"><span class="ka">თბილისში დღის ხანგრძლივობა წლის განმავლობაში ტალღასავით იცვლება. ყველაზე გრძელი დღე 21 ივნისია (≈ 15 სთ 13 წთ), ყველაზე მოკლე 21 დეკემბერი (≈ 9 სთ 9 წთ). ფორმულა ზუსტ მონაცემებს დაახლოებით 10 წუთის სიზუსტით ემთხვევა. <i>t</i> დღის ნომერია წელიწადში.</span><span class="en">In Tbilisi the length of the day changes like a wave during the year. The longest day is 21 June (≈ 15 h 13 min), the shortest is 21 December (≈ 9 h 9 min). The formula matches the real data to about 10 minutes. <i>t</i> is the day number in the year.</span></p>
     </div>
     <div class="pane" data-pane="ac" hidden>
       <div class="formula sm"><i>U</i>(<i>t</i>) = <span class="c-sin">311</span> · sin(<span class="c-cos">100π</span><i>t</i>)</div>
-      <p class="small" style="margin-top:.5em"><span class="ka">როზეტში დენი ერთი მიმართულებით არ მიედინება: ის წინ და უკან ირხევა, წამში 50-ჯერ. ამიტომ ჰქვია ცვლადი დენი. საქართველოში ძაბვა 220 ვ-ია. ფორმულაში 311 ვ არის მაქსიმალური ძაბვა (220 · √2), 100π კი მოდის 2π · 50-დან.</span><span class="en">Electricity in a socket doesn't flow one way: it goes back and forth, 50 times a second. That's why it's called alternating current. In Georgia the voltage is 220 V. In the formula, 311 V is the maximum voltage (220 · √2), and 100π comes from 2π · 50.</span></p>
+      <p class="small" style="margin-top:.5em"><span class="ka">როზეტში ცვლადი დენია, ანუ ძაბვა მუდმივად იცვლება და წამში 50 სრულ რხევას აკეთებს (50 ჰც). საქართველოში ძაბვა 220 ვ-ია, მაგრამ ეს ეფექტური მნიშვნელობაა. მაქსიმალური ძაბვა 220 · √2 ≈ 311 ვ-ია, ხოლო 100π მიიღება 2π · 50-დან.</span><span class="en">Sockets give alternating current, which means the voltage keeps changing and makes 50 full cycles per second (50 Hz). In Georgia the voltage is 220 V, but that is the effective value. The maximum voltage is 220 · √2 ≈ 311 V, and 100π comes from 2π · 50.</span></p>
     </div>
     <div class="pane" data-pane="wheel" hidden>
       <div class="formula sm"><i>h</i>(<i>t</i>) = <span class="c-tri">26</span> − <span class="c-sin">25</span> · cos<span class="frac"><span>2π<i>t</i></span><span class="c-cos">10</span></span></div>
-      <p class="small" style="margin-top:.5em"><span class="ka">ბორბალზე მჯდომი ხან ზემოთაა, ხან ქვემოთ, და ყოველ ბრუნზე ეს მეორდება. ჩვენს მაგალითში რადიუსი 25 მ-ია, ცენტრი 26 მ სიმაღლეზეა და ერთი ბრუნი 10 წუთს გრძელდება. ჯიხური ქვემოდან იწყებს, ამიტომ ფორმულაში cos მინუსით წერია.</span><span class="en">A person on the wheel is sometimes high, sometimes low, and it repeats every turn. In our example the radius is 25 m, the centre is 26 m up, and one turn takes 10 minutes. The cabin starts at the bottom, which is why the formula has minus cos.</span></p>
+      <p class="small" style="margin-top:.5em"><span class="ka">ეშმაკის ბორბალზე ადამიანის სიმაღლე პერიოდულად იცვლება. ავიღოთ ბორბალი რადიუსით 25 მ, რომლის ცენტრი 26 მ სიმაღლეზეა და ერთ ბრუნს 10 წუთში აკეთებს. ჯიხური ქვემოდან იწყებს მოძრაობას, ამიტომ ფორმულაში −cos გვაქვს.</span><span class="en">On a Ferris wheel, a person's height changes periodically. Take a wheel with a 25 m radius, its centre 26 m up, making one turn in 10 minutes. The cabin starts at the bottom, so the formula has −cos.</span></p>
     </div>
   </div>
   <div class="viz"><canvas id="cvPer" aria-label="Periodic process graph"></canvas></div>
@@ -392,7 +390,7 @@ body.idle .nav{opacity:.18}
 <section class="slide wide" data-name-ka="შეჯამება" data-name-en="Summary">
   <div class="head">
     <div class="eyebrow"><span class="ka">შეჯამება</span><span class="en">Summary</span></div>
-    <h2><span class="ka">ერთი ფუნქცია, ბევრი მოვლენა</span><span class="en">One function, many phenomena</span></h2>
+    <h2><span class="ka">რა ვნახეთ</span><span class="en">What we covered</span></h2>
   </div>
   <div class="body" style="gap:1em">
     <div class="tblwrap">
@@ -412,7 +410,7 @@ body.idle .nav{opacity:.18}
         </tbody>
       </table>
     </div>
-    <p class="closing"><span class="ka">მთავარი დასკვნა: სადაც რაღაც მეორდება, იქ ტრიგონომეტრიაა.</span><span class="en">Main takeaway: wherever something repeats, there is trigonometry.</span>
+    <p class="closing"><span class="ka">დასკვნა: სინუსი და კოსინუსი გამოიყენება ყველგან, სადაც რაღაც პერიოდულად მეორდება.</span><span class="en">Conclusion: sine and cosine are used wherever something repeats periodically.</span>
       <span class="thanks"><span class="ka">გმადლობთ ყურადღებისთვის! კითხვები?</span><span class="en">Thank you for listening! Questions?</span></span></p>
     <p class="sources"><b><span class="ka">წყაროები:</span><span class="en">Sources:</span></b> <span class="ka">ვიკიპედია (სინუსოიდა, ბგერა, ცემა, ელექტრომაგნიტური ტალღა, ჰარმონიული რხევა) · Khan Academy (ტრიგონომეტრიული ფუნქციები) · timeanddate.com (დღის ხანგრძლივობა თბილისში) · ფიზიკისა და მათემატიკის სასკოლო სახელმძღვანელოები</span><span class="en">Wikipedia (sine wave, sound, beat, electromagnetic radiation, simple harmonic motion) · Khan Academy (trigonometric functions) · timeanddate.com (day length in Tbilisi) · school physics and maths textbooks</span></p>
   </div>
