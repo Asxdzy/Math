@@ -829,8 +829,6 @@ function drawHero(g, w, h, t) {
   g.strokeStyle = C.sin; g.lineWidth = LW * 1.6; line(g, px, cy, px, py);
   g.strokeStyle = alpha(C.sin, 0.7); g.lineWidth = Math.max(1.5, LW * 0.7); dash(g, true); line(g, px, py, x0, py); dash(g, false);
   dot(g, x0, py, LW * 2.4, C.sin); dot(g, px, py, LW * 2.6, C.ink);
-  mathText(g, 'sin', x0 + F * 0.3, cy + R * 1.18, { color: C.sin, size: F });
-  mathText(g, 'cos', x0 + F * 2.4, cy + R * 1.18, { color: C.cos, size: F });
 }
 function drawOutro(g, w, h, t) {
   const cy = h * 0.5, a = Math.min(h * 0.14, F * 2.4);
