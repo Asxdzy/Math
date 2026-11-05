@@ -1,16 +1,16 @@
-# ტრიგონომეტრიის გამოყენება / Applications of Trigonometry
+# ტრიგონომეტრიის გამოყენება
 
-Interactive class presentation: sound and light waves, oscillatory motion, and periodic processes.
+მათემატიკის პროექტი · 10 გ კლასი · №112 სკოლა
+ავტორები: საბა ბერუაშვილი, თორნიკე ზირაქაშვილი, ირაკლი ბრეგაძე, გაბრიელ ნიორაძე
 
-**To present:** open `index.html` in any browser (Chrome/Edge/Firefox). It runs offline: copy it to a USB stick if needed.
+**პრეზენტაციისთვის:** გახსენით `index.html` ნებისმიერ ბრაუზერში. ინტერნეტი არ არის საჭირო.
 
-| Key | Action |
+| ღილაკი | მოქმედება |
 | --- | --- |
-| `→` `Space` `PgDn` / `←` `PgUp` | next / previous slide (presenter clickers work) |
-| `1`–`8` | jump to slide |
-| `F` | fullscreen |
-| `P` | pause animations |
-| `T` | light / dark (light usually reads better on a projector in a bright room) |
-| `L` | Georgian / English |
+| `→` `Space` `PgDn` | შემდეგი ნაბიჯი ან სლაიდი (ამოცანებში ჯერ ნაბიჯებს აჩვენებს) |
+| `←` `PgUp` | უკან |
+| `F` | სრული ეკრანი |
+| `P` | ანიმაციის პაუზა |
+| `T` | ღია / მუქი ფონი |
 
-On phones and tablets, swipe to change slides. The sound slides play real tones, so connect speakers.
+ამოცანებისა და განხილვის სლაიდებზე QR კოდი ხსნის პასუხების გვერდს (`#answers`) ტელეფონისთვის.

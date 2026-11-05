@@ -9,142 +9,189 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Noto+Sans+Georgian:wght@400;500;600;700&family=Noto+Sans:wght@400;500;600;700&family=Noto+Serif+Georgian:wght@500;600;700;800&family=Noto+Serif:wght@500;600;700;800&family=STIX+Two+Text:ital,wght@0,400;0,600;1,400;1,600&display=swap">
 <style>
-/* Layout: a full-screen deck. Landscape = text column + live canvas side by side; portrait = stacked and scrollable.
-   Everything scales from one fluid base size, so 4:3, 16:9, ultrawide and phones all keep proportions. */
+/* Layout: full-screen deck. Landscape = text column + live canvas; portrait = stacked and scrollable.
+   Colour code used in every formula and drawing:
+   orange = vertical size (sin, amplitude A) · blue = horizontal size (cos, ω, T, f, k) · green = angle / shift (α, φ, t₀) · violet = midline D */
 :root{
   --bg:#F1F4F7; --panel:#FFFFFF; --ink:#132130; --muted:#53667A; --line:#C3CFDA; --grid:#DCE4EB;
   --sin:#CF4A0C; --cos:#1660AA; --tri:#23803A; --violet:#7044BE;
+  --okbg:#E2F3E6; --badbg:#FBE5DF;
   --f-display:"Noto Serif Georgian","Noto Serif","Sylfaen",Georgia,serif;
   --f-body:"Noto Sans Georgian","Noto Sans","Sylfaen",system-ui,sans-serif;
   --f-math:"STIX Two Text","Cambria Math","Times New Roman",serif;
   --f-mono:"JetBrains Mono",ui-monospace,"Consolas",monospace;
-  --fs:clamp(14px, calc(1.25vmin + 0.55vmax), 48px);
+  --fs:clamp(14px, calc(1.2vmin + 0.52vmax), 46px);
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
     --bg:#0C1520; --panel:#132131; --ink:#E9F0F6; --muted:#93A7BA; --line:#2B3E52; --grid:#1A2A3B;
-    --sin:#FF8D45; --cos:#5AB4FF; --tri:#6FD98E; --violet:#B597FF; color-scheme:dark;
+    --sin:#FF8D45; --cos:#5AB4FF; --tri:#6FD98E; --violet:#B597FF; --okbg:#173322; --badbg:#3A1E17; color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
   --bg:#0C1520; --panel:#132131; --ink:#E9F0F6; --muted:#93A7BA; --line:#2B3E52; --grid:#1A2A3B;
-  --sin:#FF8D45; --cos:#5AB4FF; --tri:#6FD98E; --violet:#B597FF; color-scheme:dark;
+  --sin:#FF8D45; --cos:#5AB4FF; --tri:#6FD98E; --violet:#B597FF; --okbg:#173322; --badbg:#3A1E17; color-scheme:dark;
 }
-:root[data-lang="ka"] .en, :root[data-lang="en"] .ka{display:none !important}
-
 [hidden]{display:none !important}
 html,body{height:100%}
-body{margin:0; background:var(--bg); color:var(--ink); font-family:var(--f-body); font-size:var(--fs); line-height:1.45; overflow:hidden; -webkit-font-smoothing:antialiased}
+body{margin:0; background:var(--bg); color:var(--ink); font-family:var(--f-body); font-size:var(--fs); line-height:1.42; overflow:hidden; -webkit-font-smoothing:antialiased}
+body.sheet{overflow:auto; font-size:17px}
 body.idle{cursor:none}
 button,input{font:inherit; color:inherit}
 :focus-visible{outline:.14em solid var(--cos); outline-offset:.14em; border-radius:.3em}
+
+.vA{color:var(--sin)} .vW{color:var(--cos)} .vP{color:var(--tri)} .vD{color:var(--violet)}
 
 .deck{position:fixed; inset:0; display:grid; grid-template-rows:minmax(0,1fr) auto;
   padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
   padding-left:max(16px, env(safe-area-inset-left,0px)); padding-right:max(16px, env(safe-area-inset-right,0px))}
 .stage{position:relative; overflow:hidden; min-height:0}
-
-.slide{position:absolute; inset:0; display:grid; grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);
+.slide{position:absolute; inset:0; display:grid; grid-template-columns:minmax(0,.95fr) minmax(0,1.05fr);
   grid-template-rows:auto minmax(0,1fr); grid-template-areas:"head viz" "body viz";
-  column-gap:2.4em; row-gap:.8em; padding-block:1.5em .5em; padding-inline:1.5vw;
+  column-gap:2.2em; row-gap:.65em; padding-block:1.3em .4em; padding-inline:1.2vw;
   opacity:0; visibility:hidden; transform:translateX(1.5%); transition:opacity .4s ease, transform .4s ease, visibility 0s linear .4s}
 .slide.active{opacity:1; visibility:visible; transform:none; transition:opacity .4s ease, transform .4s ease}
 .slide.back{transform:translateX(-1.5%)}
 .head{grid-area:head; min-width:0}
 .body>*{flex-shrink:0}
-.body{grid-area:body; min-width:0; min-height:0; overflow-y:auto; overflow-x:hidden; display:flex; flex-direction:column; gap:.75em; padding-right:.3em; padding-bottom:.4em}
+.body{grid-area:body; min-width:0; min-height:0; overflow-y:auto; overflow-x:hidden; display:flex; flex-direction:column; gap:.6em; padding-right:.3em; padding-bottom:.4em}
 .viz{grid-area:viz; min-width:0; min-height:0; position:relative; display:flex; flex-direction:column}
 .viz canvas{flex:1; width:100%; min-height:0; display:block; touch-action:pan-y}
-.note{font-size:.62em; color:var(--muted); letter-spacing:.02em; text-align:right; padding-top:.2em}
+.note{font-size:.6em; color:var(--muted); text-align:right; padding-top:.2em}
 
-.eyebrow{font-size:.66em; font-weight:600; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); display:flex; gap:.6em; align-items:center}
+.eyebrow{font-size:.64em; font-weight:600; letter-spacing:.1em; color:var(--muted); display:flex; gap:.6em; align-items:center}
 .eyebrow b{color:var(--sin); font-weight:700}
-h1,h2{font-family:var(--f-display); font-weight:700; margin:0; text-wrap:balance; line-height:1.12; letter-spacing:-.005em}
-h1{font-size:2.9em; font-weight:800}
-h2{font-size:1.85em; margin-top:.15em}
-p{margin:0; max-width:36em}
-.lead{font-size:1.05em}
+h1,h2{font-family:var(--f-display); font-weight:700; margin:0; text-wrap:balance; line-height:1.12}
+h1{font-size:2.7em; font-weight:800}
+h2{font-size:1.65em; margin-top:.12em}
+p{margin:0; max-width:38em}
+.lead{font-size:1.02em}
 .muted{color:var(--muted)}
 .small{font-size:.8em}
 
-.formula{font-family:var(--f-math); font-size:1.5em; line-height:1.25; padding:.3em .6em; border-left:.12em solid var(--sin);
+.formula{font-family:var(--f-math); font-size:1.45em; line-height:1.25; padding:.28em .6em; border-left:.12em solid var(--ink);
   background:var(--panel); border-radius:0 .3em .3em 0; white-space:nowrap; overflow-x:auto; overflow-y:hidden; align-self:flex-start; max-width:100%}
-.formula.sm{font-size:1.2em}
+.formula.sm{font-size:1.15em}
 .formula i{font-style:italic}
-.formula .c-sin{color:var(--sin)} .c-cos{color:var(--cos)} .c-tri{color:var(--tri)}
 .frac{display:inline-flex; flex-direction:column; vertical-align:middle; text-align:center; font-size:.78em; line-height:1.15; margin:0 .08em}
 .frac>span:first-child{border-bottom:.07em solid currentColor; padding:0 .2em .05em}
 .frac>span:last-child{padding-top:.05em}
+.frac.w>span{font-family:var(--f-body); font-style:normal; font-size:.72em}
 .sqrt{white-space:nowrap}
 .sqrt>.rad{border-top:.07em solid currentColor; padding:0 .1em; display:inline-block; line-height:1.1}
 sup{font-size:.62em}
 
-dl.defs{margin:0; display:grid; grid-template-columns:auto 1fr; column-gap:.8em; row-gap:.25em; font-size:.88em}
-dl.defs dt{font-family:var(--f-math); font-style:italic; font-size:1.12em; white-space:nowrap}
-dl.defs dd{margin:0; color:var(--muted)}
-dl.defs dd b{color:var(--ink); font-weight:600}
-ul.pts{margin:0; padding:0; list-style:none; display:grid; gap:.3em; font-size:.92em}
+dl.legend{margin:0; display:grid; grid-template-columns:auto 1fr; column-gap:.8em; row-gap:.28em; font-size:.86em}
+dl.legend dt{font-family:var(--f-math); font-style:italic; font-size:1.12em; font-weight:600; white-space:nowrap}
+dl.legend dd{margin:0}
+dl.legend dd b{font-weight:600}
+ul.pts{margin:0; padding:0; list-style:none; display:grid; gap:.25em; font-size:.88em}
 ul.pts li{padding-left:1.1em; position:relative}
-ul.pts li::before{content:""; position:absolute; left:.15em; top:.62em; width:.42em; height:.42em; border-radius:50%; background:var(--sin)}
-.simple{display:flex; gap:.6em; align-items:baseline; font-size:.9em; background:var(--panel); border:1px solid var(--line); border-left:.25em solid var(--tri); border-radius:.4em; padding:.4em .75em; max-width:38em}
-.simple b{font-size:.78em; font-weight:700; color:var(--tri); white-space:nowrap}
-.sources{font-size:.66em; color:var(--muted); max-width:60em}
-.sources b{color:var(--ink); font-weight:600}
-.fact{font-size:.8em; color:var(--muted); border-top:1px solid var(--line); padding-top:.5em; max-width:40em}
+ul.pts li::before{content:""; position:absolute; left:.15em; top:.6em; width:.42em; height:.42em; border-radius:50%; background:var(--muted)}
+
+/* "what does it mean / go deeper" tabbed box */
+.mean{border:1px solid var(--line); border-radius:.5em; background:var(--panel); font-size:.84em; max-width:42em}
+.mean .mt{display:flex; flex-wrap:wrap; border-bottom:1px solid var(--line); padding-inline:.3em}
+.mean .mt button{border:0; background:transparent; padding:.42em .7em; cursor:pointer; color:var(--muted); font-weight:600; border-bottom:.16em solid transparent; margin-bottom:-1px}
+.mean .mt button[aria-selected="true"]{color:var(--ink); border-bottom-color:var(--tri)}
+.mean .mp{padding:.5em .85em .6em}
+.mean .mp p{max-width:none}
 
 /* controls */
-.ctls{display:grid; grid-template-columns:auto minmax(0,1fr) auto; align-items:center; column-gap:.7em; row-gap:.35em; font-size:.85em; background:var(--panel); border:1px solid var(--line); border-radius:.5em; padding:.6em .8em}
+.ctls{display:grid; grid-template-columns:auto minmax(0,1fr) auto; align-items:center; column-gap:.7em; row-gap:.3em; font-size:.82em; background:var(--panel); border:1px solid var(--line); border-radius:.5em; padding:.5em .8em}
 .ctls label{white-space:nowrap}
-.ctls output{font-family:var(--f-mono); font-size:.88em; font-variant-numeric:tabular-nums; min-width:5.6em; text-align:right}
-.ctls .full{grid-column:1/-1; display:flex; flex-wrap:wrap; gap:.45em; align-items:center}
+.ctls output{font-family:var(--f-mono); font-size:.88em; font-variant-numeric:tabular-nums; min-width:5em; text-align:right}
+.ctls .full{grid-column:1/-1; display:flex; flex-wrap:wrap; gap:.4em; align-items:center}
 input[type=range]{-webkit-appearance:none; appearance:none; width:100%; height:1.5em; background:transparent; margin:0; --acc:var(--sin); --p:50%}
 input[type=range]::-webkit-slider-runnable-track{height:.32em; border-radius:1em; background:linear-gradient(to right, var(--acc) var(--p), var(--line) var(--p))}
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none; width:1.1em; height:1.1em; border-radius:50%; background:var(--acc); margin-top:-.39em; border:.2em solid var(--panel); box-shadow:0 0 0 .07em var(--acc)}
 input[type=range]::-moz-range-track{height:.32em; border-radius:1em; background:var(--line)}
 input[type=range]::-moz-range-progress{height:.32em; border-radius:1em; background:var(--acc)}
 input[type=range]::-moz-range-thumb{width:.75em; height:.75em; border-radius:50%; background:var(--acc); border:.2em solid var(--panel); box-shadow:0 0 0 .07em var(--acc)}
-.btn{display:inline-flex; align-items:center; gap:.4em; border:1px solid var(--line); background:var(--bg); border-radius:2em; padding:.28em .85em; cursor:pointer; font-size:.92em; font-weight:500; line-height:1.3}
+.btn{display:inline-flex; align-items:center; gap:.4em; border:1px solid var(--line); background:var(--bg); border-radius:2em; padding:.26em .8em; cursor:pointer; font-size:.92em; font-weight:500; line-height:1.3}
 .btn:hover{border-color:var(--muted)}
 .btn[aria-pressed="true"]{background:var(--ink); color:var(--bg); border-color:var(--ink)}
 .btn.play{background:var(--sin); color:var(--bg); border-color:var(--sin); font-weight:600}
 .btn.play[aria-pressed="true"]{background:var(--ink); color:var(--bg); border-color:var(--ink)}
-.btn svg{width:.9em; height:.9em}
+.btn.math{font-family:var(--f-math); font-style:italic}
+.btn:disabled{opacity:.45; cursor:default}
 .chk{display:flex; align-items:center; gap:.5em; cursor:pointer}
 .chk input{width:1.05em; height:1.05em; accent-color:var(--sin); margin:0}
-.readout{font-family:var(--f-mono); font-size:.8em; font-variant-numeric:tabular-nums; color:var(--muted); display:flex; flex-wrap:wrap; gap:.3em 1.2em}
+.readout{font-family:var(--f-mono); font-size:.78em; font-variant-numeric:tabular-nums; color:var(--muted); display:flex; flex-wrap:wrap; gap:.3em 1.2em}
 .readout b{color:var(--ink); font-weight:600}
 .tabs{display:flex; flex-wrap:wrap; gap:.4em}
 
-/* title slide */
-.slide.title .head{align-self:end}
-.agenda{list-style:none; margin:0; padding:0; display:grid; gap:.5em; counter-reset:a}
-.agenda li{counter-increment:a; display:grid; grid-template-columns:2em 1fr; align-items:baseline; font-size:1.05em; border-top:1px solid var(--line); padding-top:.45em}
-.agenda li::before{content:counter(a); font-family:var(--f-display); font-weight:700; color:var(--sin); font-size:1.2em}
-.hint{font-size:.72em; color:var(--muted)}
+/* problems and discussions */
+.problem{font-size:1em; background:var(--panel); border:1px solid var(--line); border-radius:.5em; padding:.6em .9em; max-width:40em}
+ol.steps{margin:0; padding:0; list-style:none; counter-reset:s; display:grid; gap:.5em; font-size:.92em}
+ol.steps li{counter-increment:s; display:grid; grid-template-columns:1.5em minmax(0,1fr); column-gap:.3em; align-items:baseline}
+ol.steps li::before{content:counter(s); font-family:var(--f-display); font-weight:700; color:var(--cos)}
+ol.steps li>div{min-width:0}
+ol.steps .formula{font-size:1.12em; display:block; width:fit-content; margin-top:.2em}
+ol.steps li.final::before{content:"✓"; color:var(--tri)}
+.step{transition:opacity .35s ease}
+.step:not(.shown){visibility:hidden; opacity:0}
+.question{font-family:var(--f-display); font-size:1.25em; font-weight:700; line-height:1.3; text-wrap:balance; max-width:30em}
+.opts{display:grid; grid-template-columns:repeat(auto-fit, minmax(13em, 1fr)); gap:.45em}
+.opt{text-align:left; border:1px solid var(--line); background:var(--panel); border-radius:.5em; padding:.5em .75em; cursor:pointer; display:grid; grid-template-columns:1.5em 1fr; gap:.25em; align-items:baseline; font-size:.88em; line-height:1.35}
+.opt>b{color:var(--muted); font-family:var(--f-display)}
+.opt:hover{border-color:var(--muted)}
+.opt.correct{border-color:var(--tri); background:var(--okbg)}
+.opt.correct>b{color:var(--tri)}
+.opt.wrong{border-color:var(--sin); background:var(--badbg)}
+.why{font-size:.9em; background:var(--okbg); border-radius:.5em; padding:.55em .85em; max-width:40em}
+.numchk{display:flex; flex-wrap:wrap; align-items:center; gap:.5em; font-size:.85em}
+.numchk input{width:6.5em; padding:.3em .55em; border:1px solid var(--line); border-radius:.4em; background:var(--bg); font-family:var(--f-mono)}
+.numchk .fb{flex-basis:100%; font-size:.95em}
+.numchk .fb.ok{color:var(--tri)} .numchk .fb.no{color:var(--sin)}
+.qr{display:flex; align-items:center; gap:.8em; margin-top:.4em; font-size:.74em; color:var(--muted)}
+.qr .code{width:6.2em; height:6.2em; background:#fff; padding:.3em; border-radius:.35em; flex:0 0 auto; border:1px solid var(--line)}
+.qr .code svg{width:100%; height:100%; display:block}
+.qr b{display:block; color:var(--ink); font-size:1.12em; margin-bottom:.15em}
+
+/* cover & agenda */
+.slide.cover .head{align-self:end}
+.cover-meta{display:grid; grid-template-columns:auto 1fr; gap:.5em 1.4em; margin:0; font-size:.98em; max-width:34em}
+.cover-meta dt{color:var(--muted); font-size:.82em; padding-top:.12em; white-space:nowrap}
+.cover-meta dd{margin:0; font-weight:500}
+.cover-meta dd.names{display:grid; gap:.1em}
+[contenteditable]{border-bottom:1px dashed var(--line); outline-offset:.2em; min-width:6em; display:inline-block}
+[contenteditable]:empty::before{content:attr(data-ph); color:var(--muted); font-style:italic; font-weight:400}
+.cols{display:grid; grid-template-columns:repeat(auto-fit, minmax(15em, 1fr)); gap:1em 2.4em}
+.col h3{font-family:var(--f-display); font-size:1em; margin:0 0 .4em; color:var(--muted); font-weight:700}
+.agenda{list-style:none; margin:0; padding:0; display:grid; gap:.35em; counter-reset:a}
+.agenda li{counter-increment:a; display:grid; grid-template-columns:1.8em 1fr; align-items:baseline; border-top:1px solid var(--line); padding-top:.35em}
+.agenda li::before{content:counter(a); font-family:var(--f-display); font-weight:700; color:var(--cos)}
+.agenda.apps li::before{color:var(--sin)}
+.key{display:flex; flex-wrap:wrap; gap:.4em 1.3em; font-size:.82em}
+.key span{display:inline-flex; gap:.4em; align-items:baseline}
+.key i{font-family:var(--f-math); font-weight:600; font-size:1.15em}
+.hint{font-size:.7em; color:var(--muted)}
 kbd{font-family:var(--f-mono); font-size:.85em; border:1px solid var(--line); border-bottom-width:2px; border-radius:.3em; padding:0 .35em; background:var(--panel)}
 
-/* summary */
+/* wide slides (agenda, summary) */
 .slide.wide{grid-template-columns:minmax(0,1fr); grid-template-rows:auto auto minmax(0,1fr); grid-template-areas:"head" "body" "viz"}
 .slide.wide .body{overflow:visible}
 .tblwrap{overflow-x:auto; border:1px solid var(--line); border-radius:.5em; background:var(--panel)}
-table{border-collapse:collapse; width:100%; font-size:.9em}
-th,td{text-align:left; padding:.45em .9em; border-bottom:1px solid var(--line); vertical-align:middle}
+table{border-collapse:collapse; width:100%; font-size:.84em}
+th,td{text-align:left; padding:.38em .85em; border-bottom:1px solid var(--line); vertical-align:middle}
 tr:last-child td{border-bottom:0}
-th{font-size:.72em; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); font-weight:600}
-td.f{font-family:var(--f-math); font-size:1.12em; white-space:nowrap}
-td .sw{display:inline-block; width:.7em; height:.7em; border-radius:50%; margin-right:.55em; vertical-align:middle}
-.closing{font-family:var(--f-display); font-size:1.5em; font-weight:700; text-wrap:balance; margin-top:.2em}
-.closing span.thanks{display:block; font-size:.62em; color:var(--muted); font-family:var(--f-body); font-weight:500; margin-top:.3em}
+th{font-size:.74em; letter-spacing:.06em; color:var(--muted); font-weight:600}
+td.f{font-family:var(--f-math); font-size:1.1em; white-space:nowrap}
+.closing{font-family:var(--f-display); font-size:1.25em; font-weight:700; text-wrap:balance; max-width:44em}
+.thanks{font-size:.95em; color:var(--muted)}
+.sources{font-size:.64em; color:var(--muted); max-width:70em}
+.sources b{color:var(--ink); font-weight:600}
 
 /* nav */
-.nav{display:flex; align-items:center; gap:.45em; font-size:.72em; padding-block:.35em .45em; transition:opacity .5s}
+.nav{display:flex; align-items:center; gap:.45em; font-size:.72em; padding-block:.3em .4em; transition:opacity .5s}
 body.idle .nav{opacity:.18}
 .ib{display:inline-grid; place-items:center; min-width:2.3em; height:2.3em; border:1px solid transparent; border-radius:.5em; background:transparent; cursor:pointer; padding:0 .4em; color:var(--muted); font-weight:600}
 .ib:hover{color:var(--ink); border-color:var(--line); background:var(--panel)}
 .ib svg{width:1.2em; height:1.2em}
-.prog{flex:1; display:flex; gap:.3em; min-width:0}
+.prog{flex:1; display:flex; gap:.22em; min-width:0}
 .prog button{flex:1; height:1.6em; border:0; background:transparent; cursor:pointer; padding:0; position:relative; min-width:0}
-.prog button::after{content:""; position:absolute; left:0; right:0; top:50%; height:.28em; transform:translateY(-50%); border-radius:1em; background:var(--line); transition:background .3s}
+.prog button::after{content:""; position:absolute; left:0; right:0; top:50%; height:.26em; transform:translateY(-50%); border-radius:1em; background:var(--line)}
 .prog button.done::after{background:var(--muted)}
 .prog button.on::after{background:var(--sin); height:.4em}
 .count{font-family:var(--f-mono); color:var(--muted); font-variant-numeric:tabular-nums; white-space:nowrap}
@@ -156,18 +203,28 @@ body.idle .nav{opacity:.18}
 .help dl{display:grid; grid-template-columns:auto 1fr; gap:.4em 1em; margin:0}
 .help dd{margin:0; color:var(--muted)}
 
+/* phone answer sheet */
+.sheet-view{max-width:38em; margin:0 auto; padding-block:calc(1.2em + env(safe-area-inset-top,0px)) calc(3em + env(safe-area-inset-bottom,0px));
+  padding-left:max(16px, env(safe-area-inset-left,0px)); padding-right:max(16px, env(safe-area-inset-right,0px)); display:grid; gap:1em}
+.sheet-view h1{font-size:1.7em}
+.scard{background:var(--panel); border:1px solid var(--line); border-radius:.7em; padding:.9em 1em; display:grid; gap:.6em}
+.scard h2{font-size:.78em; font-family:var(--f-body); color:var(--muted); font-weight:600; letter-spacing:.04em; margin:0}
+.scard .q{font-weight:600; line-height:1.4}
+.scard .opts{grid-template-columns:1fr}
+.scard .numchk{font-size:1em}
+
 @media (max-aspect-ratio: 1/1){
   .slide{grid-template-columns:minmax(0,1fr); grid-template-rows:auto auto auto; grid-template-areas:"head" "viz" "body"; overflow-y:auto; align-content:start; row-gap:.9em; padding-block:1em 1em}
   .slide.wide{grid-template-rows:auto auto auto; grid-template-areas:"head" "body" "viz"}
-  .slide.wide .viz{height:28vh; min-height:160px}
+  .slide.wide .viz{height:24vh; min-height:140px}
   .viz{height:min(50vh, 95vw); min-height:230px}
   .body{overflow:visible}
-  h1{font-size:2.3em}
-  .slide.title .head{align-self:start}
+  h1{font-size:2.2em}
+  .slide.cover .head{align-self:start}
 }
 @media (max-width:520px){
   .nav .hide-sm{display:none}
-  .formula{font-size:1.3em}
+  .formula{font-size:1.25em}
 }
 @media (prefers-reduced-motion: reduce){
   .slide,.slide.active{transition:none; transform:none}
@@ -177,276 +234,523 @@ body.idle .nav{opacity:.18}
 <div class="deck" id="deck">
 <main class="stage" id="stage">
 
-<!-- 1. TITLE -->
-<section class="slide title active" data-name-ka="სათაური" data-name-en="Title">
+<!-- 1 · COVER -->
+<section class="slide cover active" data-name="ყდა">
   <div class="head">
-    <div class="eyebrow"><span class="ka">მათემატიკა · ტრიგონომეტრია</span><span class="en">Mathematics · Trigonometry</span></div>
-    <h1 style="margin-top:.25em"><span class="ka">ტრიგონომეტრიის გამოყენება</span><span class="en">Applications of Trigonometry</span></h1>
+    <div class="eyebrow">მათემატიკის პროექტი</div>
+    <h1 style="margin-top:.2em">ტრიგონომეტრიის გამოყენება</h1>
   </div>
-  <div class="body" style="justify-content:flex-start; gap:1.1em; padding-top:.4em">
-    <p class="lead muted ka">ტრიგონომეტრიას ძირითადად სამკუთხედებთან ვიყენებთ, მაგრამ სინუსი და კოსინუსი ბევრ სხვა რამესაც აღწერს. ამ პროექტში განვიხილავ, სად გვხვდება ისინი ყოველდღიურ ცხოვრებაში.</p>
-    <p class="lead muted en">We mostly use trigonometry with triangles, but sine and cosine describe a lot of other things too. In this project I look at where they show up in everyday life.</p>
-    <ol class="agenda">
-      <li><span><span class="ka">ბგერითი და სინათლის ტალღები</span><span class="en">Sound and light waves</span></span></li>
-      <li><span><span class="ka">რხევითი მოძრაობა</span><span class="en">Oscillatory motion</span></span></li>
-      <li><span><span class="ka">სხვადასხვა პერიოდული პროცესის აღწერა</span><span class="en">Describing periodic processes</span></span></li>
-    </ol>
-    <p class="hint"><span class="ka">გადართვა: <kbd>←</kbd> <kbd>→</kbd> ან <kbd>Space</kbd> · სრული ეკრანი: <kbd>F</kbd> · დახმარება: <kbd>?</kbd></span><span class="en">Navigate: <kbd>←</kbd> <kbd>→</kbd> or <kbd>Space</kbd> · Fullscreen: <kbd>F</kbd> · Help: <kbd>?</kbd></span></p>
+  <div class="body" style="padding-top:.6em">
+    <dl class="cover-meta">
+      <dt>ავტორები</dt>
+      <dd class="names"><span>საბა ბერუაშვილი</span><span>თორნიკე ზირაქაშვილი</span><span>ირაკლი ბრეგაძე</span><span>გაბრიელ ნიორაძე</span></dd>
+      <dt>კლასი</dt><dd>10 გ</dd>
+      <dt>სკოლა</dt><dd>№112 სკოლა</dd>
+      <dt>მასწავლებელი</dt><dd><span id="teacher" contenteditable="true" spellcheck="false" data-ph="ჩაწერეთ სახელი"></span></dd>
+      <dt>თარიღი</dt><dd>2026 წლის ნოემბერი</dd>
+    </dl>
   </div>
-  <div class="viz"><canvas id="cvHero" aria-label="Rotating point on a circle drawing a sine wave"></canvas></div>
+  <div class="viz"><canvas data-scene="hero" aria-label="წრეზე მბრუნავი წერტილი ხაზავს სინუსოიდას"></canvas></div>
 </section>
 
-<!-- 2. CIRCLE -->
-<section class="slide" data-name-ka="საფუძველი" data-name-en="Basics">
+<!-- 2 · AGENDA -->
+<section class="slide wide" data-name="რას ვიხილავთ">
   <div class="head">
-    <div class="eyebrow"><span class="ka">საფუძველი</span><span class="en">The basics</span></div>
-    <h2><span class="ka">სინუსოიდა და წრე</span><span class="en">The sine wave and the circle</span></h2>
+    <div class="eyebrow">შესავალი</div>
+    <h2>რას ვიხილავთ</h2>
+  </div>
+  <div class="body" style="gap:.9em">
+    <p class="lead">ტრიგონომეტრიას ძირითადად სამკუთხედებთან ვიყენებთ, მაგრამ სინუსი და კოსინუსი ბევრ სხვა რამესაც აღწერს: ყველაფერს, რაც დროში მეორდება. ჯერ ავხსნით მათემატიკას, შემდეგ ვნახავთ, სად გამოიყენება ის.</p>
+    <div class="cols">
+      <div class="col"><h3>მათემატიკური საფუძველი</h3>
+        <ol class="agenda"><li>რა არის სინუსი ერთეულოვან წრეზე</li><li>როგორ იქცევა წრე ტალღად</li><li>რას აკეთებს A, ω და φ ფორმულაში</li><li>სინუსი თუ კოსინუსი?</li></ol></div>
+      <div class="col"><h3>გამოყენება</h3>
+        <ol class="agenda apps"><li>ბგერითი და სინათლის ტალღები</li><li>რხევითი მოძრაობა</li><li>სხვადასხვა პერიოდული პროცესის აღწერა</li></ol></div>
+    </div>
+    <div class="key"><span class="muted">ფორმულებში ფერები:</span>
+      <span><i class="vA">A</i> სიმაღლე (ამპლიტუდა)</span><span><i class="vW">ω, T</i> სიგანე (სიხშირე, პერიოდი)</span><span><i class="vP">φ</i> წანაცვლება, კუთხე</span><span><i class="vD">D</i> შუა ხაზი</span></div>
+    <p class="hint">ყოველ თემას მოჰყვება ამოცანა და კითხვა კლასისთვის. პასუხის შეყვანა ტელეფონითაც შეიძლება. · გადართვა: <kbd>←</kbd> <kbd>→</kbd> ან <kbd>Space</kbd> · სრული ეკრანი: <kbd>F</kbd></p>
+  </div>
+  <div class="viz"><canvas data-scene="outro" aria-hidden="true"></canvas></div>
+</section>
+
+<!-- 3 · WHAT IS SINE -->
+<section class="slide" data-name="რა არის სინუსი">
+  <div class="head">
+    <div class="eyebrow">მათემატიკური საფუძველი · 1</div>
+    <h2>რა არის სინუსი?</h2>
   </div>
   <div class="body">
-    <p class="ka">ავიღოთ წერტილი, რომელიც წრეზე ბრუნავს. ბრუნვისას ის ხან ზემოთაა, ხან ქვემოთ. თუ ყოველ მომენტში მის სიმაღლეს გრაფიკზე მოვნიშნავთ, გამოვა ტალღა, რომელსაც სინუსოიდა ჰქვია.</p>
-    <p class="en">Take a point moving around a circle. As it turns, it is sometimes up and sometimes down. If we mark its height on a graph at every moment, we get a wave called a sine wave.</p>
-    <div class="formula"><i>y</i> = <i class="c-sin">A</i> · sin(<i>ω</i><i>t</i> + <i>φ</i>)</div>
-    <dl class="defs">
-      <dt>A</dt><dd><span class="ka"><b>ამპლიტუდა</b>, ტალღის სიმაღლე</span><span class="en"><b>amplitude</b>, the height of the wave</span></dd>
-      <dt>T</dt><dd><span class="ka"><b>პერიოდი</b>, ერთი სრული ბრუნის დრო</span><span class="en"><b>period</b>, the time of one full turn</span></dd>
-      <dt>f = 1/T</dt><dd><span class="ka"><b>სიხშირე</b>, ბრუნების რაოდენობა წამში (ჰც)</span><span class="en"><b>frequency</b>, turns per second (Hz)</span></dd>
-      <dt>ω = 2πf</dt><dd><span class="ka"><b>კუთხური სიხშირე</b></span><span class="en"><b>angular frequency</b></span></dd>
-      <dt>φ</dt><dd><span class="ka"><b>ფაზა</b>, საწყისი მდებარეობა</span><span class="en"><b>phase</b>, the starting position</span></dd>
+    <p>ავიღოთ წრე, რომლის რადიუსია 1 (ერთეულოვანი წრე). მასზე წერტილი P მოვაბრუნოთ <i class="vP">α</i> კუთხით. P-დან ღერძზე დავუშვათ მართობი და მივიღებთ მართკუთხა სამკუთხედს.</p>
+    <div class="formula">sin <i class="vP">α</i> = <span class="frac w"><span>მოპირდაპირე კათეტი</span><span>ჰიპოტენუზა</span></span> = <span class="frac"><span><i class="vA">y</i></span><span>1</span></span> = <i class="vA">y</i></div>
+    <dl class="legend">
+      <dt class="vP">α</dt><dd>კუთხე, რამდენით მოვაბრუნეთ წერტილი</dd>
+      <dt class="vA">sin α</dt><dd>წერტილის <b>სიმაღლე</b> (y კოორდინატი)</dd>
+      <dt class="vW">cos α</dt><dd>წერტილის მანძილი <b>გვერდზე</b> (x კოორდინატი)</dd>
     </dl>
+    <div class="mean">
+      <div class="mt" role="tablist"><button role="tab" aria-selected="true">რას ნიშნავს ეს?</button><button role="tab" aria-selected="false">უფრო ღრმად</button></div>
+      <div class="mp"><p>სინუსი გვეუბნება, რამდენად მაღლაა წერტილი, როცა ის α კუთხით მოვაბრუნეთ. 0°-ზე სიმაღლე 0-ია, 90°-ზე წერტილი ყველაზე მაღლაა (sin 90° = 1), წრის ქვედა ნახევარში კი სიმაღლე და სინუსი უარყოფითია.</p></div>
+      <div class="mp" hidden><p>კათეტებია sin α და cos α, ჰიპოტენუზა 1, ამიტომ პითაგორას თეორემით <b>sin²α + cos²α = 1</b>. რადგან წერტილი წრეზეა, −1 ≤ sin α ≤ 1. ეს განმარტება 90°-ზე მეტი კუთხეებისთვისაც მუშაობს, სადაც ჩვეულებრივი სამკუთხედი აღარ გამოდგება.</p></div>
+    </div>
     <div class="ctls">
-      <label for="cA"><span class="ka">ამპლიტუდა</span><span class="en">Amplitude</span> <i>A</i></label>
-      <input type="range" id="cA" min="0.2" max="1" step="0.05" value="0.8">
-      <output id="oA"></output>
-      <label for="cF"><span class="ka">სიხშირე</span><span class="en">Frequency</span> <i>f</i></label>
-      <input type="range" id="cF" min="0.25" max="1.5" step="0.05" value="0.5" style="--acc:var(--cos)">
-      <output id="oF"></output>
-      <label for="cP"><span class="ka">ფაზა</span><span class="en">Phase</span> <i>φ</i></label>
-      <input type="range" id="cP" min="0" max="360" step="15" value="0" style="--acc:var(--tri)">
-      <output id="oP"></output>
+      <label for="tA">კუთხე <i>α</i></label>
+      <input type="range" id="tA" min="0" max="360" step="1" value="35" style="--acc:var(--tri)">
+      <output id="oTA"></output>
+      <div class="full"><button class="btn" id="tSpin" aria-pressed="false">▶ დავატრიალოთ</button>
+        <button class="btn" data-deg="30">30°</button><button class="btn" data-deg="90">90°</button><button class="btn" data-deg="150">150°</button><button class="btn" data-deg="240">240°</button></div>
     </div>
   </div>
-  <div class="viz"><canvas id="cvCircle" aria-label="Unit circle and sine graph"></canvas></div>
+  <div class="viz"><canvas data-scene="triangle" aria-label="ერთეულოვანი წრე და მართკუთხა სამკუთხედი"></canvas></div>
 </section>
 
-<!-- 3. SOUND -->
-<section class="slide" data-name-ka="ბგერა" data-name-en="Sound">
+<!-- 4 · CIRCLE TO WAVE -->
+<section class="slide" data-name="წრიდან ტალღამდე">
   <div class="head">
-    <div class="eyebrow"><b>1</b><span class="ka">ბგერითი ტალღები</span><span class="en">Sound waves</span></div>
-    <h2><span class="ka">ბგერა ჰაერის რხევაა</span><span class="en">Sound is vibrating air</span></h2>
+    <div class="eyebrow">მათემატიკური საფუძველი · 2</div>
+    <h2>როგორ იქცევა წრე ტალღად</h2>
   </div>
   <div class="body">
-    <p class="ka">როცა ვლაპარაკობთ ან დინამიკი უკრავს, ჰაერის ნაწილაკები წინ და უკან მოძრაობენ და ერთმანეთს გადასცემენ რხევას. ასე აღწევს ბგერა ჩვენს ყურამდე. ჰაერის წნევის ცვლილება დროში სინუსოიდით აღიწერება.</p>
-    <p class="en">When we talk or a speaker plays, air particles move back and forth and pass the vibration to each other. That's how sound reaches our ears. The change in air pressure over time is described by a sine wave.</p>
-    <div class="formula"><i>p</i>(<i>t</i>) = <i class="c-sin">A</i> · sin(2π<i class="c-cos">f</i> <i>t</i>)</div>
+    <p>წერტილი წრეზე დავატრიალოთ და ყოველ მომენტში მისი სიმაღლე გრაფიკზე გადავიტანოთ. ჰორიზონტალურ ღერძზე კუთხეა, ვერტიკალურზე სიმაღლე. მივიღებთ ტალღას, რომელსაც <b>სინუსოიდა</b> ჰქვია.</p>
+    <div class="formula"><i>y</i> = sin <i>x</i></div>
+    <dl class="legend">
+      <dt class="vA">A</dt><dd><b>ამპლიტუდა</b>: ტალღის უდიდესი სიმაღლე შუა ხაზიდან. აქ A = 1.</dd>
+      <dt class="vW">T</dt><dd><b>პერიოდი</b>: რა მანძილის შემდეგ მეორდება ტალღა. აქ T = 2π (360°).</dd>
+      <dt class="vW">f = 1/T</dt><dd><b>სიხშირე</b>: რამდენჯერ მეორდება ტალღა ერთ წამში (ჰერცი, ჰც).</dd>
+    </dl>
+    <div class="mean">
+      <div class="mt" role="tablist"><button role="tab" aria-selected="true">რას ნიშნავს ეს?</button><button role="tab" aria-selected="false">უფრო ღრმად</button></div>
+      <div class="mp"><p>ერთი სრული ბრუნის შემდეგ წერტილი იმავე ადგილას ბრუნდება და ყველაფერი თავიდან იწყება, ამიტომ ტალღაც მეორდება. ასეთ ფუნქციას <b>პერიოდული</b> ეწოდება.</p></div>
+      <div class="mp" hidden><p>ნებისმიერი x-ისთვის sin(x + 2π) = sin x, ამიტომ 2π სინუსის უმცირესი პერიოდია. კუთხეს რადიანებში ვზომავთ: 360° = 2π რად. რადიანი მოსახერხებელია, რადგან ერთეულოვან წრეზე რკალის სიგრძე ზუსტად კუთხის ტოლია.</p></div>
+    </div>
+  </div>
+  <div class="viz"><canvas data-scene="unroll" aria-label="წრე და სინუსოიდის გრაფიკი"></canvas></div>
+</section>
+
+<!-- 5 · A, ω, φ -->
+<section class="slide" data-name="A, ω, φ">
+  <div class="head">
+    <div class="eyebrow">მათემატიკური საფუძველი · 3</div>
+    <h2>რას აკეთებს თითოეული რიცხვი</h2>
+  </div>
+  <div class="body">
+    <p>სინუსოიდის ფორმას სამი რიცხვი ცვლის. გადაატარეთ სლაიდერები და ნახეთ, როგორ იცვლება გრაფიკი. წყვეტილი ხაზი ჩვეულებრივი sin x-ია.</p>
+    <div class="formula"><i>y</i> = <i class="vA">A</i> · sin(<i class="vW">ω</i><i>x</i> + <i class="vP">φ</i>)</div>
+    <dl class="legend">
+      <dt class="vA">A</dt><dd><b>გაჭიმავს</b> გრაფიკს ზემოთ-ქვემოთ. A = 2 → ტალღა ორჯერ მაღალია.</dd>
+      <dt class="vW">ω</dt><dd><b>შეკუმშავს</b> გვერდზე. ω = 2 → ტალღები ორჯერ ვიწროა, პერიოდი T = 2π/ω.</dd>
+      <dt class="vP">φ</dt><dd><b>გადასწევს</b> გვერდზე: φ &gt; 0 მარცხნივ, φ &lt; 0 მარჯვნივ.</dd>
+    </dl>
+    <div class="ctls">
+      <label for="trA"><i class="vA">A</i></label><input type="range" id="trA" min="0.25" max="2" step="0.25" value="1"><output id="oTrA"></output>
+      <label for="trW"><i class="vW">ω</i></label><input type="range" id="trW" min="0.5" max="3" step="0.25" value="1" style="--acc:var(--cos)"><output id="oTrW"></output>
+      <label for="trP"><i class="vP">φ</i></label><input type="range" id="trP" min="-12" max="12" step="1" value="0" style="--acc:var(--tri)"><output id="oTrP"></output>
+      <div class="full"><span class="muted small">მაგალითები:</span>
+        <button class="btn math" data-tr="1,1,0">sin x</button><button class="btn math" data-tr="2,1,0">2 sin x</button><button class="btn math" data-tr="1,2,0">sin 2x</button><button class="btn math" data-tr="1,1,6">sin(x + π/2)</button></div>
+    </div>
+    <div class="readout" id="trRead"></div>
+    <div class="mean">
+      <div class="mt" role="tablist"><button role="tab" aria-selected="true">რას ნიშნავს ეს?</button><button role="tab" aria-selected="false">უფრო ღრმად</button></div>
+      <div class="mp"><p>A ტალღის სიმაღლეა, ω აჩვენებს, რამდენად ხშირად მეორდება, φ კი საიდან იწყება. ამ სამი რიცხვით ნებისმიერ სინუსოიდას ავაგებთ.</p></div>
+      <div class="mp" hidden><p>ωx + φ = ω(x + φ/ω), ამიტომ გრაფიკი φ/ω-ით იწევს და არა φ-ით. „+“ ნიშანი მარცხნივ წევს, რადგან იგივე მნიშვნელობა ახლა უფრო ადრე, ნაკლებ x-ზე მიიღება. პერიოდი გამოდის ωT = 2π ტოლობიდან.</p></div>
+    </div>
+  </div>
+  <div class="viz"><canvas data-scene="transform" aria-label="y = A sin(ωx + φ) გრაფიკი"></canvas></div>
+</section>
+
+<!-- 6 · SINE OR COSINE -->
+<section class="slide" data-name="სინუსი თუ კოსინუსი">
+  <div class="head">
+    <div class="eyebrow">მათემატიკური საფუძველი · 4</div>
+    <h2>სინუსი თუ კოსინუსი?</h2>
+  </div>
+  <div class="body">
+    <p>კოსინუსის გრაფიკი სინუსის გრაფიკის ასლია, უბრალოდ π/2-ით (90°-ით) მარცხნივაა გადაწეული. ამიტომ ორივე ერთი ფორმის ტალღაა და ორივეს <b>სინუსოიდა</b> ჰქვია. „კოსინუსოიდა“ ცალკე ფორმა არ არის.</p>
+    <div class="formula"><span class="vW">cos</span> <i>x</i> = <span class="vA">sin</span>(<i>x</i> + <span class="vP">π/2</span>)</div>
     <ul class="pts">
-      <li><span class="ka">რაც მეტია სიხშირე <i>f</i>, მით უფრო წვრილია ხმა</span><span class="en">the higher the frequency <i>f</i>, the higher the pitch</span></li>
-      <li><span class="ka">რაც მეტია ამპლიტუდა <i>A</i>, მით უფრო ხმამაღალია</span><span class="en">the bigger the amplitude <i>A</i>, the louder the sound</span></li>
-      <li><span class="ka"><i>λ</i> = <i>v</i> / <i>f</i> ტალღის სიგრძეა, <i>v</i> ≈ 343 მ/წმ ბგერის სიჩქარე ჰაერში</span><span class="en"><i>λ</i> = <i>v</i> / <i>f</i> is the wavelength, <i>v</i> ≈ 343 m/s is the speed of sound in air</span></li>
+      <li>მოძრაობა იწყება შუა ხაზიდან → <b class="vA">sin</b></li>
+      <li>იწყება უმაღლესი წერტილიდან → <b class="vW">cos</b> (ზამბარა, რომელიც ავწიეთ და გავუშვით)</li>
+      <li>იწყება უდაბლესი წერტილიდან → <b class="vW">−cos</b> (ეშმაკის ბორბალი)</li>
     </ul>
     <div class="ctls">
+      <label for="scS">წანაცვლება <i class="vP">s</i></label>
+      <input type="range" id="scS" min="0" max="24" step="1" value="0" style="--acc:var(--tri)">
+      <output id="oScS"></output>
+      <div class="full"><button class="btn" id="scGo">▶ გადავწიოთ π/2-ით</button><button class="btn" id="scZero">↺ თავიდან</button></div>
+    </div>
+    <div class="mean">
+      <div class="mt" role="tablist"><button role="tab" aria-selected="true">რას ნიშნავს ეს?</button><button role="tab" aria-selected="false">უფრო ღრმად</button></div>
+      <div class="mp"><p>სინუსი და კოსინუსი ერთი და იგივე ტალღაა. განსხვავება მხოლოდ ისაა, საიდან დავიწყეთ დროის ათვლა. ვირჩევთ იმას, რომლითაც ფორმულა უფრო მარტივი გამოდის.</p></div>
+      <div class="mp" hidden><p>ჯამის ფორმულით: sin(x + π/2) = sin x · cos π/2 + cos x · sin π/2 = cos x. სახელიც აქედან მოდის: cosinus არის ლათინური complementi sinus, ანუ „დამატებითი კუთხის სინუსი“: cos α = sin(90° − α). სიტყვა „სინუსი“ ინდური jyā-დან (მშვილდის ლარი) მოდის, რომელიც არაბულის გავლით ლათინურად sinus-ად (ნაკეცი) ითარგმნა.</p></div>
+    </div>
+  </div>
+  <div class="viz"><canvas data-scene="sincos" aria-label="სინუსის და კოსინუსის გრაფიკები"></canvas></div>
+</section>
+
+<!-- 7 · SOUND -->
+<section class="slide" data-name="ბგერა">
+  <div class="head">
+    <div class="eyebrow"><b>თემა 1</b> ბგერითი ტალღები</div>
+    <h2>ბგერა: წნევის სინუსოიდა</h2>
+  </div>
+  <div class="body">
+    <p>ბგერა ჰაერის რხევაა. ყურთან ჰაერის წნევა ხან იზრდება, ხან მცირდება, და ეს ცვლილება დროში სინუსოიდაა.</p>
+    <div class="formula"><i>p</i>(<i>t</i>) = <i class="vA">A</i> · sin(2π<i class="vW">f</i> <i>t</i>)</div>
+    <dl class="legend">
+      <dt class="vA">A</dt><dd><b>ხმის სიძლიერე</b>: რაც უფრო მაღალია ტალღა, მით უფრო ხმამაღალია ბგერა</dd>
+      <dt class="vW">f</dt><dd><b>ტონი</b>: f = 440 ნიშნავს, რომ ტალღა წამში 440-ჯერ მეორდება</dd>
+      <dt class="vW">2πf = ω</dt><dd>ω-ს ნაცვლად 2πf-ს ვწერთ, პერიოდი T = 1/f</dd>
+    </dl>
+    <div class="ctls">
       <div class="full">
-        <button class="btn play" id="sPlay" aria-pressed="false"><span class="ka lbl-on">▶ მოსმენა</span><span class="en lbl-on">▶ Play</span></button>
-        <span class="muted small"><span class="ka">ნოტები:</span><span class="en">Notes:</span></span>
-        <button class="btn" data-note="261.63"><span class="ka">დო</span><span class="en">C4</span></button>
-        <button class="btn" data-note="329.63"><span class="ka">მი</span><span class="en">E4</span></button>
-        <button class="btn" data-note="392"><span class="ka">სოლ</span><span class="en">G4</span></button>
-        <button class="btn" data-note="440"><span class="ka">ლა</span><span class="en">A4</span></button>
+        <button class="btn play" id="sPlay" aria-pressed="false">▶ მოსმენა</button>
+        <span class="muted small">ნოტები:</span>
+        <button class="btn" data-note="261.63">დო</button><button class="btn" data-note="329.63">მი</button><button class="btn" data-note="392">სოლ</button><button class="btn" data-note="440">ლა</button><button class="btn" data-note="880">ლა²</button>
       </div>
-      <label for="sF"><span class="ka">სიხშირე</span><span class="en">Frequency</span> <i>f</i></label>
+      <label for="sF">სიხშირე <i class="vW">f</i></label>
       <input type="range" id="sF" min="0" max="1" step="0.001" value="0.6667" style="--acc:var(--cos)">
       <output id="oSF"></output>
-      <label for="sV"><span class="ka">სიძლიერე</span><span class="en">Loudness</span> <i>A</i></label>
+      <label for="sV">სიძლიერე <i class="vA">A</i></label>
       <input type="range" id="sV" min="0" max="1" step="0.01" value="0.7">
       <output id="oSV"></output>
     </div>
     <div class="readout" id="sRead"></div>
-    <p class="fact"><span class="ka">ადამიანს ესმის დაახლოებით 20-დან 20 000 ჰც-მდე. ნოტი „ლა“ 440 ჰც-ია, ამ ნოტზე აწყობენ ინსტრუმენტებს.</span><span class="en">People hear roughly 20 to 20,000 Hz. The note A is 440 Hz, and instruments are tuned to it.</span></p>
+    <div class="mean">
+      <div class="mt" role="tablist"><button role="tab" aria-selected="true">რას ნიშნავს ეს?</button><button role="tab" aria-selected="false">უფრო ღრმად</button></div>
+      <div class="mp"><p>წვრილ ხმას (სასტვენს) ბევრი ვიწრო ტალღა აქვს, ბოხ ხმას (დოლს) ცოტა და განიერი. ჩართეთ ბგერა და გაზარდეთ სიხშირე: გრაფიკი შეიკუმშება და ხმა აიწევს.</p></div>
+      <div class="mp" hidden><p>ოქტავით მაღალი ნოტის სიხშირე ზუსტად ორჯერ მეტია: ლა 440 ჰც → ლა 880 ჰც. ოქტავაში 12 ნახევარტონია და ყოველი მომდევნო ნოტი წინაზე 2<sup>1/12</sup> ≈ 1.059-ჯერ მაღალია, ანუ ნოტების სიხშირეები გეომეტრიულ პროგრესიას ქმნის.</p></div>
+    </div>
   </div>
-  <div class="viz"><canvas id="cvSound" aria-label="Air particles and pressure wave"></canvas><div class="note"><span class="ka">ანიმაცია შენელებულია</span><span class="en">Animation slowed down</span></div></div>
+  <div class="viz"><canvas data-scene="sound" aria-label="ჰაერის ნაწილაკები და წნევის ტალღა"></canvas><div class="note">ანიმაცია შენელებულია</div></div>
 </section>
 
-<!-- 4. BEATS -->
-<section class="slide" data-name-ka="ცემა" data-name-en="Beats">
+<!-- 8 · BEATS -->
+<section class="slide" data-name="ცემა">
   <div class="head">
-    <div class="eyebrow"><b>1</b><span class="ka">ბგერითი ტალღები</span><span class="en">Sound waves</span></div>
-    <h2><span class="ka">ცემა: ორი ბგერის შეკრება</span><span class="en">Beats: adding two sounds</span></h2>
+    <div class="eyebrow"><b>თემა 1</b> ბგერითი ტალღები</div>
+    <h2>ცემა: ორი სინუსის ჯამი</h2>
   </div>
   <div class="body">
-    <p class="ka">როცა ერთად ჟღერს ორი ბგერა, რომელთა სიხშირეები ცოტათი განსხვავდება, ხმა ხან ძლიერდება და ხან სუსტდება. ამას ცემა ჰქვია. ამის ახსნა სინუსების ჯამის ფორმულით შეიძლება:</p>
-    <p class="en">When two sounds with slightly different frequencies play together, the sound gets louder and quieter in turns. This is called beating. It can be explained with the sum of sines formula:</p>
-    <div class="formula sm">sin <i class="c-sin">α</i> + sin <i class="c-cos">β</i> = 2 · sin<span class="frac"><span><i>α</i> + <i>β</i></span><span>2</span></span> · cos<span class="frac"><span><i>α</i> − <i>β</i></span><span>2</span></span></div>
-    <p class="ka">მარჯვენა მხარეს cos-ის მამრავლი ნელა იცვლება და ის განსაზღვრავს ხმის სიძლიერეს. ხმა წამში იმდენჯერ ძლიერდება, რამდენი ჰერცითაც განსხვავდება ორი სიხშირე.</p>
-    <p class="en">On the right side, the cos factor changes slowly, and it sets how loud the sound is. The sound gets louder as many times per second as the two frequencies differ in hertz.</p>
+    <p>როცა ორი ბგერა თითქმის ერთნაირი სიხშირით ჟღერს, ხმა ხან ძლიერდება, ხან სუსტდება. ამას <b>ცემა</b> ჰქვია. მიზეზს ჯამის ნამრავლად გარდაქმნის ფორმულა გვიჩვენებს:</p>
+    <div class="formula sm">sin <i>α</i> + sin <i>β</i> = 2 · sin<span class="frac"><span><i>α</i> + <i>β</i></span><span>2</span></span> · cos<span class="frac"><span><i>α</i> − <i>β</i></span><span>2</span></span></div>
+    <p class="small">ჩავსვათ <i>α</i> = 2π<i class="vW">f</i>₁<i>t</i> და <i>β</i> = 2π<i class="vW">f</i>₂<i>t</i>:</p>
+    <div class="formula sm"><i>y</i> = <span class="vP">2 cos(π(<i>f</i>₁ − <i>f</i>₂)<i>t</i>)</span> · <span class="vA">sin(π(<i>f</i>₁ + <i>f</i>₂)<i>t</i>)</span></div>
     <div class="ctls">
-      <div class="full">
-        <button class="btn play" id="bPlay" aria-pressed="false"><span class="ka">▶ მოსმენა</span><span class="en">▶ Play</span></button>
-        <span class="readout" id="bRead"></span>
-      </div>
-      <label for="bD"><span class="ka">სხვაობა</span><span class="en">Difference</span> <i>f</i>₂ − <i>f</i>₁</label>
+      <div class="full"><button class="btn play" id="bPlay" aria-pressed="false">▶ მოსმენა</button><span class="readout" id="bRead"></span></div>
+      <label for="bD">სხვაობა <i class="vW">f</i>₂ − <i class="vW">f</i>₁</label>
       <input type="range" id="bD" min="0" max="8" step="0.5" value="2" style="--acc:var(--cos)">
       <output id="oBD"></output>
     </div>
-    <p class="fact"><span class="ka">ამას იყენებენ გიტარის აწყობისას. როცა ცემა აღარ ისმის, ორი სიმი ერთნაირადაა აწყობილი.</span><span class="en">This is used when tuning a guitar. When the beating can't be heard anymore, the two strings are in tune.</span></p>
+    <div class="mean">
+      <div class="mt" role="tablist"><button role="tab" aria-selected="true">რას ნიშნავს ეს?</button><button role="tab" aria-selected="false">უფრო ღრმად</button></div>
+      <div class="mp"><p>ორი ტალღა ხან ერთად ადის და ერთმანეთს აძლიერებს, ხან ერთი ადის, მეორე ჩადის და ერთმანეთს აქრობენ. <span class="vA">sin</span>-ის ნაწილი ტონია, <span class="vP">cos</span>-ის ნაწილი (მწვანე ხაზი) ხმის სიძლიერეს ნელა ცვლის.</p></div>
+      <div class="mp" hidden><p>ფორმულა გამოდის sin(x + y) + sin(x − y) = 2 sin x cos y ტოლობიდან. cos(πΔf·t)-ის პერიოდია 2/Δf, მაგრამ ყური სიძლიერეს გრძნობს, ანუ |cos|-ს, რომლის პერიოდი ორჯერ მოკლეა: 1/Δf. ამიტომ წამში Δf = |f₁ − f₂| ცემა გვესმის.</p></div>
+    </div>
   </div>
-  <div class="viz"><canvas id="cvBeats" aria-label="Two waves and their sum showing beats"></canvas><div class="note"><span class="ka">რხევები გრაფიკზე შენელებულია, ცემის რიტმი რეალურია</span><span class="en">Waves are slowed down on the graph; the beat rhythm is real-time</span></div></div>
+  <div class="viz"><canvas data-scene="beats" aria-label="ორი ტალღა და მათი ჯამი"></canvas><div class="note">რხევები გრაფიკზე შენელებულია, ცემის რიტმი რეალურია</div></div>
 </section>
 
-<!-- 5. LIGHT -->
-<section class="slide" data-name-ka="სინათლე" data-name-en="Light">
+<!-- 9 · LIGHT -->
+<section class="slide" data-name="სინათლე">
   <div class="head">
-    <div class="eyebrow"><b>1</b><span class="ka">სინათლის ტალღები</span><span class="en">Light waves</span></div>
-    <h2><span class="ka">სინათლე ელექტრომაგნიტური ტალღაა</span><span class="en">Light is an electromagnetic wave</span></h2>
+    <div class="eyebrow"><b>თემა 1</b> სინათლის ტალღები</div>
+    <h2>სინათლე: ტალღა სივრცეში და დროში</h2>
   </div>
   <div class="body">
-    <p class="ka">სინათლეც ტალღაა, მაგრამ ბგერისგან განსხვავებით მას ჰაერი არ სჭირდება და ვაკუუმშიც ვრცელდება. მასში ირხევა ელექტრული (<i>E</i>) და მაგნიტური (<i>B</i>) ველი. სინათლის სიჩქარე დაახლოებით 300 000 კმ/წმ-ია.</p>
-    <p class="en">Light is a wave too, but unlike sound it doesn't need air and travels through a vacuum. In it, an electric (<i>E</i>) and a magnetic (<i>B</i>) field oscillate. The speed of light is about 300,000 km/s.</p>
-    <div class="formula"><i class="c-sin">E</i> = <i>E</i>₀ · sin(<i>k</i><i>x</i> − <i>ω</i><i>t</i>)</div>
-    <dl class="defs">
-      <dt>c = λ · f</dt><dd><span class="ka"><b>სიჩქარე</b> = ტალღის სიგრძე × სიხშირე</span><span class="en"><b>speed</b> = wavelength × frequency</span></dd>
+    <p>სინათლე ელექტრომაგნიტური ტალღაა: მასში ელექტრული (E) და მაგნიტური (B) ველი ირხევა. ბგერისგან განსხვავებით, ფორმულაში ორი ცვლადია: ადგილი <i>x</i> და დრო <i>t</i>.</p>
+    <div class="formula"><i>E</i> = <i class="vA">E</i><span class="vA">₀</span> · sin(<i class="vW">k</i><i>x</i> − <i class="vW">ω</i><i>t</i>)</div>
+    <dl class="legend">
+      <dt class="vA">E₀</dt><dd>ტალღის სიმაღლე (სინათლის სიკაშკაშე)</dd>
+      <dt class="vW">k = 2π/λ</dt><dd>რამდენად ხშირია ტალღები სივრცეში. <b>λ</b> ტალღის სიგრძეა და ის განსაზღვრავს <b>ფერს</b></dd>
+      <dt class="vW">ω = 2πf</dt><dd>რამდენად სწრაფად ირხევა ველი დროში</dd>
     </dl>
-    <p class="ka">სინათლის ფერი ტალღის სიგრძეზეა დამოკიდებული. წითელს ყველაზე გრძელი ტალღა აქვს (≈ 700 ნმ), იისფერს ყველაზე მოკლე (≈ 400 ნმ). ცისარტყელაში ეს ფერები ცალ-ცალკე ჩანს. (1 ნმ = 0.000001 მმ)</p>
-    <p class="en">The colour of light depends on its wavelength. Red has the longest wave (≈ 700 nm), violet the shortest (≈ 400 nm). In a rainbow these colours can be seen separately. (1 nm = 0.000001 mm)</p>
     <div class="ctls">
-      <label for="lL"><span class="ka">ტალღის სიგრძე</span><span class="en">Wavelength</span> <i>λ</i></label>
+      <label for="lL">ტალღის სიგრძე <i class="vW">λ</i></label>
       <input type="range" id="lL" min="380" max="750" step="1" value="530">
       <output id="oLL"></output>
     </div>
     <div class="readout" id="lRead"></div>
+    <div class="mean">
+      <div class="mt" role="tablist"><button role="tab" aria-selected="true">რას ნიშნავს ეს?</button><button role="tab" aria-selected="false">უფრო ღრმად</button></div>
+      <div class="mp"><p>თუ დროს „გავაჩერებთ“, სივრცეში სინუსოიდას დავინახავთ. თუ ერთ წერტილს ვუყურებთ, იქ ველი დროში ირხევა. წითელს ყველაზე გრძელი ტალღა აქვს (≈ 700 ნმ), იისფერს ყველაზე მოკლე (≈ 400 ნმ). 1 ნმ = 0.000001 მმ.</p></div>
+      <div class="mp" hidden><p>ტალღის ერთი და იგივე წერტილი (kx − ωt = const) მოძრაობს კანონით x = (ω/k)·t + const, ანუ სიჩქარით v = ω/k = λf. სინათლისთვის v = c ≈ 3·10⁸ მ/წმ, ამიტომ f = c/λ.</p></div>
+    </div>
   </div>
-  <div class="viz"><canvas id="cvLight" aria-label="Electromagnetic wave and visible spectrum"></canvas></div>
+  <div class="viz"><canvas data-scene="light" aria-label="ელექტრომაგნიტური ტალღა და სპექტრი"></canvas></div>
 </section>
 
-<!-- 6. OSCILLATION -->
-<section class="slide" data-name-ka="რხევა" data-name-en="Oscillation">
+<!-- 10 · PROBLEM 1 -->
+<section class="slide" data-name="ამოცანა 1" data-steps>
   <div class="head">
-    <div class="eyebrow"><b>2</b><span class="ka">რხევითი მოძრაობა</span><span class="en">Oscillatory motion</span></div>
-    <h2><span class="ka">ზამბარა და ქანქარა</span><span class="en">Spring and pendulum</span></h2>
+    <div class="eyebrow"><b>თემა 1</b> ამოცანა</div>
+    <h2>ამოცანა: გიტარის ორი სიმი</h2>
   </div>
   <div class="body">
-    <p class="ka">რხევითი მოძრაობისას სხეული ერთი წერტილის გარშემო წინ და უკან მოძრაობს. მაგალითად, საქანელა, საათის ქანქარა ან ზამბარაზე დაკიდებული ტვირთი. ასეთი მოძრაობის გრაფიკიც ტალღაა:</p>
-    <p class="en">In oscillatory motion, an object moves back and forth around one point. For example a swing, a clock pendulum or a weight hanging on a spring. The graph of this motion is also a wave:</p>
-    <div class="formula" id="oFormA"><i>x</i>(<i>t</i>) = <i class="c-sin">A</i> · cos(<i>ω</i><i>t</i>)</div>
-    <div class="formula" id="oFormB" hidden><i>x</i>(<i>t</i>) = <i class="c-sin">A</i> · <i>e</i><sup>−<i>βt</i></sup> · cos(<i>ω</i><i>t</i>)</div>
+    <p class="problem">ერთი სიმი ჟღერს 440 ჰც, მეორე 446 ჰც სიხშირით. დაწერეთ ჯამური ტალღის ფორმულა. რამდენჯერ გაძლიერდება ხმა ერთ წამში?</p>
+    <ol class="steps">
+      <li class="step"><div>ორი ბგერის ჯამი:<span class="formula">y = sin(2π·440<i>t</i>) + sin(2π·446<i>t</i>)</span></div></li>
+      <li class="step"><div>ჯამის ნამრავლად გარდაქმნით:<span class="formula">y = <span class="vP">2 cos(π(440 − 446)<i>t</i>)</span> · <span class="vA">sin(π(440 + 446)<i>t</i>)</span></span></div></li>
+      <li class="step"><div>გავამარტივოთ (cos ლუწი ფუნქციაა):<span class="formula">y = <span class="vP">2 cos(6π<i>t</i>)</span> · <span class="vA">sin(886π<i>t</i>)</span></span></div></li>
+      <li class="step"><div>ხმის სიძლიერე |cos(6π<i>t</i>)|-ზეა დამოკიდებული. მისი პერიოდია π/(6π) = 1/6 წმ.</div></li>
+      <li class="step final"><div><b>პასუხი: ხმა წამში 6-ჯერ ძლიერდება, ტონი კი (440 + 446)/2 = 443 ჰც-ია.</b></div></li>
+    </ol>
+    <div class="tabs"><button class="btn" data-next-step>შემდეგი ნაბიჯი ▸</button><button class="btn play" id="pbPlay" aria-pressed="false">▶ მოსმენა</button></div>
+    <div class="numchk" data-quiz="p1"></div>
+  </div>
+  <div class="viz"><canvas data-scene="p1" aria-label="440 და 446 ჰც ტალღების ჯამი"></canvas>
+    <div class="qr"><span class="code"></span><span><b>უპასუხეთ ტელეფონით</b>დაასკანერეთ კოდი და შეიყვანეთ პასუხი</span></div></div>
+</section>
+
+<!-- 11 · DISCUSSION 1 -->
+<section class="slide" data-name="განხილვა 1" data-steps>
+  <div class="head">
+    <div class="eyebrow"><b>თემა 1</b> განხილვა</div>
+    <h2>კითხვა კლასს</h2>
+  </div>
+  <div class="body">
+    <p class="question">რა მოუვა ბგერის გრაფიკს, თუ სიხშირეს გავაორმაგებთ? როგორ შეიცვლება ხმა?</p>
+    <div class="opts" data-quiz="d1"></div>
+    <div class="step why" data-quiz="d1"></div>
+    <div class="tabs"><button class="btn" data-next-step>პასუხის ჩვენება</button><button class="btn play" id="seqPlay">▶ მოვუსმინოთ: 440 ჰც → 880 ჰც</button></div>
+  </div>
+  <div class="viz"><canvas data-scene="d1" aria-label="სიხშირე f და 2f"></canvas>
+    <div class="qr"><span class="code"></span><span><b>უპასუხეთ ტელეფონით</b>დაასკანერეთ კოდი და აირჩიეთ პასუხი</span></div></div>
+</section>
+
+<!-- 12 · OSCILLATION -->
+<section class="slide" data-name="რხევა">
+  <div class="head">
+    <div class="eyebrow"><b>თემა 2</b> რხევითი მოძრაობა</div>
+    <h2>ჰარმონიული რხევა</h2>
+  </div>
+  <div class="body">
+    <p>ზამბარაზე დაკიდებული ტვირთი ან ქანქარა ერთი წერტილის გარშემო მოძრაობს წინ და უკან. ვწერთ cos-ს, რადგან ტვირთს ჯერ ვწევთ და მერე ვუშვებთ: <i>t</i> = 0-ზე ის უმაღლეს წერტილშია (cos 0 = 1).</p>
+    <div class="formula" id="oFormA"><i>x</i>(<i>t</i>) = <i class="vA">A</i> · cos(<i class="vW">ω</i><i>t</i>)</div>
+    <div class="formula" id="oFormB" hidden><i>x</i>(<i>t</i>) = <i class="vA">A</i> · <i>e</i><sup>−<i>βt</i></sup> · cos(<i class="vW">ω</i><i>t</i>)</div>
     <div class="tabs">
-      <button class="btn" data-mode="spring" aria-pressed="true"><span class="ka">ზამბარა</span><span class="en">Spring</span></button>
-      <button class="btn" data-mode="pend" aria-pressed="false"><span class="ka">ქანქარა</span><span class="en">Pendulum</span></button>
+      <button class="btn" data-mode="spring" aria-pressed="true">ზამბარა</button>
+      <button class="btn" data-mode="pend" aria-pressed="false">ქანქარა</button>
     </div>
-    <div class="formula sm only-spring"><i>T</i> = 2π<span class="sqrt">√<span class="rad"><span class="frac"><span><i>m</i></span><span><i>k</i></span></span></span></span></div>
-    <div class="formula sm only-pend" hidden><i>T</i> = 2π<span class="sqrt">√<span class="rad"><span class="frac"><span><i>L</i></span><span><i>g</i></span></span></span></span></div>
-    <p class="small muted only-spring"><span class="ka"><i>m</i> ტვირთის მასაა, <i>k</i> ზამბარის სიხისტე. რაც უფრო მძიმეა ტვირთი, მით უფრო ნელა ირხევა.</span><span class="en"><i>m</i> is the mass, <i>k</i> is the spring stiffness. The heavier the mass, the slower it oscillates.</span></p>
-    <p class="small muted only-pend" hidden><span class="ka"><i>L</i> ძაფის სიგრძეა, <i>g</i> ≈ 9.8 მ/წმ². რაც უფრო გრძელია ძაფი, მით უფრო ნელა ქანაობს. პერიოდი არ არის დამოკიდებული იმაზე, რამდენად ძლიერად გავაქანებთ (თუ გადახრა პატარაა).</span><span class="en"><i>L</i> is the string length, <i>g</i> ≈ 9.8 m/s². The longer the string, the slower it swings. The period doesn't depend on how hard we push it (if the swing is small).</span></p>
+    <div class="formula sm only-spring"><i class="vW">T</i> = <span class="frac"><span>2π</span><span><i class="vW">ω</i></span></span> = 2π<span class="sqrt">√<span class="rad"><span class="frac"><span><i>m</i></span><span><i>k</i></span></span></span></span></div>
+    <div class="formula sm only-pend" hidden><i class="vW">T</i> = <span class="frac"><span>2π</span><span><i class="vW">ω</i></span></span> = 2π<span class="sqrt">√<span class="rad"><span class="frac"><span><i>L</i></span><span><i>g</i></span></span></span></span></div>
+    <p class="small only-spring"><i class="vA">A</i> რამდენით ავწიეთ ტვირთი, <i>m</i> მასაა, <i>k</i> ზამბარის სიხისტე, <i class="vW">ω</i> = √(k/m).</p>
+    <p class="small only-pend" hidden><i>L</i> ძაფის სიგრძეა, <i>g</i> ≈ 9.8 მ/წმ², <i class="vW">ω</i> = √(g/L).</p>
     <div class="ctls">
-      <label for="oM" class="only-spring"><span class="ka">მასა</span><span class="en">Mass</span> <i>m</i></label>
+      <label for="oM" class="only-spring">მასა <i>m</i></label>
       <input type="range" id="oM" min="0.1" max="2" step="0.05" value="0.5" class="only-spring">
       <output id="oOM" class="only-spring"></output>
-      <label for="oK" class="only-spring"><span class="ka">სიხისტე</span><span class="en">Stiffness</span> <i>k</i></label>
+      <label for="oK" class="only-spring">სიხისტე <i>k</i></label>
       <input type="range" id="oK" min="5" max="50" step="1" value="20" class="only-spring" style="--acc:var(--cos)">
       <output id="oOK" class="only-spring"></output>
-      <label for="oL" class="only-pend" hidden><span class="ka">სიგრძე</span><span class="en">Length</span> <i>L</i></label>
+      <label for="oL" class="only-pend" hidden>სიგრძე <i>L</i></label>
       <input type="range" id="oL" min="0.2" max="2" step="0.05" value="1" class="only-pend" hidden style="--acc:var(--cos)">
       <output id="oOL" class="only-pend" hidden></output>
       <div class="full">
-        <label class="chk"><input type="checkbox" id="oD"><span class="ka">ჰაერის წინააღმდეგობა (რხევა ნელ-ნელა ქრება)</span><span class="en">Air resistance (the oscillation slowly fades)</span></label>
-        <button class="btn" id="oReset"><span class="ka">↺ თავიდან</span><span class="en">↺ Restart</span></button>
+        <label class="chk"><input type="checkbox" id="oD">ჰაერის წინააღმდეგობა</label>
+        <button class="btn" id="oReset">↺ თავიდან</button>
+        <span class="readout" id="oRead"></span>
       </div>
     </div>
-    <div class="readout" id="oRead"></div>
+    <div class="mean">
+      <div class="mt" role="tablist"><button role="tab" aria-selected="true">რას ნიშნავს ეს?</button><button role="tab" aria-selected="false">უფრო ღრმად</button></div>
+      <div class="mp"><p>მძიმე ტვირთი ნელა ირხევა, მაგარი ზამბარა სწრაფად, გრძელი ქანქარა ნელა ქანაობს. ჰაერის წინააღმდეგობა რხევას ნელ-ნელა აქრობს.</p></div>
+      <div class="mp" hidden><p>ჰაერის წინააღმდეგობით ფორმულა ხდება x = A·e<sup>−βt</sup>·cos(ωt): კოსინუსი მრავლდება კლებად ფუნქციაზე, ამიტომ ამპლიტუდა მცირდება, პერიოდი კი თითქმის არ იცვლება. ქანქარის ფორმულა ზუსტია მცირე გადახრისას, როცა sin θ ≈ θ.</p></div>
+    </div>
   </div>
-  <div class="viz"><canvas id="cvOsc" aria-label="Spring or pendulum with its displacement graph"></canvas></div>
+  <div class="viz"><canvas data-scene="osc" aria-label="ზამბარა ან ქანქარა და მისი გრაფიკი"></canvas></div>
 </section>
 
-<!-- 7. PERIODIC -->
-<section class="slide" data-name-ka="პროცესები" data-name-en="Processes">
+<!-- 13 · PROBLEM 2 -->
+<section class="slide" data-name="ამოცანა 2" data-steps>
   <div class="head">
-    <div class="eyebrow"><b>3</b><span class="ka">პერიოდული პროცესები</span><span class="en">Periodic processes</span></div>
-    <h2><span class="ka">პერიოდული პროცესების მაგალითები</span><span class="en">Examples of periodic processes</span></h2>
+    <div class="eyebrow"><b>თემა 2</b> ამოცანა</div>
+    <h2>ამოცანა: ზამბარა</h2>
   </div>
   <div class="body">
-    <p class="ka">ბევრი პროცესი, რომელიც დროში მეორდება, შეგვიძლია სინუსოიდით აღვწეროთ. ამისთვის გვჭირდება საშუალო მნიშვნელობა <i class="c-tri">D</i>, ამპლიტუდა <i class="c-sin">A</i> და პერიოდი <i class="c-cos">T</i>:</p>
-    <p class="en">Many processes that repeat over time can be described with a sine wave. For that we need the average value <i class="c-tri">D</i>, the amplitude <i class="c-sin">A</i> and the period <i class="c-cos">T</i>:</p>
-    <div class="formula sm"><i>y</i>(<i>t</i>) = <i class="c-tri">D</i> + <i class="c-sin">A</i> · sin(<span class="frac"><span>2π<i>t</i></span><span><i class="c-cos">T</i></span></span> + <i>φ</i>)</div>
-    <div class="tabs" role="tablist">
-      <button class="btn" data-tab="day" aria-pressed="true"><span class="ka">დღის ხანგრძლივობა</span><span class="en">Day length</span></button>
-      <button class="btn" data-tab="ac" aria-pressed="false"><span class="ka">ცვლადი დენი</span><span class="en">AC electricity</span></button>
-      <button class="btn" data-tab="wheel" aria-pressed="false"><span class="ka">ეშმაკის ბორბალი</span><span class="en">Ferris wheel</span></button>
-    </div>
-    <div class="pane" data-pane="day">
-      <div class="formula sm"><i>L</i>(<i>t</i>) ≈ <span class="c-tri">12.2</span> + <span class="c-sin">3.0</span> · sin<span class="frac"><span>2π(<i>t</i> − 80)</span><span class="c-cos">365</span></span></div>
-      <p class="small" style="margin-top:.5em"><span class="ka">თბილისში დღის ხანგრძლივობა წლის განმავლობაში ტალღასავით იცვლება. ყველაზე გრძელი დღე 21 ივნისია (≈ 15 სთ 13 წთ), ყველაზე მოკლე 21 დეკემბერი (≈ 9 სთ 9 წთ). ფორმულა ზუსტ მონაცემებს დაახლოებით 10 წუთის სიზუსტით ემთხვევა. <i>t</i> დღის ნომერია წელიწადში.</span><span class="en">In Tbilisi the length of the day changes like a wave during the year. The longest day is 21 June (≈ 15 h 13 min), the shortest is 21 December (≈ 9 h 9 min). The formula matches the real data to about 10 minutes. <i>t</i> is the day number in the year.</span></p>
-    </div>
-    <div class="pane" data-pane="ac" hidden>
-      <div class="formula sm"><i>U</i>(<i>t</i>) = <span class="c-sin">311</span> · sin(<span class="c-cos">100π</span><i>t</i>)</div>
-      <p class="small" style="margin-top:.5em"><span class="ka">როზეტში ცვლადი დენია, ანუ ძაბვა მუდმივად იცვლება და წამში 50 სრულ რხევას აკეთებს (50 ჰც). საქართველოში ძაბვა 220 ვ-ია, მაგრამ ეს ეფექტური მნიშვნელობაა. მაქსიმალური ძაბვა 220 · √2 ≈ 311 ვ-ია, ხოლო 100π მიიღება 2π · 50-დან.</span><span class="en">Sockets give alternating current, which means the voltage keeps changing and makes 50 full cycles per second (50 Hz). In Georgia the voltage is 220 V, but that is the effective value. The maximum voltage is 220 · √2 ≈ 311 V, and 100π comes from 2π · 50.</span></p>
-    </div>
-    <div class="pane" data-pane="wheel" hidden>
-      <div class="formula sm"><i>h</i>(<i>t</i>) = <span class="c-tri">26</span> − <span class="c-sin">25</span> · cos<span class="frac"><span>2π<i>t</i></span><span class="c-cos">10</span></span></div>
-      <p class="small" style="margin-top:.5em"><span class="ka">ეშმაკის ბორბალზე ადამიანის სიმაღლე პერიოდულად იცვლება. ავიღოთ ბორბალი რადიუსით 25 მ, რომლის ცენტრი 26 მ სიმაღლეზეა და ერთ ბრუნს 10 წუთში აკეთებს. ჯიხური ქვემოდან იწყებს მოძრაობას, ამიტომ ფორმულაში −cos გვაქვს.</span><span class="en">On a Ferris wheel, a person's height changes periodically. Take a wheel with a 25 m radius, its centre 26 m up, making one turn in 10 minutes. The cabin starts at the bottom, so the formula has −cos.</span></p>
-    </div>
+    <p class="problem">ზამბარაზე დაკიდებულია 0.5 კგ ტვირთი, ზამბარის სიხისტეა 20 ნ/მ. ტვირთი 10 სმ-ით ავწიეთ და გავუშვით. დაწერეთ მოძრაობის ფორმულა და იპოვეთ პერიოდი.</p>
+    <ol class="steps">
+      <li class="step"><div>კუთხური სიხშირე:<span class="formula"><i class="vW">ω</i> = √(<i>k</i>/<i>m</i>) = √(20/0.5) = √40 ≈ <span class="vW">6.32</span> რად/წმ</span></div></li>
+      <li class="step"><div>ტვირთი უმაღლესი წერტილიდან გავუშვით, ამიტომ ვწერთ cos-ს, <i class="vA">A</i> = 0.1 მ:<span class="formula"><i>x</i>(<i>t</i>) = <span class="vA">0.1</span> · cos(<span class="vW">6.32</span><i>t</i>)</span></div></li>
+      <li class="step"><div>პერიოდი:<span class="formula"><i class="vW">T</i> = 2π/<i class="vW">ω</i> = 2π/6.32 ≈ 0.99 წმ</span></div></li>
+      <li class="step final"><div><b>პასუხი: ტვირთი ერთ სრულ რხევას დაახლოებით 1 წამში ასრულებს.</b></div></li>
+    </ol>
+    <div class="tabs"><button class="btn" data-next-step>შემდეგი ნაბიჯი ▸</button></div>
+    <div class="numchk" data-quiz="p2"></div>
   </div>
-  <div class="viz"><canvas id="cvPer" aria-label="Periodic process graph"></canvas></div>
+  <div class="viz"><canvas data-scene="p2" aria-label="0.5 კგ ტვირთი ზამბარაზე"></canvas>
+    <div class="qr"><span class="code"></span><span><b>უპასუხეთ ტელეფონით</b>დაასკანერეთ კოდი და შეიყვანეთ პასუხი</span></div></div>
 </section>
 
-<!-- 8. SUMMARY -->
-<section class="slide wide" data-name-ka="შეჯამება" data-name-en="Summary">
+<!-- 14 · DISCUSSION 2 -->
+<section class="slide" data-name="განხილვა 2" data-steps>
   <div class="head">
-    <div class="eyebrow"><span class="ka">შეჯამება</span><span class="en">Summary</span></div>
-    <h2><span class="ka">რა ვნახეთ</span><span class="en">What we covered</span></h2>
+    <div class="eyebrow"><b>თემა 2</b> განხილვა</div>
+    <h2>კითხვა კლასს</h2>
   </div>
-  <div class="body" style="gap:1em">
+  <div class="body">
+    <p class="question">რა მოუვა რხევის პერიოდს, თუ ტვირთის მასას 4-ჯერ გავზრდით?</p>
+    <div class="opts" data-quiz="d2"></div>
+    <div class="step why" data-quiz="d2"></div>
+    <div class="tabs"><button class="btn" data-next-step>პასუხის ჩვენება</button></div>
+  </div>
+  <div class="viz"><canvas data-scene="d2" aria-label="მასა m და 4m"></canvas>
+    <div class="qr"><span class="code"></span><span><b>უპასუხეთ ტელეფონით</b>დაასკანერეთ კოდი და აირჩიეთ პასუხი</span></div></div>
+</section>
+
+<!-- 15 · PERIODIC PROCESSES -->
+<section class="slide" data-name="პერიოდული პროცესები">
+  <div class="head">
+    <div class="eyebrow"><b>თემა 3</b> პერიოდული პროცესები</div>
+    <h2>ფორმულის აგება მონაცემებით</h2>
+  </div>
+  <div class="body">
+    <p>თუ რაიმე დროში მეორდება, მის ფორმულას ოთხი რიცხვით ავაგებთ:</p>
+    <div class="formula sm"><i>y</i> = <i class="vD">D</i> + <i class="vA">A</i> · sin<span class="frac"><span>2π(<i>t</i> − <i class="vP">t₀</i>)</span><span><i class="vW">T</i></span></span></div>
+    <div class="tabs" role="tablist">
+      <button class="btn" data-tab="day" aria-pressed="true">დღის ხანგრძლივობა</button>
+      <button class="btn" data-tab="ac" aria-pressed="false">ცვლადი დენი</button>
+      <button class="btn" data-tab="wheel" aria-pressed="false">ეშმაკის ბორბალი</button>
+    </div>
+    <div class="pane" data-pane="day">
+      <dl class="legend">
+        <dt class="vD">D</dt><dd>(max + min)/2 = (15.2 + 9.1)/2 ≈ <b>12.2</b> სთ, შუა ხაზი</dd>
+        <dt class="vA">A</dt><dd>(max − min)/2 = (15.2 − 9.1)/2 ≈ <b>3.0</b> სთ</dd>
+        <dt class="vW">T</dt><dd><b>365</b> დღე, ერთი წელი</dd>
+        <dt class="vP">t₀</dt><dd><b>80</b>-ე დღე (21 მარტი), როცა დღე იზრდება და შუა ხაზს კვეთს</dd>
+      </dl>
+      <div class="formula sm" style="margin-top:.4em"><i>L</i>(<i>t</i>) ≈ <span class="vD">12.2</span> + <span class="vA">3.0</span> · sin<span class="frac"><span>2π(<i>t</i> − <span class="vP">80</span>)</span><span class="vW">365</span></span></div>
+      <p class="small muted" style="margin-top:.3em">თბილისი. მოდელი ზუსტ ასტრონომიულ გამოთვლას 10 წუთის სიზუსტით ემთხვევა.</p>
+    </div>
+    <div class="pane" data-pane="ac" hidden>
+      <dl class="legend">
+        <dt class="vD">D</dt><dd><b>0</b>, ძაბვა ნულის გარშემო ირხევა</dd>
+        <dt class="vA">A</dt><dd>220 · √2 ≈ <b>311</b> ვ (220 ვ ეფექტური ძაბვაა)</dd>
+        <dt class="vW">T</dt><dd>1/50 = <b>0.02</b> წმ, რადგან სიხშირე 50 ჰც-ია</dd>
+        <dt class="vP">t₀</dt><dd><b>0</b></dd>
+      </dl>
+      <div class="formula sm" style="margin-top:.4em"><i>U</i>(<i>t</i>) = <span class="vA">311</span> · sin(<span class="vW">100π</span><i>t</i>)<span class="muted" style="font-size:.7em">&nbsp;&nbsp;რადგან 2π/0.02 = 100π</span></div>
+    </div>
+    <div class="pane" data-pane="wheel" hidden>
+      <dl class="legend">
+        <dt class="vD">D</dt><dd><b>26</b> მ, ბორბლის ცენტრის სიმაღლე</dd>
+        <dt class="vA">A</dt><dd><b>25</b> მ, ბორბლის რადიუსი</dd>
+        <dt class="vW">T</dt><dd><b>10</b> წთ, ერთი ბრუნი</dd>
+        <dt class="vP">t₀</dt><dd><b>2.5</b> წთ, რადგან კაბინა ქვემოდან იწყებს</dd>
+      </dl>
+      <div class="formula sm" style="margin-top:.4em"><i>h</i>(<i>t</i>) = <span class="vD">26</span> + <span class="vA">25</span> · sin<span class="frac"><span>2π(<i>t</i> − <span class="vP">2.5</span>)</span><span class="vW">10</span></span> = <span class="vD">26</span> − <span class="vA">25</span> · cos<span class="frac"><span>2π<i>t</i></span><span class="vW">10</span></span></div>
+    </div>
+    <div class="mean">
+      <div class="mt" role="tablist"><button role="tab" aria-selected="true">რას ნიშნავს ეს?</button><button role="tab" aria-selected="false">უფრო ღრმად</button></div>
+      <div class="mp"><p>D შუა ხაზია, A რამდენით შორდება მას, T რამდენ ხანში მეორდება, t₀ კი გრაფიკს გვერდზე წევს, რომ სწორ დროს დაიწყოს.</p></div>
+      <div class="mp" hidden><p>რეალური მონაცემები ზუსტ სინუსოიდას არ ემთხვევა, მაგრამ მასთან ძალიან ახლოსაა. ასეთ მიახლოებას მათემატიკური მოდელირება ჰქვია. ბორბლის ორი ფორმულა ტოლია, რადგან 2.5 წუთი პერიოდის მეოთხედია, ანუ π/2-ით წანაცვლება.</p></div>
+    </div>
+  </div>
+  <div class="viz"><canvas data-scene="per" aria-label="პერიოდული პროცესის გრაფიკი"></canvas></div>
+</section>
+
+<!-- 16 · PROBLEM 3 -->
+<section class="slide" data-name="ამოცანა 3" data-steps>
+  <div class="head">
+    <div class="eyebrow"><b>თემა 3</b> ამოცანა</div>
+    <h2>ამოცანა: ეშმაკის ბორბალი</h2>
+  </div>
+  <div class="body">
+    <p class="problem">ბორბლის რადიუსია 25 მ, ცენტრი 26 მ სიმაღლეზეა, ერთი ბრუნი 10 წუთი გრძელდება. კაბინა მოძრაობას ქვემოდან იწყებს. რა სიმაღლეზე იქნება კაბინა მე-3 წუთზე?</p>
+    <ol class="steps">
+      <li class="step"><div>ფორმულა (წინა სლაიდიდან):<span class="formula"><i>h</i>(<i>t</i>) = <span class="vD">26</span> − <span class="vA">25</span> · cos(2π<i>t</i>/<span class="vW">10</span>)</span></div></li>
+      <li class="step"><div>ჩავსვათ <i>t</i> = 3, კუთხე იქნება:<span class="formula">2π · 3/10 = 0.6π = <span class="vP">108°</span></span></div></li>
+      <li class="step"><div>კოსინუსი:<span class="formula">cos 108° ≈ −0.309</span></div></li>
+      <li class="step"><div>სიმაღლე:<span class="formula"><i>h</i>(3) = 26 − 25 · (−0.309) = 26 + 7.7 ≈ 33.7 მ</span></div></li>
+      <li class="step final"><div><b>პასუხი: მე-3 წუთზე კაბინა დაახლოებით 33.7 მ სიმაღლეზეა.</b></div></li>
+    </ol>
+    <div class="tabs"><button class="btn" data-next-step>შემდეგი ნაბიჯი ▸</button></div>
+    <div class="numchk" data-quiz="p3"></div>
+  </div>
+  <div class="viz"><canvas data-scene="p3" aria-label="ეშმაკის ბორბალი მე-3 წუთზე"></canvas>
+    <div class="qr"><span class="code"></span><span><b>უპასუხეთ ტელეფონით</b>დაასკანერეთ კოდი და შეიყვანეთ პასუხი</span></div></div>
+</section>
+
+<!-- 17 · DISCUSSION 3 -->
+<section class="slide" data-name="განხილვა 3" data-steps>
+  <div class="head">
+    <div class="eyebrow"><b>თემა 3</b> განხილვა</div>
+    <h2>კითხვა კლასს</h2>
+  </div>
+  <div class="body">
+    <p class="question">რა მოუვა ბორბლის გრაფიკს, თუ პერიოდს გავაორმაგებთ (ერთი ბრუნი 20 წუთში)?</p>
+    <div class="opts" data-quiz="d3"></div>
+    <div class="step why" data-quiz="d3"></div>
+    <div class="tabs"><button class="btn" data-next-step>პასუხის ჩვენება</button></div>
+  </div>
+  <div class="viz"><canvas data-scene="d3" aria-label="პერიოდი 10 და 20 წუთი"></canvas>
+    <div class="qr"><span class="code"></span><span><b>უპასუხეთ ტელეფონით</b>დაასკანერეთ კოდი და აირჩიეთ პასუხი</span></div></div>
+</section>
+
+<!-- 18 · SUMMARY -->
+<section class="slide wide" data-name="შეჯამება">
+  <div class="head">
+    <div class="eyebrow">შეჯამება</div>
+    <h2>რა ვნახეთ</h2>
+  </div>
+  <div class="body" style="gap:.75em">
     <div class="tblwrap">
       <table>
-        <thead><tr>
-          <th><span class="ka">მოვლენა</span><span class="en">Phenomenon</span></th>
-          <th><span class="ka">რა მეორდება</span><span class="en">What repeats</span></th>
-          <th><span class="ka">ფორმულა</span><span class="en">Formula</span></th>
-        </tr></thead>
+        <thead><tr><th>მოვლენა</th><th>ფორმულა</th><th>რას ნიშნავს რიცხვები</th></tr></thead>
         <tbody>
-          <tr><td><span class="sw" style="background:var(--sin)"></span><span class="ka">ბგერა</span><span class="en">Sound</span></td><td><span class="ka">ჰაერის წნევა</span><span class="en">air pressure</span></td><td class="f"><i>p</i> = <i>A</i> · sin(2π<i>ft</i>)</td></tr>
-          <tr><td><span class="sw" style="background:var(--violet)"></span><span class="ka">სინათლე</span><span class="en">Light</span></td><td><span class="ka">ელექტრომაგნიტური ველი</span><span class="en">electromagnetic field</span></td><td class="f"><i>E</i> = <i>E</i>₀ · sin(<i>kx</i> − <i>ωt</i>)</td></tr>
-          <tr><td><span class="sw" style="background:var(--cos)"></span><span class="ka">ზამბარა, ქანქარა</span><span class="en">Spring, pendulum</span></td><td><span class="ka">გადახრა</span><span class="en">displacement</span></td><td class="f"><i>x</i> = <i>A</i> · cos(<i>ωt</i>)</td></tr>
-          <tr><td><span class="sw" style="background:var(--tri)"></span><span class="ka">დღის ხანგრძლივობა</span><span class="en">Day length</span></td><td><span class="ka">მზიანი საათები</span><span class="en">hours of daylight</span></td><td class="f"><i>L</i> ≈ 12.2 + 3.0 · sin(2π(<i>t</i> − 80)/365)</td></tr>
-          <tr><td><span class="sw" style="background:var(--sin)"></span><span class="ka">ცვლადი დენი</span><span class="en">AC electricity</span></td><td><span class="ka">ძაბვა</span><span class="en">voltage</span></td><td class="f"><i>U</i> = 311 · sin(100π<i>t</i>)</td></tr>
-          <tr><td><span class="sw" style="background:var(--cos)"></span><span class="ka">ეშმაკის ბორბალი</span><span class="en">Ferris wheel</span></td><td><span class="ka">სიმაღლე</span><span class="en">height</span></td><td class="f"><i>h</i> = 26 − 25 · cos(2π<i>t</i>/10)</td></tr>
+          <tr><td>ბგერა</td><td class="f"><i>p</i> = <i class="vA">A</i> · sin(2π<i class="vW">f</i><i>t</i>)</td><td><span class="vA">A</span> სიძლიერე, <span class="vW">f</span> ტონი</td></tr>
+          <tr><td>ცემა</td><td class="f"><span class="vP">2cos(πΔ<i>f</i>·<i>t</i>)</span> · <span class="vA">sin(π(<i>f</i>₁+<i>f</i>₂)<i>t</i>)</span></td><td>წამში <span class="vW">Δf</span> ცემა</td></tr>
+          <tr><td>სინათლე</td><td class="f"><i>E</i> = <i class="vA">E</i>₀ · sin(<i class="vW">k</i><i>x</i> − <i class="vW">ω</i><i>t</i>)</td><td><span class="vW">λ = 2π/k</span> განსაზღვრავს ფერს</td></tr>
+          <tr><td>ზამბარა, ქანქარა</td><td class="f"><i>x</i> = <i class="vA">A</i> · cos(<i class="vW">ω</i><i>t</i>)</td><td><span class="vW">ω = √(k/m)</span>, cos რადგან ზემოდან ვუშვებთ</td></tr>
+          <tr><td>დღის ხანგრძლივობა</td><td class="f"><i>L</i> ≈ <span class="vD">12.2</span> + <span class="vA">3.0</span> · sin(2π(<i>t</i> − <span class="vP">80</span>)/<span class="vW">365</span>)</td><td>აგებულია max-ით და min-ით</td></tr>
+          <tr><td>ეშმაკის ბორბალი</td><td class="f"><i>h</i> = <span class="vD">26</span> − <span class="vA">25</span> · cos(2π<i>t</i>/<span class="vW">10</span>)</td><td><span class="vD">D</span> ცენტრი, <span class="vA">A</span> რადიუსი</td></tr>
         </tbody>
       </table>
     </div>
-    <p class="closing"><span class="ka">დასკვნა: სინუსი და კოსინუსი გამოიყენება ყველგან, სადაც რაღაც პერიოდულად მეორდება.</span><span class="en">Conclusion: sine and cosine are used wherever something repeats periodically.</span>
-      <span class="thanks"><span class="ka">გმადლობთ ყურადღებისთვის! კითხვები?</span><span class="en">Thank you for listening! Questions?</span></span></p>
-    <p class="sources"><b><span class="ka">წყაროები:</span><span class="en">Sources:</span></b> <span class="ka">ვიკიპედია (სინუსოიდა, ბგერა, ცემა, ელექტრომაგნიტური ტალღა, ჰარმონიული რხევა) · Khan Academy (ტრიგონომეტრიული ფუნქციები) · timeanddate.com (დღის ხანგრძლივობა თბილისში) · ფიზიკისა და მათემატიკის სასკოლო სახელმძღვანელოები</span><span class="en">Wikipedia (sine wave, sound, beat, electromagnetic radiation, simple harmonic motion) · Khan Academy (trigonometric functions) · timeanddate.com (day length in Tbilisi) · school physics and maths textbooks</span></p>
+    <p class="closing">დასკვნა: ერთი ფუნქცია, sin x, და მისი გარდაქმნები <span class="vA">A</span>, <span class="vW">ω</span>, <span class="vP">φ</span> და <span class="vD">D</span> აღწერს ყველაფერს, რაც დროში მეორდება.</p>
+    <p class="thanks">გმადლობთ ყურადღებისთვის! კითხვები?</p>
+    <p class="sources"><b>წყაროები:</b> ვიკიპედია (ტრიგონომეტრიული ფუნქციები, სინუსოიდა, ცემა, ჰარმონიული რხევა, ელექტრომაგნიტური გამოსხივება) · Khan Academy (ერთეულოვანი წრე, ტრიგონომეტრიული ფუნქციების გრაფიკები) · timeanddate.com (დღის ხანგრძლივობა თბილისში) · მათემატიკისა და ფიზიკის სასკოლო სახელმძღვანელოები</p>
   </div>
-  <div class="viz"><canvas id="cvOutro" aria-label="Several sine waves and their sum"></canvas></div>
+  <div class="viz"><canvas data-scene="outro" aria-hidden="true"></canvas></div>
 </section>
 
 </main>
 
-<nav class="nav" id="nav" aria-label="Slides">
-  <button class="ib" id="nPrev" aria-label="Previous slide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+<nav class="nav" id="nav" aria-label="სლაიდები">
+  <button class="ib" id="nPrev" aria-label="წინა სლაიდი"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
   <div class="prog" id="prog"></div>
-  <span class="count" id="count">1 / 8</span>
-  <button class="ib" id="nNext" aria-label="Next slide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button>
+  <span class="count" id="count">1 / 18</span>
+  <button class="ib" id="nNext" aria-label="შემდეგი სლაიდი"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button>
   <span class="sep hide-sm"></span>
-  <button class="ib" id="nPause" aria-label="Pause animation" title="P"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg></button>
-  <button class="ib" id="nLang" aria-label="Switch language" title="L">EN</button>
-  <button class="ib" id="nTheme" aria-label="Switch light or dark" title="T"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg></button>
-  <button class="ib" id="nFull" aria-label="Fullscreen" title="F"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
-  <button class="ib hide-sm" id="nHelp" aria-label="Keyboard shortcuts" title="?">?</button>
+  <button class="ib" id="nPause" aria-label="ანიმაციის პაუზა" title="P"></button>
+  <button class="ib" id="nTheme" aria-label="ღია ან მუქი ფონი" title="T"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg></button>
+  <button class="ib" id="nFull" aria-label="სრული ეკრანი" title="F"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+  <button class="ib hide-sm" id="nHelp" aria-label="მართვა" title="?">?</button>
 </nav>
 </div>
 
+<section class="sheet-view" id="sheet" hidden>
+  <div>
+    <div class="eyebrow">ტრიგონომეტრიის გამოყენება</div>
+    <h1>კითხვები კლასს</h1>
+    <p class="muted" style="margin-top:.4em">აირჩიეთ ან ჩაწერეთ პასუხი. პასუხი მაშინვე შემოწმდება.</p>
+  </div>
+  <div id="sheetList" style="display:grid; gap:1em"></div>
+  <p><a class="btn" href="#slide-1">← პრეზენტაციის ნახვა</a></p>
+</section>
+
 <div class="help" id="help" hidden>
   <div class="card" role="dialog" aria-modal="true" aria-labelledby="helpT">
-    <h3 id="helpT"><span class="ka">მართვა</span><span class="en">Controls</span></h3>
+    <h3 id="helpT">მართვა</h3>
     <dl>
-      <dt><kbd>→</kbd> <kbd>Space</kbd> <kbd>PgDn</kbd></dt><dd><span class="ka">შემდეგი სლაიდი</span><span class="en">Next slide</span></dd>
-      <dt><kbd>←</kbd> <kbd>PgUp</kbd></dt><dd><span class="ka">წინა სლაიდი</span><span class="en">Previous slide</span></dd>
-      <dt><kbd>1</kbd>–<kbd>8</kbd></dt><dd><span class="ka">სლაიდზე გადასვლა</span><span class="en">Jump to slide</span></dd>
-      <dt><kbd>F</kbd></dt><dd><span class="ka">სრული ეკრანი</span><span class="en">Fullscreen</span></dd>
-      <dt><kbd>P</kbd></dt><dd><span class="ka">ანიმაციის პაუზა</span><span class="en">Pause animation</span></dd>
-      <dt><kbd>T</kbd></dt><dd><span class="ka">ღია / მუქი ფონი</span><span class="en">Light / dark</span></dd>
-      <dt><kbd>L</kbd></dt><dd><span class="ka">ენა: ქართული / English</span><span class="en">Language: Georgian / English</span></dd>
+      <dt><kbd>→</kbd> <kbd>Space</kbd> <kbd>PgDn</kbd></dt><dd>შემდეგი ნაბიჯი ან სლაიდი</dd>
+      <dt><kbd>←</kbd> <kbd>PgUp</kbd></dt><dd>უკან</dd>
+      <dt><kbd>Home</kbd> <kbd>End</kbd></dt><dd>პირველი / ბოლო სლაიდი</dd>
+      <dt><kbd>F</kbd></dt><dd>სრული ეკრანი</dd>
+      <dt><kbd>P</kbd></dt><dd>ანიმაციის პაუზა</dd>
+      <dt><kbd>T</kbd></dt><dd>ღია / მუქი ფონი</dd>
     </dl>
-    <p class="small muted" style="margin-top:.8em"><span class="ka">ტელეფონზე სლაიდები თითის გასმით გადაირთვება.</span><span class="en">On a phone, swipe to change slides.</span></p>
-    <button class="btn" id="helpClose" style="margin-top:.6em"><span class="ka">დახურვა</span><span class="en">Close</span></button>
+    <p class="small muted" style="margin-top:.8em">ამოცანებში <kbd>→</kbd> ჯერ შემდეგ ნაბიჯს აჩვენებს, მერე გადადის შემდეგ სლაიდზე. ტელეფონზე სლაიდები თითის გასმით გადაირთვება.</p>
+    <button class="btn" id="helpClose" style="margin-top:.6em">დახურვა</button>
   </div>
 </div>
 
@@ -461,15 +765,10 @@ const store = {
   get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
   set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
 };
+const QR_N = 33;
+const QR_PATH = 'M0,0h1v1h-1zM1,0h1v1h-1zM2,0h1v1h-1zM3,0h1v1h-1zM4,0h1v1h-1zM5,0h1v1h-1zM6,0h1v1h-1zM8,0h1v1h-1zM9,0h1v1h-1zM10,0h1v1h-1zM14,0h1v1h-1zM17,0h1v1h-1zM18,0h1v1h-1zM21,0h1v1h-1zM22,0h1v1h-1zM26,0h1v1h-1zM27,0h1v1h-1zM28,0h1v1h-1zM29,0h1v1h-1zM30,0h1v1h-1zM31,0h1v1h-1zM32,0h1v1h-1zM0,1h1v1h-1zM6,1h1v1h-1zM8,1h1v1h-1zM9,1h1v1h-1zM10,1h1v1h-1zM11,1h1v1h-1zM17,1h1v1h-1zM18,1h1v1h-1zM19,1h1v1h-1zM20,1h1v1h-1zM22,1h1v1h-1zM24,1h1v1h-1zM26,1h1v1h-1zM32,1h1v1h-1zM0,2h1v1h-1zM2,2h1v1h-1zM3,2h1v1h-1zM4,2h1v1h-1zM6,2h1v1h-1zM8,2h1v1h-1zM9,2h1v1h-1zM15,2h1v1h-1zM19,2h1v1h-1zM20,2h1v1h-1zM21,2h1v1h-1zM22,2h1v1h-1zM26,2h1v1h-1zM28,2h1v1h-1zM29,2h1v1h-1zM30,2h1v1h-1zM32,2h1v1h-1zM0,3h1v1h-1zM2,3h1v1h-1zM3,3h1v1h-1zM4,3h1v1h-1zM6,3h1v1h-1zM10,3h1v1h-1zM12,3h1v1h-1zM17,3h1v1h-1zM26,3h1v1h-1zM28,3h1v1h-1zM29,3h1v1h-1zM30,3h1v1h-1zM32,3h1v1h-1zM0,4h1v1h-1zM2,4h1v1h-1zM3,4h1v1h-1zM4,4h1v1h-1zM6,4h1v1h-1zM8,4h1v1h-1zM9,4h1v1h-1zM10,4h1v1h-1zM13,4h1v1h-1zM14,4h1v1h-1zM15,4h1v1h-1zM19,4h1v1h-1zM21,4h1v1h-1zM22,4h1v1h-1zM23,4h1v1h-1zM26,4h1v1h-1zM28,4h1v1h-1zM29,4h1v1h-1zM30,4h1v1h-1zM32,4h1v1h-1zM0,5h1v1h-1zM6,5h1v1h-1zM9,5h1v1h-1zM11,5h1v1h-1zM13,5h1v1h-1zM17,5h1v1h-1zM18,5h1v1h-1zM23,5h1v1h-1zM26,5h1v1h-1zM32,5h1v1h-1zM0,6h1v1h-1zM1,6h1v1h-1zM2,6h1v1h-1zM3,6h1v1h-1zM4,6h1v1h-1zM5,6h1v1h-1zM6,6h1v1h-1zM8,6h1v1h-1zM10,6h1v1h-1zM12,6h1v1h-1zM14,6h1v1h-1zM16,6h1v1h-1zM18,6h1v1h-1zM20,6h1v1h-1zM22,6h1v1h-1zM24,6h1v1h-1zM26,6h1v1h-1zM27,6h1v1h-1zM28,6h1v1h-1zM29,6h1v1h-1zM30,6h1v1h-1zM31,6h1v1h-1zM32,6h1v1h-1zM9,7h1v1h-1zM12,7h1v1h-1zM13,7h1v1h-1zM22,7h1v1h-1zM24,7h1v1h-1zM0,8h1v1h-1zM3,8h1v1h-1zM4,8h1v1h-1zM5,8h1v1h-1zM6,8h1v1h-1zM7,8h1v1h-1zM8,8h1v1h-1zM12,8h1v1h-1zM13,8h1v1h-1zM14,8h1v1h-1zM15,8h1v1h-1zM16,8h1v1h-1zM17,8h1v1h-1zM20,8h1v1h-1zM22,8h1v1h-1zM23,8h1v1h-1zM24,8h1v1h-1zM25,8h1v1h-1zM28,8h1v1h-1zM30,8h1v1h-1zM31,8h1v1h-1zM32,8h1v1h-1zM0,9h1v1h-1zM1,9h1v1h-1zM2,9h1v1h-1zM7,9h1v1h-1zM10,9h1v1h-1zM11,9h1v1h-1zM14,9h1v1h-1zM15,9h1v1h-1zM18,9h1v1h-1zM19,9h1v1h-1zM21,9h1v1h-1zM22,9h1v1h-1zM23,9h1v1h-1zM28,9h1v1h-1zM29,9h1v1h-1zM30,9h1v1h-1zM31,9h1v1h-1zM1,10h1v1h-1zM2,10h1v1h-1zM6,10h1v1h-1zM8,10h1v1h-1zM9,10h1v1h-1zM11,10h1v1h-1zM12,10h1v1h-1zM14,10h1v1h-1zM15,10h1v1h-1zM16,10h1v1h-1zM20,10h1v1h-1zM23,10h1v1h-1zM26,10h1v1h-1zM28,10h1v1h-1zM29,10h1v1h-1zM30,10h1v1h-1zM31,10h1v1h-1zM32,10h1v1h-1zM1,11h1v1h-1zM4,11h1v1h-1zM8,11h1v1h-1zM10,11h1v1h-1zM14,11h1v1h-1zM15,11h1v1h-1zM17,11h1v1h-1zM19,11h1v1h-1zM22,11h1v1h-1zM23,11h1v1h-1zM25,11h1v1h-1zM27,11h1v1h-1zM30,11h1v1h-1zM31,11h1v1h-1zM0,12h1v1h-1zM1,12h1v1h-1zM2,12h1v1h-1zM3,12h1v1h-1zM6,12h1v1h-1zM7,12h1v1h-1zM9,12h1v1h-1zM10,12h1v1h-1zM11,12h1v1h-1zM12,12h1v1h-1zM13,12h1v1h-1zM14,12h1v1h-1zM15,12h1v1h-1zM16,12h1v1h-1zM19,12h1v1h-1zM20,12h1v1h-1zM21,12h1v1h-1zM23,12h1v1h-1zM26,12h1v1h-1zM3,13h1v1h-1zM5,13h1v1h-1zM7,13h1v1h-1zM8,13h1v1h-1zM9,13h1v1h-1zM10,13h1v1h-1zM13,13h1v1h-1zM16,13h1v1h-1zM18,13h1v1h-1zM21,13h1v1h-1zM23,13h1v1h-1zM24,13h1v1h-1zM25,13h1v1h-1zM26,13h1v1h-1zM30,13h1v1h-1zM0,14h1v1h-1zM1,14h1v1h-1zM3,14h1v1h-1zM4,14h1v1h-1zM6,14h1v1h-1zM10,14h1v1h-1zM14,14h1v1h-1zM16,14h1v1h-1zM17,14h1v1h-1zM19,14h1v1h-1zM20,14h1v1h-1zM26,14h1v1h-1zM29,14h1v1h-1zM1,15h1v1h-1zM2,15h1v1h-1zM9,15h1v1h-1zM10,15h1v1h-1zM11,15h1v1h-1zM13,15h1v1h-1zM15,15h1v1h-1zM18,15h1v1h-1zM20,15h1v1h-1zM22,15h1v1h-1zM23,15h1v1h-1zM24,15h1v1h-1zM25,15h1v1h-1zM29,15h1v1h-1zM30,15h1v1h-1zM32,15h1v1h-1zM0,16h1v1h-1zM1,16h1v1h-1zM3,16h1v1h-1zM6,16h1v1h-1zM8,16h1v1h-1zM9,16h1v1h-1zM12,16h1v1h-1zM13,16h1v1h-1zM14,16h1v1h-1zM22,16h1v1h-1zM25,16h1v1h-1zM26,16h1v1h-1zM27,16h1v1h-1zM28,16h1v1h-1zM1,17h1v1h-1zM2,17h1v1h-1zM4,17h1v1h-1zM8,17h1v1h-1zM10,17h1v1h-1zM11,17h1v1h-1zM13,17h1v1h-1zM14,17h1v1h-1zM17,17h1v1h-1zM18,17h1v1h-1zM19,17h1v1h-1zM20,17h1v1h-1zM22,17h1v1h-1zM26,17h1v1h-1zM28,17h1v1h-1zM30,17h1v1h-1zM32,17h1v1h-1zM0,18h1v1h-1zM4,18h1v1h-1zM5,18h1v1h-1zM6,18h1v1h-1zM7,18h1v1h-1zM8,18h1v1h-1zM10,18h1v1h-1zM13,18h1v1h-1zM15,18h1v1h-1zM17,18h1v1h-1zM19,18h1v1h-1zM23,18h1v1h-1zM25,18h1v1h-1zM27,18h1v1h-1zM29,18h1v1h-1zM30,18h1v1h-1zM32,18h1v1h-1zM0,19h1v1h-1zM1,19h1v1h-1zM3,19h1v1h-1zM5,19h1v1h-1zM7,19h1v1h-1zM8,19h1v1h-1zM10,19h1v1h-1zM11,19h1v1h-1zM14,19h1v1h-1zM15,19h1v1h-1zM16,19h1v1h-1zM19,19h1v1h-1zM20,19h1v1h-1zM24,19h1v1h-1zM28,19h1v1h-1zM29,19h1v1h-1zM30,19h1v1h-1zM32,19h1v1h-1zM1,20h1v1h-1zM5,20h1v1h-1zM6,20h1v1h-1zM7,20h1v1h-1zM8,20h1v1h-1zM10,20h1v1h-1zM12,20h1v1h-1zM13,20h1v1h-1zM16,20h1v1h-1zM17,20h1v1h-1zM19,20h1v1h-1zM21,20h1v1h-1zM24,20h1v1h-1zM27,20h1v1h-1zM29,20h1v1h-1zM0,21h1v1h-1zM3,21h1v1h-1zM4,21h1v1h-1zM5,21h1v1h-1zM9,21h1v1h-1zM12,21h1v1h-1zM13,21h1v1h-1zM16,21h1v1h-1zM19,21h1v1h-1zM25,21h1v1h-1zM26,21h1v1h-1zM27,21h1v1h-1zM28,21h1v1h-1zM29,21h1v1h-1zM30,21h1v1h-1zM0,22h1v1h-1zM2,22h1v1h-1zM5,22h1v1h-1zM6,22h1v1h-1zM8,22h1v1h-1zM9,22h1v1h-1zM11,22h1v1h-1zM13,22h1v1h-1zM15,22h1v1h-1zM17,22h1v1h-1zM18,22h1v1h-1zM21,22h1v1h-1zM23,22h1v1h-1zM26,22h1v1h-1zM28,22h1v1h-1zM30,22h1v1h-1zM31,22h1v1h-1zM32,22h1v1h-1zM0,23h1v1h-1zM2,23h1v1h-1zM3,23h1v1h-1zM4,23h1v1h-1zM8,23h1v1h-1zM10,23h1v1h-1zM11,23h1v1h-1zM16,23h1v1h-1zM17,23h1v1h-1zM19,23h1v1h-1zM24,23h1v1h-1zM25,23h1v1h-1zM26,23h1v1h-1zM27,23h1v1h-1zM28,23h1v1h-1zM30,23h1v1h-1zM31,23h1v1h-1zM0,24h1v1h-1zM1,24h1v1h-1zM3,24h1v1h-1zM4,24h1v1h-1zM6,24h1v1h-1zM7,24h1v1h-1zM8,24h1v1h-1zM12,24h1v1h-1zM14,24h1v1h-1zM15,24h1v1h-1zM16,24h1v1h-1zM19,24h1v1h-1zM20,24h1v1h-1zM23,24h1v1h-1zM24,24h1v1h-1zM25,24h1v1h-1zM26,24h1v1h-1zM27,24h1v1h-1zM28,24h1v1h-1zM31,24h1v1h-1zM8,25h1v1h-1zM9,25h1v1h-1zM10,25h1v1h-1zM11,25h1v1h-1zM14,25h1v1h-1zM15,25h1v1h-1zM18,25h1v1h-1zM24,25h1v1h-1zM28,25h1v1h-1zM30,25h1v1h-1zM31,25h1v1h-1zM0,26h1v1h-1zM1,26h1v1h-1zM2,26h1v1h-1zM3,26h1v1h-1zM4,26h1v1h-1zM5,26h1v1h-1zM6,26h1v1h-1zM8,26h1v1h-1zM9,26h1v1h-1zM13,26h1v1h-1zM15,26h1v1h-1zM16,26h1v1h-1zM17,26h1v1h-1zM18,26h1v1h-1zM19,26h1v1h-1zM20,26h1v1h-1zM23,26h1v1h-1zM24,26h1v1h-1zM26,26h1v1h-1zM28,26h1v1h-1zM30,26h1v1h-1zM0,27h1v1h-1zM6,27h1v1h-1zM8,27h1v1h-1zM12,27h1v1h-1zM13,27h1v1h-1zM14,27h1v1h-1zM18,27h1v1h-1zM19,27h1v1h-1zM22,27h1v1h-1zM23,27h1v1h-1zM24,27h1v1h-1zM28,27h1v1h-1zM29,27h1v1h-1zM30,27h1v1h-1zM31,27h1v1h-1zM32,27h1v1h-1zM0,28h1v1h-1zM2,28h1v1h-1zM3,28h1v1h-1zM4,28h1v1h-1zM6,28h1v1h-1zM8,28h1v1h-1zM9,28h1v1h-1zM10,28h1v1h-1zM12,28h1v1h-1zM13,28h1v1h-1zM15,28h1v1h-1zM19,28h1v1h-1zM20,28h1v1h-1zM21,28h1v1h-1zM22,28h1v1h-1zM23,28h1v1h-1zM24,28h1v1h-1zM25,28h1v1h-1zM26,28h1v1h-1zM27,28h1v1h-1zM28,28h1v1h-1zM31,28h1v1h-1zM0,29h1v1h-1zM2,29h1v1h-1zM3,29h1v1h-1zM4,29h1v1h-1zM6,29h1v1h-1zM8,29h1v1h-1zM12,29h1v1h-1zM13,29h1v1h-1zM16,29h1v1h-1zM17,29h1v1h-1zM19,29h1v1h-1zM21,29h1v1h-1zM22,29h1v1h-1zM23,29h1v1h-1zM24,29h1v1h-1zM25,29h1v1h-1zM27,29h1v1h-1zM30,29h1v1h-1zM31,29h1v1h-1zM32,29h1v1h-1zM0,30h1v1h-1zM2,30h1v1h-1zM3,30h1v1h-1zM4,30h1v1h-1zM6,30h1v1h-1zM9,30h1v1h-1zM10,30h1v1h-1zM11,30h1v1h-1zM13,30h1v1h-1zM15,30h1v1h-1zM18,30h1v1h-1zM19,30h1v1h-1zM21,30h1v1h-1zM22,30h1v1h-1zM25,30h1v1h-1zM27,30h1v1h-1zM28,30h1v1h-1zM31,30h1v1h-1zM32,30h1v1h-1zM0,31h1v1h-1zM6,31h1v1h-1zM9,31h1v1h-1zM14,31h1v1h-1zM15,31h1v1h-1zM19,31h1v1h-1zM22,31h1v1h-1zM23,31h1v1h-1zM24,31h1v1h-1zM26,31h1v1h-1zM27,31h1v1h-1zM28,31h1v1h-1zM29,31h1v1h-1zM30,31h1v1h-1zM31,31h1v1h-1zM32,31h1v1h-1zM0,32h1v1h-1zM1,32h1v1h-1zM2,32h1v1h-1zM3,32h1v1h-1zM4,32h1v1h-1zM5,32h1v1h-1zM6,32h1v1h-1zM8,32h1v1h-1zM9,32h1v1h-1zM10,32h1v1h-1zM11,32h1v1h-1zM15,32h1v1h-1zM17,32h1v1h-1zM19,32h1v1h-1zM22,32h1v1h-1zM23,32h1v1h-1zM24,32h1v1h-1zM26,32h1v1h-1zM27,32h1v1h-1zM28,32h1v1h-1zM29,32h1v1h-1z';
 
-/* ---------- language & theme ---------- */
-let lang = store.get('trig-lang') === 'en' ? 'en' : 'ka';
-const T = (ka, en) => (lang === 'ka' ? ka : en);
-function applyLang() {
-  root.dataset.lang = lang; root.lang = lang;
-  $('#nLang').textContent = lang === 'ka' ? 'EN' : 'ქა';
-  updateAllReadouts(); buildProgress();
-}
+/* ---------- theme ---------- */
 const savedTheme = store.get('trig-theme');
 if (savedTheme === 'light' || savedTheme === 'dark') root.dataset.theme = savedTheme;
 const mqDark = matchMedia('(prefers-color-scheme: dark)');
@@ -480,8 +779,7 @@ function readColors() {
   for (const k of ['bg', 'panel', 'ink', 'muted', 'line', 'grid', 'sin', 'cos', 'tri', 'violet']) C[k] = cs.getPropertyValue('--' + k).trim();
   C.dark = isDark();
 }
-mqDark.addEventListener && mqDark.addEventListener('change', () => { readColors(); spectrumCache = null; });
-
+mqDark.addEventListener && mqDark.addEventListener('change', () => { readColors(); updLight(); });
 function alpha(hex, a) {
   const h = hex.replace('#', '');
   const n = parseInt(h.length === 3 ? h.split('').map(c => c + c).join('') : h, 16);
@@ -511,29 +809,65 @@ function curve(g, x0, x1, fy, step = 2) {
   for (let x = x0, i = 0; x <= x1 + 0.01; x += step, i++) { const y = fy(x); i ? g.lineTo(x, y) : g.moveTo(x, y); }
   g.stroke();
 }
+function measureW(g, s, size) { g.font = `600 ${size}px ${FS}`; return g.measureText(s).width; }
 function bracketH(g, xa, xb, y, label, color) {
   const tk = F * 0.3;
   g.strokeStyle = color; g.lineWidth = Math.max(1.5, LW * 0.7); dash(g, false);
   g.beginPath(); g.moveTo(xa, y + tk); g.lineTo(xa, y); g.lineTo(xb, y); g.lineTo(xb, y + tk); g.stroke();
-  const tw = measureW(g, label, F * 0.78) + F * 0.6, mx = (xa + xb) / 2;
+  const tw = measureW(g, label, F * 0.76) + F * 0.6, mx = (xa + xb) / 2;
   g.fillStyle = C.bg; g.fillRect(mx - tw / 2, y - F * 0.5, tw, F);
-  text(g, label, mx, y, { align: 'center', color, size: F * 0.78, weight: 600 });
+  text(g, label, mx, y, { align: 'center', color, size: F * 0.76, weight: 600 });
 }
 function bracketV(g, x, ya, yb, label, color) {
   const tk = F * 0.3;
   g.strokeStyle = color; g.lineWidth = Math.max(1.5, LW * 0.7); dash(g, false);
   g.beginPath(); g.moveTo(x - tk, ya); g.lineTo(x, ya); g.lineTo(x, yb); g.lineTo(x - tk, yb); g.stroke();
-  text(g, label, x + F * 0.35, (ya + yb) / 2, { color, size: F * 0.78, weight: 600 });
+  text(g, label, x + F * 0.35, (ya + yb) / 2, { color, size: F * 0.76, weight: 600 });
 }
-function measureW(g, s, size) { g.font = `600 ${size}px ${FS}`; return g.measureText(s).width; }
-function arrowV(g, x, y1, y2, color) {
-  g.strokeStyle = color; g.fillStyle = color; g.lineWidth = Math.max(1.5, LW * 0.7); dash(g, false);
-  line(g, x, y1, x, y2);
-  const s = Math.sign(y2 - y1) || 1, a = F * 0.32;
-  g.beginPath(); g.moveTo(x, y2); g.lineTo(x - a * 0.6, y2 - s * a); g.lineTo(x + a * 0.6, y2 - s * a); g.closePath(); g.fill();
+function arrow(g, x1, y1, x2, y2, color) {
+  g.strokeStyle = color; g.fillStyle = color; g.lineWidth = Math.max(1.5, LW * 0.8); dash(g, false);
+  line(g, x1, y1, x2, y2);
+  const a = Math.atan2(y2 - y1, x2 - x1), s = F * 0.34;
+  g.beginPath(); g.moveTo(x2, y2); g.lineTo(x2 - s * Math.cos(a - 0.45), y2 - s * Math.sin(a - 0.45)); g.lineTo(x2 - s * Math.cos(a + 0.45), y2 - s * Math.sin(a + 0.45)); g.closePath(); g.fill();
 }
 const fmt = (v, d = 2) => v.toFixed(d).replace('-', '−');
 const hash = i => { const s = Math.sin(i * 127.1 + 311.7) * 43758.5453; return s - Math.floor(s); };
+function gcd(a, b) { return b ? gcd(b, a % b) : a; }
+function fmtPi(v) {
+  if (Math.abs(v) < 1e-9) return '0';
+  const r = v / Math.PI, sg = r < 0 ? '−' : '', a = Math.abs(r);
+  for (let d = 1; d <= 12; d++) {
+    const n = Math.round(a * d);
+    if (n > 0 && Math.abs(a - n / d) < 1e-6) {
+      const g2 = gcd(n, d), nn = n / g2, dd = d / g2;
+      return sg + (nn === 1 ? '' : nn) + 'π' + (dd === 1 ? '' : '/' + dd);
+    }
+  }
+  return sg + fmt(a, 2) + 'π';
+}
+/* plotting frame used by the maths graphs */
+function frame(w, h, xa, xb, ymax, o = {}) {
+  const L = o.L ?? F * 2.2, R = o.R ?? F * 0.7, top = o.top ?? F * 1.0, bot = o.bot ?? F * 1.7;
+  const cy = (top + (h - bot)) / 2, sy = ((h - bot) - top) / 2 / ymax;
+  return { L, R, top, bot, cy, X: x => L + (x - xa) / (xb - xa) * (w - L - R), Y: v => cy - v * sy, xa, xb, ymax, w, h };
+}
+function piGrid(g, fr, step) {
+  const { X, Y, xa, xb, ymax } = fr;
+  g.lineWidth = 1; dash(g, false);
+  for (let k = Math.ceil(xa / (Math.PI / 2)); k * Math.PI / 2 <= xb + 1e-9; k++) {
+    const x = k * Math.PI / 2; g.strokeStyle = k % 2 ? alpha(C.grid, 0.6) : C.grid; line(g, X(x), Y(ymax), X(x), Y(-ymax));
+    if (k % 2 === 0 || (X(Math.PI) - X(0)) > F * 5) text(g, fmtPi(x), X(x), Y(0) + F * 0.75, { align: 'center', font: FM, italic: true, size: F * 0.72 });
+  }
+  for (let v = -Math.floor(ymax); v <= ymax; v += step) {
+    if (v === 0) continue;
+    g.strokeStyle = C.grid; line(g, X(xa), Y(v), X(xb), Y(v));
+    text(g, String(v).replace('-', '−'), X(xa) - F * 0.3, Y(v), { align: 'right', font: FMONO, size: F * 0.6 });
+  }
+  g.strokeStyle = C.line; g.lineWidth = Math.max(1.5, LW * 0.6);
+  line(g, X(xa), Y(0), X(xb), Y(0));
+  if (xa <= 0 && xb >= 0) line(g, X(0), Y(ymax), X(0), Y(-ymax));
+  mathText(g, 'x', X(xb) - F * 0.2, Y(0) - F * 0.6, { color: C.muted, size: F * 0.8, align: 'right' });
+}
 
 /* ---------- canvas wrapper ---------- */
 class Viz {
@@ -550,7 +884,7 @@ class Viz {
     this.c.height = Math.max(1, Math.round(r.height * this.dpr));
   }
   render(t, dt) {
-    if (this.w < 4 || this.h < 4) return;
+    if (this.w < 4 || this.h < 4 || !this.draw) return;
     const g = this.g;
     g.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
     g.clearRect(0, 0, this.w, this.h);
@@ -595,10 +929,11 @@ const AUD = {
 /* ---------- range helpers ---------- */
 function fill(r) { const p = (r.value - r.min) / (r.max - r.min) * 100; r.style.setProperty('--p', p + '%'); }
 function bindRange(id, on) { const r = $('#' + id); const h = () => { fill(r); on(parseFloat(r.value)); }; r.addEventListener('input', h); fill(r); return r; }
+function setRange(r, v) { r.value = v; fill(r); r.dispatchEvent(new Event('input')); }
 function setPressed(btn, v) { btn.setAttribute('aria-pressed', v ? 'true' : 'false'); }
 
 /* =========================================================
-   SCENE 1 — title hero
+   cover / agenda / summary decorations
    ========================================================= */
 function drawHero(g, w, h, t) {
   const R = Math.min(h * 0.27, w * 0.17), cx = R * 1.2 + F * 0.4, cy = h * 0.5;
@@ -607,88 +942,197 @@ function drawHero(g, w, h, t) {
   g.lineWidth = 1; g.strokeStyle = C.grid; dash(g, false);
   for (let i = -2; i <= 2; i++) line(g, cx - R * 1.15, cy + i * R / 2, x1, cy + i * R / 2);
   g.strokeStyle = C.line; line(g, cx, cy - R * 1.2, cx, cy + R * 1.2);
-  g.lineWidth = LW; g.strokeStyle = C.line; ring(g, cx, cy, R);
-  // second harmonic echo (faint)
-  g.strokeStyle = alpha(C.cos, 0.35); g.lineWidth = LW;
-  curve(g, x0, x1, x => cy - R * 0.55 * Math.sin(2 * (th - k * (x - x0))) );
-  // sine
+  g.lineWidth = LW; ring(g, cx, cy, R);
+  g.strokeStyle = alpha(C.cos, 0.4); g.lineWidth = LW;
+  curve(g, x0, x1, x => cy - R * Math.cos(th - k * (x - x0)));
   const grd = g.createLinearGradient(x0, 0, x1, 0);
   grd.addColorStop(0, C.sin); grd.addColorStop(1, alpha(C.sin, 0.25));
   g.strokeStyle = grd; g.lineWidth = LW * 1.6;
   curve(g, x0, x1, x => cy - R * Math.sin(th - k * (x - x0)));
   const px = cx + R * Math.cos(th), py = cy - R * Math.sin(th);
   g.strokeStyle = C.ink; g.lineWidth = LW; line(g, cx, cy, px, py);
+  g.strokeStyle = C.cos; g.lineWidth = LW * 1.4; line(g, cx, cy, px, cy);
   g.strokeStyle = C.sin; g.lineWidth = LW * 1.6; line(g, px, cy, px, py);
   g.strokeStyle = alpha(C.sin, 0.7); g.lineWidth = Math.max(1.5, LW * 0.7); dash(g, true); line(g, px, py, x0, py); dash(g, false);
-  dot(g, x0, py, LW * 2.4, C.sin); dot(g, px, py, LW * 2.6, C.ink); dot(g, cx, cy, LW * 1.4, C.muted);
-  mathText(g, 'sin', x0 + F * 0.3, cy + R * 1.18, { color: C.sin, size: F * 1.0 });
+  dot(g, x0, py, LW * 2.4, C.sin); dot(g, px, py, LW * 2.6, C.ink);
+  mathText(g, 'sin', x0 + F * 0.3, cy + R * 1.18, { color: C.sin, size: F });
+  mathText(g, 'cos', x0 + F * 2.4, cy + R * 1.18, { color: C.cos, size: F });
+}
+function drawOutro(g, w, h, t) {
+  const cy = h * 0.5, a = Math.min(h * 0.14, F * 2.4);
+  const waves = [[C.sin, 1.0, 1.0, 0], [C.cos, 0.6, 2.0, 1.1], [C.tri, 0.4, 3.0, 2.3]];
+  const lam = Math.max(w / 2.5, F * 12);
+  waves.forEach(([col, amp, k, p]) => {
+    g.strokeStyle = alpha(col, 0.55); g.lineWidth = LW;
+    curve(g, 0, w, x => cy - a * amp * Math.sin(TAU * k * x / lam - t * k * 0.8 + p), 3);
+  });
+  g.strokeStyle = C.ink; g.lineWidth = LW * 1.4;
+  curve(g, 0, w, x => cy - a * waves.reduce((s, [, amp, k, p]) => s + amp * Math.sin(TAU * k * x / lam - t * k * 0.8 + p), 0), 2);
 }
 
 /* =========================================================
-   SCENE 2 — circle → sine (A, f, φ)
+   maths 1 — sine in the unit circle
    ========================================================= */
-const P1 = { A: 0.8, f: 0.5, ph: 0 };
-function drawCircle(g, w, h, t) {
-  const pad = F * 0.6, W = 4.5;
-  const R = Math.min(h * 0.36, w * 0.2), cx = pad + R * 1.1, cy = h * 0.52;
-  const x0 = cx + R * 1.45, x1 = w - pad, pps = (x1 - x0) / W;
-  const om = TAU * P1.f, A = P1.A, ph = P1.ph, th = om * t + ph;
-  // grid & axes
-  g.lineWidth = 1; dash(g, false); g.strokeStyle = C.grid;
-  for (let s = 1; s <= W; s++) line(g, x0 + s * pps, cy - R * 1.1, x0 + s * pps, cy + R * 1.1);
+const TRI = { deg: 35, spin: false };
+function drawTriangle(g, w, h, t, dt) {
+  if (TRI.spin && dt) { TRI.deg = (TRI.deg + dt * 24) % 360; syncTri(); }
+  const panelW = F * 9;
+  const side = w - panelW > h * 0.95;
+  const R = side ? Math.min(h * 0.38, (w - panelW) * 0.38) : Math.min(h * 0.34, w * 0.38);
+  const cx = side ? (w - panelW) / 2 + F * 0.5 : w / 2, cy = side ? h / 2 : h * 0.46;
+  const a = TRI.deg * Math.PI / 180, ca = Math.cos(a), sa = Math.sin(a);
+  const px = cx + R * ca, py = cy - R * sa;
+  g.lineWidth = Math.max(1.5, LW * 0.6); dash(g, false); g.strokeStyle = C.line;
+  line(g, cx - R * 1.25, cy, cx + R * 1.25, cy); line(g, cx, cy - R * 1.25, cx, cy + R * 1.25);
+  mathText(g, 'x', cx + R * 1.25, cy + F * 0.6, { color: C.muted, size: F * 0.8, align: 'right' });
+  mathText(g, 'y', cx + F * 0.4, cy - R * 1.2, { color: C.muted, size: F * 0.8 });
+  text(g, '1', cx + R + F * 0.25, cy + F * 0.6, { font: FMONO, size: F * 0.62 });
+  text(g, '−1', cx - R - F * 0.25, cy + F * 0.6, { font: FMONO, size: F * 0.62, align: 'right' });
+  text(g, '1', cx - F * 0.3, cy - R - F * 0.3, { font: FMONO, size: F * 0.62, align: 'right' });
+  text(g, '−1', cx - F * 0.3, cy + R + F * 0.4, { font: FMONO, size: F * 0.62, align: 'right' });
+  g.strokeStyle = C.line; g.lineWidth = LW; ring(g, cx, cy, R);
+  g.fillStyle = alpha(C.tri, 0.1); g.beginPath(); g.moveTo(cx, cy); g.lineTo(px, cy); g.lineTo(px, py); g.closePath(); g.fill();
+  g.strokeStyle = C.cos; g.lineWidth = LW * 1.8; line(g, cx, cy, px, cy);
+  g.strokeStyle = C.sin; g.lineWidth = LW * 1.8; line(g, px, cy, px, py);
+  g.strokeStyle = C.ink; g.lineWidth = LW * 1.2; line(g, cx, cy, px, py);
+  if (Math.abs(sa) > 0.12 && Math.abs(ca) > 0.12) {
+    const s = F * 0.45, dx = -Math.sign(ca) * s, dy = -Math.sign(sa) * s;
+    g.strokeStyle = C.muted; g.lineWidth = 1;
+    g.beginPath(); g.moveTo(px + dx, cy); g.lineTo(px + dx, cy + dy); g.lineTo(px, cy + dy); g.stroke();
+  }
+  g.strokeStyle = C.tri; g.lineWidth = Math.max(1.5, LW * 0.9);
+  g.beginPath(); g.arc(cx, cy, R * 0.2, 0, -a, true); g.stroke();
+  mathText(g, 'α', cx + R * 0.3 * Math.cos(a / 2), cy - R * 0.3 * Math.sin(a / 2), { color: C.tri, size: F * 0.95, align: 'center' });
+  const mx = cx + R * ca / 2, my = cy - R * sa / 2, side1 = (sa * ca > 0 ? -1 : 1);
+  mathText(g, '1', mx + side1 * sa * F * 0.75, my + side1 * ca * F * 0.75, { size: F * 0.85, align: 'center' });
+  if (Math.abs(sa) > 0.08) mathText(g, 'sin α', px + (ca >= 0 ? F * 0.35 : -F * 0.35), cy - R * sa / 2, { color: C.sin, size: F * 0.85, align: ca >= 0 ? 'left' : 'right', weight: 600 });
+  if (Math.abs(ca) > 0.08) mathText(g, 'cos α', cx + R * ca / 2, cy + (sa >= 0 ? F * 0.8 : -F * 0.8), { color: C.cos, size: F * 0.85, align: 'center', weight: 600 });
+  dot(g, px, py, LW * 2.6, C.ink);
+  mathText(g, 'P', cx + (R + F * 0.8) * ca, cy - (R + F * 0.8) * sa, { size: F * 0.85, align: 'center' });
+  const vals = [[`α = ${Math.round(TRI.deg)}°`, C.tri], [`sin α = ${fmt(sa)}`, C.sin], [`cos α = ${fmt(ca)}`, C.cos]];
+  if (side) {
+    const x = w - panelW + F * 0.6; let y = h * 0.5 - F * 2.6;
+    vals.forEach(([s, c]) => { mathText(g, s, x, y, { color: c, size: F * 1.05, weight: 600 }); y += F * 1.6; });
+    text(g, 'sin²α + cos²α = 1', x, y + F * 0.2, { font: FM, italic: true, size: F * 0.8 });
+  } else {
+    let x = F * 0.4; const y = h - F * 0.8;
+    vals.forEach(([s, c]) => { mathText(g, s, x, y, { color: c, size: F * 0.85, weight: 600 }); g.font = `italic 600 ${F * 0.85}px ${FM}`; x += g.measureText(s).width + F * 1.1; });
+  }
+}
+function syncTri() { const r = $('#tA'); r.value = Math.round(TRI.deg); fill(r); $('#oTA').textContent = `${Math.round(TRI.deg)}°`; }
+
+/* =========================================================
+   maths 2 — unrolling the circle
+   ========================================================= */
+let unClock = 0;
+function drawUnroll(g, w, h, t, dt) {
+  unClock += dt;
+  const pad = F * 0.6, R = Math.min(h * 0.3, w * 0.15), cx = pad + R * 1.15, cy = h * 0.5;
+  const x0 = cx + R * 1.6, x1 = w - pad, span = 4 * Math.PI;
+  const X = a => x0 + a / span * (x1 - x0), Y = v => cy - v * R;
+  const th = (unClock * 0.8) % span;
+  g.lineWidth = 1; dash(g, false);
+  for (let k = 1; k <= 8; k++) {
+    g.strokeStyle = k % 2 ? alpha(C.grid, 0.6) : C.grid; line(g, X(k * Math.PI / 2), Y(1.2), X(k * Math.PI / 2), Y(-1.2));
+    if (k % 2 === 0 || (X(Math.PI) - X(0)) > F * 5) text(g, fmtPi(k * Math.PI / 2), X(k * Math.PI / 2), Y(0) + F * 0.75, { align: 'center', font: FM, italic: true, size: F * 0.72 });
+  }
+  text(g, '(360°)', X(TAU), Y(0) + F * 1.6, { align: 'center', font: FMONO, size: F * 0.56 });
+  g.strokeStyle = alpha(C.sin, 0.35); dash(g, true); line(g, X(0), Y(1), X(span), Y(1)); line(g, X(0), Y(-1), X(span), Y(-1)); dash(g, false);
+  text(g, '1', X(0) - F * 0.3, Y(1), { align: 'right', font: FMONO, size: F * 0.6 });
+  text(g, '−1', X(0) - F * 0.3, Y(-1), { align: 'right', font: FMONO, size: F * 0.6 });
   g.strokeStyle = C.line; g.lineWidth = Math.max(1.5, LW * 0.6);
-  line(g, cx - R * 1.15, cy, x1, cy); line(g, cx, cy - R * 1.2, cx, cy + R * 1.2); line(g, x0, cy - R * 1.15, x0, cy + R * 1.15);
-  text(g, 'y', x0 - F * 0.5, cy - R * 1.12, { font: FM, italic: true, size: F * 0.9, color: C.muted, align: 'center' });
-  text(g, T('t, წარსული →', 't, the past →'), x1, cy + F * 0.75, { align: 'right', size: F * 0.62 });
-  // unit circle and amplitude circle
-  g.strokeStyle = C.grid; g.lineWidth = Math.max(1.5, LW * 0.6); dash(g, true); ring(g, cx, cy, R); dash(g, false);
-  g.strokeStyle = C.line; g.lineWidth = LW; ring(g, cx, cy, R * A);
-  // ghost (φ = 0)
-  if (ph > 0.01) {
-    g.strokeStyle = alpha(C.tri, 0.55); g.lineWidth = LW; dash(g, true);
-    curve(g, x0, x1, x => cy - R * A * Math.sin(om * (t - (x - x0) / pps)));
-    dash(g, false);
-  }
-  // A guides
-  g.strokeStyle = alpha(C.sin, 0.35); g.lineWidth = 1; dash(g, true);
-  line(g, x0, cy - R * A, x1, cy - R * A); line(g, x0, cy + R * A, x1, cy + R * A); dash(g, false);
-  // the wave
-  g.strokeStyle = C.sin; g.lineWidth = LW * 1.5;
-  curve(g, x0, x1, x => cy - R * A * Math.sin(om * (t - (x - x0) / pps) + ph));
-  // period bracket between the two newest crests
-  const nA = Math.floor((th - Math.PI / 2) / TAU), tA = (Math.PI / 2 + TAU * nA - ph) / om, tB = tA - 1 / P1.f;
-  const xA = x0 + (t - tA) * pps, xB = x0 + (t - tB) * pps;
-  if (xB <= x1 && xA >= x0) {
-    bracketH(g, xA, xB, cy - R * A - F * 0.9, `T = ${fmt(1 / P1.f)} ${T('წმ', 's')}`, C.cos);
-  }
-  // amplitude arrow at newest crest
-  if (xA >= x0 + F && xA <= x1) {
-    arrowV(g, xA, cy, cy - R * A + LW, C.sin);
-    mathText(g, 'A', xA + F * 0.35, cy - R * A * 0.5, { color: C.sin });
-  }
-  // rotating point
-  const px = cx + R * A * Math.cos(th), py = cy - R * A * Math.sin(th);
-  // angle arc
-  const ang = ((th % TAU) + TAU) % TAU;
+  line(g, cx - R * 1.15, cy, x1, cy); line(g, X(0), Y(1.25), X(0), Y(-1.25)); line(g, cx, cy - R * 1.2, cx, cy + R * 1.2);
+  mathText(g, 'x', x1, cy - F * 0.6, { color: C.muted, size: F * 0.8, align: 'right' });
+  g.strokeStyle = alpha(C.sin, 0.22); g.lineWidth = LW * 1.2; curve(g, X(0), X(span), x => Y(Math.sin((x - x0) / (x1 - x0) * span)));
+  g.strokeStyle = C.sin; g.lineWidth = LW * 1.6; curve(g, X(0), X(th), x => Y(Math.sin((x - x0) / (x1 - x0) * span)));
+  bracketH(g, X(0), X(TAU), Y(1) - F * 0.9, 'T = 2π', C.cos);
+  arrow(g, X(Math.PI / 2) + F * 0.5, Y(0), X(Math.PI / 2) + F * 0.5, Y(1) + LW, C.sin);
+  mathText(g, 'A = 1', X(Math.PI / 2) + F * 0.85, Y(0.45), { color: C.sin, size: F * 0.8 });
+  g.strokeStyle = C.line; g.lineWidth = LW; ring(g, cx, cy, R);
+  const px = cx + R * Math.cos(th), py = cy - R * Math.sin(th);
   g.strokeStyle = C.tri; g.lineWidth = Math.max(1.5, LW * 0.8);
-  g.beginPath(); g.arc(cx, cy, R * 0.25, 0, -ang, true); g.stroke();
-  mathText(g, 'ωt + φ', cx + R * 0.32 * Math.cos(ang / 2) + F * 0.2, cy - R * 0.32 * Math.sin(ang / 2) - F * 0.2, { color: C.tri, size: F * 0.72 });
+  g.beginPath(); g.arc(cx, cy, R * 0.22, 0, -(th % TAU), true); g.stroke();
   g.strokeStyle = C.ink; g.lineWidth = LW; line(g, cx, cy, px, py);
   g.strokeStyle = C.sin; g.lineWidth = LW * 1.6; line(g, px, cy, px, py);
-  g.strokeStyle = alpha(C.sin, 0.75); g.lineWidth = Math.max(1.5, LW * 0.7); dash(g, true); line(g, px, py, x0, py); dash(g, false);
-  dot(g, x0, py, LW * 2.4, C.sin); dot(g, px, py, LW * 2.6, C.ink); dot(g, cx, cy, LW * 1.3, C.muted);
-}
-function updCircle() {
-  $('#oA').textContent = fmt(P1.A);
-  $('#oF').textContent = `${fmt(P1.f)} ${T('ჰც', 'Hz')}`;
-  $('#oP').textContent = `${Math.round(P1.ph * 180 / Math.PI)}°`;
+  g.strokeStyle = alpha(C.sin, 0.75); g.lineWidth = Math.max(1.5, LW * 0.7); dash(g, true); line(g, px, py, X(th), py); dash(g, false);
+  dot(g, X(th), py, LW * 2.4, C.sin); dot(g, px, py, LW * 2.6, C.ink);
+  mathText(g, `x = ${Math.round(th * 180 / Math.PI)}°`, cx, cy + R + F * 1.0, { color: C.tri, size: F * 0.8, align: 'center' });
 }
 
 /* =========================================================
-   SCENE 3 — sound
+   maths 3 — A, ω, φ
+   ========================================================= */
+const TR = { A: 1, w: 1, p: 0 };
+function drawTransform(g, w, h) {
+  const fr = frame(w, h, -Math.PI, 3 * Math.PI, 2.4);
+  const { X, Y } = fr;
+  piGrid(g, fr, 1);
+  const P = px => fr.xa + (px - X(fr.xa)) / (X(fr.xb) - X(fr.xa)) * (fr.xb - fr.xa);
+  g.strokeStyle = alpha(C.muted, 0.7); g.lineWidth = LW; dash(g, true);
+  curve(g, X(fr.xa), X(fr.xb), px => Y(Math.sin(P(px))));
+  dash(g, false);
+  g.strokeStyle = C.ink; g.lineWidth = LW * 1.7;
+  curve(g, X(fr.xa), X(fr.xb), px => Y(TR.A * Math.sin(TR.w * P(px) + TR.p)), 1.5);
+  const Tp = TAU / TR.w, xs = -TR.p / TR.w;
+  const z0 = xs + Tp * Math.ceil((0 - xs) / Tp - 1e-9);
+  if (z0 + Tp <= fr.xb) bracketH(g, X(z0), X(z0 + Tp), Y(TR.A) - F * 0.85, `T = 2π/ω = ${fmtPi(Tp)}`, C.cos);
+  const xc = z0 + Tp / 4;
+  if (xc < fr.xb) { arrow(g, X(xc), Y(0), X(xc), Y(TR.A) + LW, C.sin); mathText(g, `A = ${+TR.A.toFixed(2)}`, X(xc) + F * 0.35, Y(TR.A * 0.5), { color: C.sin, size: F * 0.8, weight: 600 }); }
+  if (Math.abs(xs) > 0.02) {
+    const ya = Y(0) + F * 1.55;
+    arrow(g, X(0), ya, X(xs), ya, C.tri);
+    text(g, `${xs < 0 ? 'მარცხნივ' : 'მარჯვნივ'} ${fmtPi(Math.abs(xs))}`, (X(0) + X(xs)) / 2, ya + F * 0.7, { align: 'center', color: C.tri, size: F * 0.66, weight: 600 });
+  }
+  dot(g, X(xs), Y(0), LW * 2.4, C.tri);
+  text(g, '- - sin x', fr.L + F * 0.2, fr.top + F * 0.2, { size: F * 0.62 });
+}
+function updTransform() {
+  $('#oTrA').textContent = fmt(TR.A);
+  $('#oTrW').textContent = fmt(TR.w);
+  $('#oTrP').textContent = fmtPi(TR.p);
+  const Tp = TAU / TR.w, sh = TR.p / TR.w;
+  $('#trRead').innerHTML = `<span>T = 2π/ω = <b>${fmtPi(Tp)}</b> ≈ ${fmt(Tp)}</span><span>წანაცვლება φ/ω = <b>${fmtPi(sh)}</b></span>`;
+}
+
+/* =========================================================
+   maths 4 — sine vs cosine
+   ========================================================= */
+const SC = { s: 0, target: null };
+function drawSinCos(g, w, h, t, dt) {
+  if (SC.target != null && dt) {
+    const d = SC.target - SC.s, st = Math.sign(d) * Math.min(Math.abs(d), dt * 0.7);
+    SC.s += st; if (Math.abs(SC.target - SC.s) < 1e-4) { SC.s = SC.target; SC.target = null; }
+    syncSC();
+  }
+  const fr = frame(w, h, -Math.PI, 3 * Math.PI, 1.6, { top: F * 2.4 });
+  const { X, Y } = fr;
+  piGrid(g, fr, 1);
+  const P = px => fr.xa + (px - X(fr.xa)) / (X(fr.xb) - X(fr.xa)) * (fr.xb - fr.xa);
+  g.strokeStyle = C.cos; g.lineWidth = LW * 2.4; curve(g, X(fr.xa), X(fr.xb), px => Y(Math.cos(P(px))));
+  g.strokeStyle = C.sin; g.lineWidth = LW * 1.2; curve(g, X(fr.xa), X(fr.xb), px => Y(Math.sin(P(px) + SC.s)), 1.5);
+  dot(g, X(0), Y(Math.sin(SC.s)), LW * 2.6, C.sin);
+  dot(g, X(0), Y(1), LW * 2.2, C.cos);
+  if (SC.s > 0.01) {
+    const ya = Y(0) + F * 1.55;
+    arrow(g, X(0), ya, X(-SC.s), ya, C.tri);
+    text(g, `მარცხნივ ${fmtPi(SC.s)}`, X(-SC.s / 2), ya + F * 0.7, { align: 'center', color: C.tri, size: F * 0.66, weight: 600 });
+  }
+  let lx = fr.L; const ly = F * 0.9;
+  const sLab = `y = sin(x + ${fmtPi(SC.s)})`;
+  g.strokeStyle = C.sin; g.lineWidth = LW * 1.4; line(g, lx, ly, lx + F * 1.2, ly);
+  mathText(g, sLab, lx + F * 1.5, ly, { color: C.sin, size: F * 0.82 });
+  g.font = `italic 500 ${F * 0.82}px ${FM}`; lx += F * 2.4 + g.measureText(sLab).width;
+  g.strokeStyle = C.cos; g.lineWidth = LW * 2; line(g, lx, ly, lx + F * 1.2, ly);
+  mathText(g, 'y = cos x', lx + F * 1.5, ly, { color: C.cos, size: F * 0.82 });
+  if (Math.abs(SC.s - Math.PI / 2) < 1e-3) text(g, 'ემთხვევა: sin(x + π/2) = cos x', X(fr.xb), ly + F * 1.1, { align: 'right', color: C.tri, size: F * 0.78, weight: 700 });
+}
+function syncSC() { const r = $('#scS'); const k = Math.round(SC.s / (Math.PI / 12)); r.value = k; fill(r); $('#oScS').textContent = fmtPi(k * Math.PI / 12); }
+
+/* =========================================================
+   topic 1 — sound
    ========================================================= */
 const S = { f: 440, vol: 0.7, tone: null };
-const fFromSlider = v => 110 * Math.pow(8, v);          // 110 … 880 Hz, log scale
+const fFromSlider = v => 110 * Math.pow(8, v);
 const sliderFromF = f => Math.log(f / 110) / Math.log(8);
 let sClock = 0;
 function drawSound(g, w, h, t, dt) {
@@ -698,13 +1142,11 @@ function drawSound(g, w, h, t, dt) {
   const topY = F * 0.4, partH = h * 0.5, gy = h * 0.79, gh = h * 0.15;
   const lam = region * 0.62 * (165 / S.f), fvis = 0.9 * S.f / 440, phase = x => TAU * (x - xs) / lam - TAU * fvis * sClock;
   const s0 = Math.min(0.75 * S.vol * lam / TAU, F * 2.2);
-  // speaker
   const sc = topY + partH / 2, cone = s0 * Math.sin(-TAU * fvis * sClock);
   g.fillStyle = C.ink; g.fillRect(pad, sc - partH * 0.16, spkW * 0.42, partH * 0.32);
   g.beginPath(); g.moveTo(pad + spkW * 0.42, sc - partH * 0.16); g.lineTo(pad + spkW * 0.95 + cone * 0.5, sc - partH * 0.42); g.lineTo(pad + spkW * 0.95 + cone * 0.5, sc + partH * 0.42); g.lineTo(pad + spkW * 0.42, sc + partH * 0.16); g.closePath();
   g.fillStyle = alpha(C.ink, 0.75); g.fill();
   g.strokeStyle = C.sin; g.lineWidth = LW * 1.3; line(g, pad + spkW * 0.95 + cone * 0.5, sc - partH * 0.42, pad + spkW * 0.95 + cone * 0.5, sc + partH * 0.42);
-  // air particles
   const sp = Math.max(6, F * 0.52), cols = Math.floor(region / sp), rows = Math.max(5, Math.floor(partH / sp * 0.7));
   const rowGap = partH / rows;
   for (let j = 0; j < rows; j++) {
@@ -714,79 +1156,82 @@ function drawSound(g, w, h, t, dt) {
       const yr = topY + (j + 0.5 + (hash(id + 7) - 0.5) * 0.5) * rowGap;
       const xx = xr + s0 * Math.sin(phase(xr));
       if (xx < xs - sp * 0.5 || xx > xe) continue;
-      const dens = -Math.cos(phase(xr)) * S.vol;     // pressure → tint
+      const dens = -Math.cos(phase(xr)) * S.vol;
       dot(g, xx, yr, Math.max(1.6, F * 0.12), dens > 0.35 ? C.sin : alpha(C.ink, 0.55 + 0.25 * dens));
     }
   }
-  text(g, T('შემჭიდროება', 'compression'), xs, topY + partH + F * 0.55, { size: F * 0.62, color: C.sin });
-  text(g, T('● ჰაერის ნაწილაკები', '● air particles'), xe, topY + partH + F * 0.55, { size: F * 0.62, align: 'right' });
-  // pressure graph
+  text(g, 'შემჭიდროება', xs, topY + partH + F * 0.55, { size: F * 0.62, color: C.sin });
+  text(g, '● ჰაერის ნაწილაკები', xe, topY + partH + F * 0.55, { size: F * 0.62, align: 'right' });
   g.strokeStyle = C.line; g.lineWidth = Math.max(1.5, LW * 0.6); line(g, xs, gy, xe, gy);
-  text(g, T('წნევა', 'pressure'), xs, gy - gh - F * 0.55, { size: F * 0.62 });
+  text(g, 'წნევა p', xs, gy - gh - F * 0.55, { size: F * 0.62 });
   text(g, 'x', xe, gy + F * 0.6, { font: FM, italic: true, size: F * 0.85, align: 'right' });
   g.strokeStyle = C.sin; g.lineWidth = LW * 1.4;
   curve(g, xs, xe, x => gy - gh * S.vol * -Math.cos(phase(x)));
-  // wavelength ruler under the graph, from a crest
   let xa = xs + lam * ((((0.5 + fvis * sClock) % 1) + 1) % 1);
   if (xa + lam > xe) xa -= lam;
   if (xa < xs) xa = xs;
-  if (xa + lam <= xe + 1) bracketH(g, xa, xa + lam, gy + gh + F * 0.6, `λ = ${fmt(343 / S.f)} ${T('მ', 'm')}`, C.cos);
-  else text(g, `λ = ${fmt(343 / S.f)} ${T('მ', 'm')}`, xs, gy + gh + F * 0.6, { color: C.cos, weight: 600, size: F * 0.78 });
+  if (xa + lam <= xe + 1) bracketH(g, xa, xa + lam, gy + gh + F * 0.6, `λ = ${fmt(343 / S.f)} მ`, C.cos);
+  else text(g, `λ = ${fmt(343 / S.f)} მ`, xs, gy + gh + F * 0.6, { color: C.cos, weight: 600, size: F * 0.76 });
 }
 function updSound() {
-  $('#oSF').textContent = `${Math.round(S.f)} ${T('ჰც', 'Hz')}`;
+  $('#oSF').textContent = `${Math.round(S.f)} ჰც`;
   $('#oSV').textContent = `${Math.round(S.vol * 100)}%`;
-  $('#sRead').innerHTML = `<span>λ = <b>${fmt(343 / S.f)} ${T('მ', 'm')}</b></span><span>T = 1/f = <b>${fmt(1000 / S.f)} ${T('მწმ', 'ms')}</b></span>`;
+  $('#sRead').innerHTML = `<span>T = 1/f = <b>${fmt(1000 / S.f)} მწმ</b></span><span>ω = 2πf ≈ <b>${Math.round(TAU * S.f)}</b></span><span>λ = v/f = <b>${fmt(343 / S.f)} მ</b></span>`;
   AUD.set(S.tone, S.f, S.vol * 0.22);
 }
 
 /* =========================================================
-   SCENE 4 — beats
+   topic 1 — beats (beats slide and problem 1)
    ========================================================= */
-const B = { f1: 440, d: 2, tones: null, t0: 0 };
-let bClock = 0;
-function drawBeats(g, w, h, t, dt) {
-  if (B.tones && AUD.ctx) bClock = AUD.ctx.currentTime - B.t0; else bClock += dt;
-  const pad = F * 0.5, meterW = F * 2.2, x0 = pad + F * 0.2, x1 = w - pad - meterW - F * 0.6;
-  const W = 2, fc = 12, tEnd = bClock, tStart = tEnd - W;
-  const ph = (h - F * 0.6) / 3, amp = ph * 0.32;
-  const rows = [
-    { y: ph * 0.5, f: fc, col: C.sin, lab: `f₁ = ${B.f1} ${T('ჰც', 'Hz')}`, fn: tt => Math.sin(TAU * fc * tt), a: amp },
-    { y: ph * 1.5, f: fc + B.d, col: C.cos, lab: `f₂ = ${fmt(B.f1 + B.d, 1).replace('.0', '')} ${T('ჰც', 'Hz')}`, fn: tt => Math.sin(TAU * (fc + B.d) * tt), a: amp },
-    { y: ph * 2.5 + F * 0.3, col: C.ink, lab: T('ჯამი', 'sum'), fn: tt => Math.sin(TAU * fc * tt) + Math.sin(TAU * (fc + B.d) * tt), a: amp * 0.62 }
-  ];
-  const X = tt => x0 + (tt - tStart) / W * (x1 - x0);
-  for (const r of rows) {
-    g.strokeStyle = C.grid; g.lineWidth = 1; dash(g, false); line(g, x0, r.y, x1, r.y);
-    text(g, r.lab, x0, r.y - ph * 0.42, { size: F * 0.66, color: r.col === C.ink ? C.ink : r.col, weight: 600 });
-    g.strokeStyle = r.col; g.lineWidth = r.col === C.ink ? LW * 1.1 : LW * 0.9;
-    curve(g, x0, x1, x => r.y - r.a * r.fn(tStart + (x - x0) / (x1 - x0) * W), 1);
-  }
-  // envelope
-  const r3 = rows[2];
-  g.strokeStyle = C.tri; g.lineWidth = LW * 1.1; dash(g, true);
-  curve(g, x0, x1, x => r3.y - r3.a * 2 * Math.cos(Math.PI * B.d * (tStart + (x - x0) / (x1 - x0) * W)), 2);
-  curve(g, x0, x1, x => r3.y + r3.a * 2 * Math.cos(Math.PI * B.d * (tStart + (x - x0) / (x1 - x0) * W)), 2);
-  dash(g, false);
-  text(g, T('ამპლიტუდა: 2cos(π·Δf·t)', 'envelope: 2cos(π·Δf·t)'), x1, r3.y - ph * 0.42, { size: F * 0.6, color: C.tri, align: 'right', weight: 600 });
-  // "now" line
-  g.strokeStyle = alpha(C.muted, 0.5); g.lineWidth = 1; line(g, x1, F * 0.3, x1, h - F * 0.3);
-  // loudness meter
-  const lv = Math.abs(Math.cos(Math.PI * B.d * tEnd));
-  const mx = w - pad - meterW, my0 = ph * 0.4, my1 = h - F * 1.4;
-  g.fillStyle = alpha(C.line, 0.6); g.fillRect(mx, my0, meterW, my1 - my0);
-  g.fillStyle = C.tri; g.fillRect(mx, my1 - (my1 - my0) * lv, meterW, (my1 - my0) * lv);
-  text(g, T('ხმა', 'level'), mx + meterW / 2, my1 + F * 0.55, { size: F * 0.62, align: 'center' });
+const B = { f1: 440, d: 2, tones: null, t0: 0, clock: 0 };
+const BP = { f1: 440, d: 6, tones: null, t0: 0, clock: 0 };
+function makeBeats(st) {
+  return function (g, w, h, t, dt) {
+    if (st.tones && AUD.ctx) st.clock = AUD.ctx.currentTime - st.t0; else st.clock += dt;
+    const pad = F * 0.5, meterW = F * 2, x0 = pad + F * 0.2, x1 = w - pad - meterW - F * 0.6;
+    const W = 2, fc = 12, tEnd = st.clock, tStart = tEnd - W;
+    const ph = (h - F * 0.6) / 3, amp = ph * 0.32;
+    const f2 = st.f1 + st.d;
+    const rows = [
+      { y: ph * 0.5, col: C.sin, lab: `f₁ = ${st.f1} ჰც`, fn: tt => Math.sin(TAU * fc * tt), a: amp },
+      { y: ph * 1.5, col: C.cos, lab: `f₂ = ${+f2.toFixed(1)} ჰც`, fn: tt => Math.sin(TAU * (fc + st.d) * tt), a: amp },
+      { y: ph * 2.5 + F * 0.3, col: C.ink, lab: 'ჯამი', fn: tt => Math.sin(TAU * fc * tt) + Math.sin(TAU * (fc + st.d) * tt), a: amp * 0.62 }
+    ];
+    for (const r of rows) {
+      g.strokeStyle = C.grid; g.lineWidth = 1; dash(g, false); line(g, x0, r.y, x1, r.y);
+      text(g, r.lab, x0, r.y - ph * 0.42, { size: F * 0.66, color: r.col, weight: 600 });
+      g.strokeStyle = r.col; g.lineWidth = r.col === C.ink ? LW * 1.1 : LW * 0.9;
+      curve(g, x0, x1, x => r.y - r.a * r.fn(tStart + (x - x0) / (x1 - x0) * W), 1);
+    }
+    const r3 = rows[2];
+    g.strokeStyle = C.tri; g.lineWidth = LW * 1.1; dash(g, true);
+    curve(g, x0, x1, x => r3.y - r3.a * 2 * Math.cos(Math.PI * st.d * (tStart + (x - x0) / (x1 - x0) * W)), 2);
+    curve(g, x0, x1, x => r3.y + r3.a * 2 * Math.cos(Math.PI * st.d * (tStart + (x - x0) / (x1 - x0) * W)), 2);
+    dash(g, false);
+    text(g, '±2cos(π·Δf·t)', x1, r3.y - ph * 0.42, { size: F * 0.62, color: C.tri, align: 'right', weight: 600, font: FM, italic: true });
+    g.strokeStyle = alpha(C.muted, 0.5); g.lineWidth = 1; line(g, x1, F * 0.3, x1, h - F * 0.3);
+    const lv = Math.abs(Math.cos(Math.PI * st.d * tEnd));
+    const mx = w - pad - meterW, my0 = ph * 0.4, my1 = h - F * 1.4;
+    g.fillStyle = alpha(C.line, 0.6); g.fillRect(mx, my0, meterW, my1 - my0);
+    g.fillStyle = C.tri; g.fillRect(mx, my1 - (my1 - my0) * lv, meterW, (my1 - my0) * lv);
+    text(g, 'ხმა', mx + meterW / 2, my1 + F * 0.55, { size: F * 0.62, align: 'center' });
+  };
 }
 function updBeats() {
-  $('#oBD').textContent = `${fmt(B.d, 1)} ${T('ჰც', 'Hz')}`;
-  const n = B.d === 0 ? T('ცემა არ არის', 'no beats') : T(`ცემა: <b>${fmt(B.d, 1)}</b>-ჯერ წამში`, `beats: <b>${fmt(B.d, 1)}</b> per second`);
-  $('#bRead').innerHTML = n;
+  $('#oBD').textContent = `${fmt(B.d, 1)} ჰც`;
+  $('#bRead').innerHTML = B.d === 0 ? 'ცემა არ არის' : `ცემა: <b>${fmt(B.d, 1)}</b>-ჯერ წამში`;
   if (B.tones) AUD.set(B.tones[1], B.f1 + B.d, null);
 }
+function startBeats(st, btn) {
+  const c = AUD.ensure(); if (!c) return;
+  const when = c.currentTime + 0.05;
+  st.tones = [AUD.tone(st.f1, 0.12, when), AUD.tone(st.f1 + st.d, 0.12, when)]; st.t0 = when;
+  setPressed(btn, true); btn.textContent = '■ გაჩერება';
+}
+function stopBeats(st, btn) { if (st.tones) st.tones.forEach(tn => AUD.stop(tn)); st.tones = null; setPressed(btn, false); btn.textContent = '▶ მოსმენა'; }
 
 /* =========================================================
-   SCENE 5 — light
+   topic 1 — light
    ========================================================= */
 const L = { nm: 530 };
 function wl2rgb(l, boost) {
@@ -805,12 +1250,12 @@ function wl2rgb(l, boost) {
 }
 function waveCol(l, a = 1) {
   let [r, g, b] = wl2rgb(l, true);
-  if (!C.dark) { r *= 0.78; g *= 0.72; b *= 0.85; }          // keep contrast on a light background
+  if (!C.dark) { r *= 0.78; g *= 0.72; b *= 0.85; }
   return `rgba(${r | 0},${g | 0},${b | 0},${a})`;
 }
 function colorName(l) {
-  const n = [[450, 'იისფერი', 'violet'], [485, 'ლურჯი', 'blue'], [500, 'ცისფერი', 'cyan'], [565, 'მწვანე', 'green'], [590, 'ყვითელი', 'yellow'], [625, 'ნარინჯისფერი', 'orange'], [9999, 'წითელი', 'red']];
-  for (const [m, ka, en] of n) if (l < m) return T(ka, en);
+  const n = [[450, 'იისფერი'], [485, 'ლურჯი'], [500, 'ცისფერი'], [565, 'მწვანე'], [590, 'ყვითელი'], [625, 'ნარინჯისფერი'], [9999, 'წითელი']];
+  for (const [m, ka] of n) if (l < m) return ka;
 }
 let spectrumCache = null, lClock = 0;
 function drawLight(g, w, h, t, dt) {
@@ -821,14 +1266,11 @@ function drawLight(g, w, h, t, dt) {
   const Ae = regH * 0.4, Ab = Ae * 0.72, dzx = -0.12, dzy = 0.32;
   const lamPx = (xb - xa) * L.nm / 1650, vpx = (xb - xa) * 0.09;
   const phase = x => TAU * (x - xa) / lamPx - TAU * (vpx / lamPx) * lClock;
-  // axes
   g.strokeStyle = C.line; g.lineWidth = Math.max(1.5, LW * 0.6); dash(g, false);
   line(g, xa, ya, xb + F * 0.4, ya);
   g.fillStyle = C.line; g.beginPath(); g.moveTo(xb + F * 0.7, ya); g.lineTo(xb + F * 0.2, ya - F * 0.25); g.lineTo(xb + F * 0.2, ya + F * 0.25); g.closePath(); g.fill();
   line(g, xa, ya - Ae * 1.15, xa, ya + Ae * 1.15);
-  line(g, xa - Ab * dzx * 1.1, ya - Ab * dzy * 1.1, xa + Ab * dzx * 1.2, ya + Ab * dzy * 1.2);
   mathText(g, 'x', xb + F * 0.4, ya + F * 0.7, { color: C.muted, size: F * 0.85 });
-  // B field (depth), behind, on a faint horizontal plane
   g.fillStyle = alpha(C.cos, 0.06);
   g.beginPath(); g.moveTo(xa - Ab * dzx, ya - Ab * dzy); g.lineTo(xb - Ab * dzx, ya - Ab * dzy); g.lineTo(xb + Ab * dzx, ya + Ab * dzy); g.lineTo(xa + Ab * dzx, ya + Ab * dzy); g.closePath(); g.fill();
   const step = Math.max(6, lamPx / 10);
@@ -836,20 +1278,17 @@ function drawLight(g, w, h, t, dt) {
   for (let x = xa; x <= xb; x += step) { const b = Ab * Math.sin(phase(x)); line(g, x, ya, x + b * dzx, ya + b * dzy); }
   g.strokeStyle = C.cos; g.lineWidth = LW;
   g.beginPath();
-  for (let x = xa, i = 0; x <= xb; x += 2, i++) { const b = Ab * Math.sin(phase(x)); const X = x + b * dzx, Y = ya + b * dzy; i ? g.lineTo(X, Y) : g.moveTo(X, Y); }
+  for (let x = xa, i = 0; x <= xb; x += 2, i++) { const b = Ab * Math.sin(phase(x)); const Xp = x + b * dzx, Yp = ya + b * dzy; i ? g.lineTo(Xp, Yp) : g.moveTo(Xp, Yp); }
   g.stroke();
-  // E field (vertical)
   g.strokeStyle = waveCol(L.nm, 0.45); g.lineWidth = Math.max(1, LW * 0.6);
   for (let x = xa; x <= xb; x += step) line(g, x, ya, x, ya - Ae * Math.sin(phase(x)));
   g.strokeStyle = waveCol(L.nm); g.lineWidth = LW * 1.7;
   curve(g, xa, xb, x => ya - Ae * Math.sin(phase(x)));
   mathText(g, 'E', xa - F * 0.9, ya - Ae * 0.95, { color: waveCol(L.nm), size: F * 1.05, weight: 600 });
   mathText(g, 'B', xa + Ab * dzx * 1.2 - F * 0.9, ya + Ab * dzy * 1.2 + F * 0.3, { color: C.cos, size: F * 1.05, weight: 600 });
-  // λ bracket
   let x0 = xa + lamPx * ((((0.25 + (vpx / lamPx) * lClock) % 1) + 1) % 1);
   if (x0 + lamPx > xb) x0 -= lamPx;
-  if (x0 >= xa) bracketH(g, x0, x0 + lamPx, ya - Ae - F * 0.75, `λ = ${L.nm} ${T('ნმ', 'nm')}`, C.ink);
-  // spectrum bar
+  if (x0 >= xa) bracketH(g, x0, x0 + lamPx, ya - Ae - F * 0.75, `λ = ${L.nm} ნმ`, C.cos);
   const bx0 = pad + F * 0.2, bx1 = w - pad - F * 0.2, bw = Math.round(bx1 - bx0);
   if (!spectrumCache || spectrumCache.w !== bw) {
     const oc = document.createElement('canvas'); oc.width = Math.max(1, bw); oc.height = 1;
@@ -865,136 +1304,124 @@ function drawLight(g, w, h, t, dt) {
     g.strokeStyle = C.muted; line(g, xOf(nm), barY + barH, xOf(nm), barY + barH + F * 0.25);
     text(g, String(nm), xOf(nm), barY + barH + F * 0.7, { align: 'center', size: F * 0.6, font: FMONO });
   }
-  text(g, T('← ულტრაიისფერი', '← ultraviolet'), bx0, barY - F * 0.45, { size: F * 0.58 });
-  text(g, T('ინფრაწითელი →', 'infrared →'), bx1, barY - F * 0.45, { size: F * 0.58, align: 'right' });
+  text(g, '← ულტრაიისფერი', bx0, barY - F * 0.45, { size: F * 0.58 });
+  text(g, 'ინფრაწითელი →', bx1, barY - F * 0.45, { size: F * 0.58, align: 'right' });
   const mx = xOf(L.nm);
   g.fillStyle = C.ink; g.beginPath(); g.moveTo(mx, barY + barH * 0.55); g.lineTo(mx - F * 0.35, barY - F * 0.15); g.lineTo(mx + F * 0.35, barY - F * 0.15); g.closePath(); g.fill();
   g.strokeStyle = C.bg; g.lineWidth = 1.5; g.stroke();
 }
 function updLight() {
-  const nm = L.nm, THz = 299792.458 / nm;   // c/λ in THz
-  $('#oLL').textContent = `${nm} ${T('ნმ', 'nm')}`;
-  $('#lRead').innerHTML = `<span>${T('ფერი', 'colour')}: <b style="color:${waveCol(nm)}">${colorName(nm)}</b></span><span>f = c/λ ≈ <b>${Math.round(THz)} ${T('ტჰც', 'THz')}</b></span><span>${T(`ველი წამში ${Math.round(THz)} ტრილიონჯერ ირხევა`, `the field oscillates ${Math.round(THz)} trillion times a second`)}</span>`;
+  const nm = L.nm, THz = 299792.458 / nm;
+  $('#oLL').textContent = `${nm} ნმ`;
+  $('#lRead').innerHTML = `<span>ფერი: <b style="color:${waveCol(nm)}">${colorName(nm)}</b></span><span>f = c/λ ≈ <b>${Math.round(THz)} ტჰც</b> (${Math.round(THz)} ტრილიონი რხევა წამში)</span>`;
   $('#lL').style.setProperty('--acc', waveCol(nm));
 }
 
 /* =========================================================
-   SCENE 6 — spring / pendulum
+   topic 2 — spring / pendulum (slide and problem 2)
    ========================================================= */
 const O = { mode: 'spring', m: 0.5, k: 20, L: 1, damp: false, t: 0 };
+const OP = { mode: 'spring', m: 0.5, k: 20, L: 1, damp: false, t: 0 };
 const BETA = 0.3, G = 9.81;
-const oOmega = () => (O.mode === 'spring' ? Math.sqrt(O.k / O.m) : Math.sqrt(G / O.L));
-const oX = tt => (tt < 0 ? NaN : Math.cos(oOmega() * tt) * (O.damp ? Math.exp(-BETA * tt) : 1));
+const oOmega = o => (o.mode === 'spring' ? Math.sqrt(o.k / o.m) : Math.sqrt(G / o.L));
+const oX = (o, tt) => (tt < 0 ? NaN : Math.cos(oOmega(o) * tt) * (o.damp ? Math.exp(-BETA * tt) : 1));
 function springPath(g, x, y1, y2, wd, n) {
   const lead = Math.min(F * 0.6, (y2 - y1) * 0.12), Lc = (y2 - y1) - 2 * lead;
   g.beginPath(); g.moveTo(x, y1); g.lineTo(x, y1 + lead);
   for (let i = 0; i < n; i++) g.lineTo(x + (i % 2 ? -wd : wd) / 2, y1 + lead + Lc * (i + 0.5) / n);
   g.lineTo(x, y2 - lead); g.lineTo(x, y2); g.stroke();
 }
-function drawOsc(g, w, h, t, dt) {
-  O.t += dt;
-  const om = oOmega(), Tp = TAU / om, tn = O.t, pad = F * 0.6;
-  if (O.mode === 'spring') {
-    const W = 6, colW = Math.min(w * 0.28, h * 0.5), mx = pad + colW / 2;
-    const ceil = F * 0.6, yEq = h * 0.55, Apx = Math.min(h * 0.2, (h - yEq) * 0.55);
-    const ms = Math.min(colW * 0.42, h * 0.14) * (0.75 + 0.25 * Math.cbrt(O.m / 0.5));
-    const x = oX(tn), ym = yEq - Apx * x;
-    const cx0 = pad + colW + F * 0.8, cx1 = w - pad, pps = (cx1 - cx0) / W;
-    // ceiling
-    g.fillStyle = C.line; g.fillRect(mx - colW * 0.42, ceil - F * 0.35, colW * 0.84, F * 0.35);
-    g.strokeStyle = C.muted; g.lineWidth = 1;
-    for (let i = 0; i < 9; i++) { const xx = mx - colW * 0.42 + i * colW * 0.84 / 8; line(g, xx, ceil - F * 0.35, xx - F * 0.3, ceil - F * 0.75); }
-    // guides
-    g.lineWidth = 1; dash(g, true);
-    g.strokeStyle = alpha(C.muted, 0.6); line(g, mx - colW * 0.45, yEq, cx1, yEq);
-    g.strokeStyle = alpha(C.sin, 0.35); line(g, cx0, yEq - Apx, cx1, yEq - Apx); line(g, cx0, yEq + Apx, cx1, yEq + Apx);
-    dash(g, false);
-    text(g, '+A', cx1, yEq - Apx - F * 0.45, { align: 'right', font: FM, italic: true, size: F * 0.75, color: C.sin });
-    text(g, '−A', cx1, yEq + Apx + F * 0.5, { align: 'right', font: FM, italic: true, size: F * 0.75, color: C.sin });
-    text(g, '0', mx - colW * 0.48, yEq, { align: 'right', font: FMONO, size: F * 0.62 });
-    // spring
-    g.strokeStyle = C.ink; g.lineWidth = Math.max(1.5, LW * 0.8);
-    springPath(g, mx, ceil, ym - ms / 2, Math.min(colW * 0.32, ms * 0.8), 14);
-    // mass
-    g.fillStyle = C.cos; g.beginPath();
-    if (g.roundRect) g.roundRect(mx - ms / 2, ym - ms / 2, ms, ms, ms * 0.12); else g.rect(mx - ms / 2, ym - ms / 2, ms, ms);
-    g.fill();
-    text(g, 'm', mx, ym, { align: 'center', font: FM, italic: true, size: ms * 0.42, color: C.bg, weight: 600 });
-    // axis of chart
-    g.strokeStyle = C.line; g.lineWidth = Math.max(1.5, LW * 0.6); line(g, cx0, yEq - Apx * 1.25, cx0, yEq + Apx * 1.25);
-    text(g, 'x', cx0 - F * 0.45, yEq - Apx * 1.25, { font: FM, italic: true, size: F * 0.85, align: 'center' });
-    text(g, T('t, წარსული →', 't, the past →'), cx1, yEq + Apx * 1.25 + F * 0.4, { align: 'right', size: F * 0.62 });
-    // envelope
-    if (O.damp) {
-      g.strokeStyle = alpha(C.tri, 0.7); g.lineWidth = LW * 0.8; dash(g, true);
-      const env = s => (tn - s < 0 ? NaN : Math.exp(-BETA * (tn - s)));
-      curveNaN(g, cx0, cx1, xx => { const e = env((xx - cx0) / pps); return yEq - Apx * e; });
-      curveNaN(g, cx0, cx1, xx => { const e = env((xx - cx0) / pps); return yEq + Apx * e; });
-      dash(g, false);
-    }
-    // trace
-    g.strokeStyle = C.sin; g.lineWidth = LW * 1.5;
-    curveNaN(g, cx0, cx1, xx => yEq - Apx * oX(tn - (xx - cx0) / pps));
-    g.strokeStyle = alpha(C.sin, 0.7); g.lineWidth = Math.max(1.5, LW * 0.6); dash(g, true); line(g, mx + ms / 2, ym, cx0, ym); dash(g, false);
-    dot(g, cx0, ym, LW * 2.4, C.sin);
-    // period bracket
-    const nA = Math.floor(tn / Tp), tA = nA * Tp, tB = tA - Tp;
-    const xA = cx0 + (tn - tA) * pps, xB = cx0 + (tn - tB) * pps;
-    if (tB >= 0 && xB <= cx1) bracketH(g, xA, xB, yEq - Apx - F * 1.1, `T = ${fmt(Tp)} ${T('წმ', 's')}`, C.cos);
-  } else {
-    const W = 5, px = w * 0.5, py = F * 0.7, th0 = 22 * Math.PI / 180;
-    const Lpx = Math.min(h * 0.16 + h * 0.24 * (O.L - 0.2) / 1.8, h * 0.42), br = Math.max(F * 0.55, h * 0.035);
-    const yb0 = py + Lpx + br + F * 0.4, yEnd = h - F * 0.5, pps = (yEnd - yb0) / W;
-    const th = th0 * oX(tn), bx = px + Lpx * Math.sin(th), by = py + Lpx * Math.cos(th);
-    const swing = Lpx * Math.sin(th0);
-    // ceiling
-    g.fillStyle = C.line; g.fillRect(px - F * 2.5, py - F * 0.35, F * 5, F * 0.35);
-    // swing arc and rest line
-    g.strokeStyle = alpha(C.muted, 0.5); g.lineWidth = 1; dash(g, true);
-    g.beginPath(); g.arc(px, py, Lpx, Math.PI / 2 - th0, Math.PI / 2 + th0); g.stroke();
-    line(g, px, py, px, yEnd);
-    g.strokeStyle = alpha(C.sin, 0.35); line(g, px - swing, yb0, px - swing, yEnd); line(g, px + swing, yb0, px + swing, yEnd);
-    dash(g, false);
-    // angle
-    g.strokeStyle = C.tri; g.lineWidth = Math.max(1.5, LW * 0.7);
-    g.beginPath(); g.arc(px, py, Lpx * 0.28, Math.PI / 2, Math.PI / 2 - th, th > 0); g.stroke();
-    mathText(g, 'θ', px + (th >= 0 ? 1 : -1) * F * 0.7 - F * 0.2, py + Lpx * 0.36, { color: C.tri, size: F * 0.8 });
-    // string & bob
-    g.strokeStyle = C.ink; g.lineWidth = Math.max(1.5, LW * 0.7); line(g, px, py, bx, by);
-    mathText(g, 'L', px + (bx - px) * 0.5 + F * 0.45, py + (by - py) * 0.5, { color: C.muted, size: F * 0.8 });
-    dot(g, bx, by, br, C.cos);
-    // trace flowing down
-    g.strokeStyle = C.sin; g.lineWidth = LW * 1.5;
-    g.beginPath(); let started = false;
-    for (let y = yb0; y <= yEnd; y += 2) {
-      const v = oX(tn - (y - yb0) / pps); if (isNaN(v)) break;
-      const xx = px + Lpx * Math.sin(th0 * v);
-      started ? g.lineTo(xx, y) : (g.moveTo(xx, y), started = true);
-    }
-    g.stroke();
-    g.strokeStyle = alpha(C.sin, 0.7); g.lineWidth = Math.max(1.5, LW * 0.6); dash(g, true); line(g, bx, by + br, px + Lpx * Math.sin(th), yb0); dash(g, false);
-    dot(g, px + Lpx * Math.sin(th), yb0, LW * 2.2, C.sin);
-    text(g, T('↓ t, წარსული', '↓ t, the past'), px - swing - F * 0.6, yEnd - F * 0.3, { align: 'right', size: F * 0.62 });
-    const nA = Math.floor(tn / Tp), tA = nA * Tp, tB = tA - Tp;
-    const yA = yb0 + (tn - tA) * pps, yB = yb0 + (tn - tB) * pps;
-    if (tB >= 0 && yB <= yEnd) bracketV(g, px + swing + F * 0.9, yA, yB, `T = ${fmt(Tp)} ${T('წმ', 's')}`, C.cos);
-  }
-}
 function curveNaN(g, x0, x1, fy) {
   g.beginPath(); let pen = false;
   for (let x = x0; x <= x1; x += 2) { const y = fy(x); if (isNaN(y)) { pen = false; continue; } pen ? g.lineTo(x, y) : (g.moveTo(x, y), pen = true); }
   g.stroke();
 }
+function makeOsc(o) {
+  return function (g, w, h, t, dt) {
+    o.t += dt;
+    const om = oOmega(o), Tp = TAU / om, tn = o.t, pad = F * 0.6;
+    if (o.mode === 'spring') {
+      const W = 6, colW = Math.min(w * 0.28, h * 0.5), mx = pad + colW / 2;
+      const ceil = F * 0.6, yEq = h * 0.55, Apx = Math.min(h * 0.2, (h - yEq) * 0.55);
+      const ms = Math.min(colW * 0.42, h * 0.14) * (0.75 + 0.25 * Math.cbrt(o.m / 0.5));
+      const x = oX(o, tn), ym = yEq - Apx * x;
+      const cx0 = pad + colW + F * 0.8, cx1 = w - pad, pps = (cx1 - cx0) / W;
+      g.fillStyle = C.line; g.fillRect(mx - colW * 0.42, ceil - F * 0.35, colW * 0.84, F * 0.35);
+      g.lineWidth = 1; dash(g, true);
+      g.strokeStyle = alpha(C.muted, 0.6); line(g, mx - colW * 0.45, yEq, cx1, yEq);
+      g.strokeStyle = alpha(C.sin, 0.35); line(g, cx0, yEq - Apx, cx1, yEq - Apx); line(g, cx0, yEq + Apx, cx1, yEq + Apx);
+      dash(g, false);
+      text(g, '+A', cx1, yEq - Apx - F * 0.45, { align: 'right', font: FM, italic: true, size: F * 0.75, color: C.sin });
+      text(g, '−A', cx1, yEq + Apx + F * 0.5, { align: 'right', font: FM, italic: true, size: F * 0.75, color: C.sin });
+      text(g, '0', mx - colW * 0.48, yEq, { align: 'right', font: FMONO, size: F * 0.62 });
+      g.strokeStyle = C.ink; g.lineWidth = Math.max(1.5, LW * 0.8);
+      springPath(g, mx, ceil, ym - ms / 2, Math.min(colW * 0.32, ms * 0.8), 14);
+      g.fillStyle = C.cos; g.beginPath();
+      if (g.roundRect) g.roundRect(mx - ms / 2, ym - ms / 2, ms, ms, ms * 0.12); else g.rect(mx - ms / 2, ym - ms / 2, ms, ms);
+      g.fill();
+      text(g, 'm', mx, ym, { align: 'center', font: FM, italic: true, size: ms * 0.42, color: C.bg, weight: 600 });
+      g.strokeStyle = C.line; g.lineWidth = Math.max(1.5, LW * 0.6); line(g, cx0, yEq - Apx * 1.25, cx0, yEq + Apx * 1.25);
+      text(g, 'x', cx0 - F * 0.45, yEq - Apx * 1.25, { font: FM, italic: true, size: F * 0.85, align: 'center' });
+      text(g, 't, წარსული →', cx1, yEq + Apx * 1.25 + F * 0.4, { align: 'right', size: F * 0.62 });
+      if (o.damp) {
+        g.strokeStyle = alpha(C.tri, 0.7); g.lineWidth = LW * 0.8; dash(g, true);
+        const env = s => (tn - s < 0 ? NaN : Math.exp(-BETA * (tn - s)));
+        curveNaN(g, cx0, cx1, xx => yEq - Apx * env((xx - cx0) / pps));
+        curveNaN(g, cx0, cx1, xx => yEq + Apx * env((xx - cx0) / pps));
+        dash(g, false);
+      }
+      g.strokeStyle = C.sin; g.lineWidth = LW * 1.5;
+      curveNaN(g, cx0, cx1, xx => yEq - Apx * oX(o, tn - (xx - cx0) / pps));
+      g.strokeStyle = alpha(C.sin, 0.7); g.lineWidth = Math.max(1.5, LW * 0.6); dash(g, true); line(g, mx + ms / 2, ym, cx0, ym); dash(g, false);
+      dot(g, cx0, ym, LW * 2.4, C.sin);
+      const nA = Math.floor(tn / Tp), tA = nA * Tp, tB = tA - Tp;
+      const xA = cx0 + (tn - tA) * pps, xB = cx0 + (tn - tB) * pps;
+      if (tB >= 0 && xB <= cx1) bracketH(g, xA, xB, yEq - Apx - F * 1.1, `T = ${fmt(Tp)} წმ`, C.cos);
+    } else {
+      const W = 5, px = w * 0.5, py = F * 0.7, th0 = 22 * Math.PI / 180;
+      const Lpx = Math.min(h * 0.16 + h * 0.24 * (o.L - 0.2) / 1.8, h * 0.42), br = Math.max(F * 0.55, h * 0.035);
+      const yb0 = py + Lpx + br + F * 0.4, yEnd = h - F * 0.5, pps = (yEnd - yb0) / W;
+      const th = th0 * oX(o, tn), bx = px + Lpx * Math.sin(th), by = py + Lpx * Math.cos(th);
+      const swing = Lpx * Math.sin(th0);
+      g.fillStyle = C.line; g.fillRect(px - F * 2.5, py - F * 0.35, F * 5, F * 0.35);
+      g.strokeStyle = alpha(C.muted, 0.5); g.lineWidth = 1; dash(g, true);
+      g.beginPath(); g.arc(px, py, Lpx, Math.PI / 2 - th0, Math.PI / 2 + th0); g.stroke();
+      line(g, px, py, px, yEnd);
+      g.strokeStyle = alpha(C.sin, 0.35); line(g, px - swing, yb0, px - swing, yEnd); line(g, px + swing, yb0, px + swing, yEnd);
+      dash(g, false);
+      g.strokeStyle = C.tri; g.lineWidth = Math.max(1.5, LW * 0.7);
+      g.beginPath(); g.arc(px, py, Lpx * 0.28, Math.PI / 2, Math.PI / 2 - th, th > 0); g.stroke();
+      mathText(g, 'θ', px + (th >= 0 ? 1 : -1) * F * 0.7 - F * 0.2, py + Lpx * 0.36, { color: C.tri, size: F * 0.8 });
+      g.strokeStyle = C.ink; g.lineWidth = Math.max(1.5, LW * 0.7); line(g, px, py, bx, by);
+      mathText(g, 'L', px + (bx - px) * 0.5 + F * 0.45, py + (by - py) * 0.5, { color: C.muted, size: F * 0.8 });
+      dot(g, bx, by, br, C.cos);
+      g.strokeStyle = C.sin; g.lineWidth = LW * 1.5;
+      g.beginPath(); let started = false;
+      for (let y = yb0; y <= yEnd; y += 2) {
+        const v = oX(o, tn - (y - yb0) / pps); if (isNaN(v)) break;
+        const xx = px + Lpx * Math.sin(th0 * v);
+        started ? g.lineTo(xx, y) : (g.moveTo(xx, y), started = true);
+      }
+      g.stroke();
+      g.strokeStyle = alpha(C.sin, 0.7); g.lineWidth = Math.max(1.5, LW * 0.6); dash(g, true); line(g, bx, by + br, px + Lpx * Math.sin(th), yb0); dash(g, false);
+      dot(g, px + Lpx * Math.sin(th), yb0, LW * 2.2, C.sin);
+      text(g, '↓ t, წარსული', px - swing - F * 0.6, yEnd - F * 0.3, { align: 'right', size: F * 0.62 });
+      const nA = Math.floor(tn / Tp), tA = nA * Tp, tB = tA - Tp;
+      const yA = yb0 + (tn - tA) * pps, yB = yb0 + (tn - tB) * pps;
+      if (tB >= 0 && yB <= yEnd) bracketV(g, px + swing + F * 0.9, yA, yB, `T = ${fmt(Tp)} წმ`, C.cos);
+    }
+  };
+}
 function updOsc() {
-  const om = oOmega(), Tp = TAU / om;
-  $('#oOM').textContent = `${fmt(O.m)} ${T('კგ', 'kg')}`;
-  $('#oOK').textContent = `${O.k} ${T('ნ/მ', 'N/m')}`;
-  $('#oOL').textContent = `${fmt(O.L)} ${T('მ', 'm')}`;
-  $('#oRead').innerHTML = `<span>T = <b>${fmt(Tp)} ${T('წმ', 's')}</b></span><span>f = 1/T = <b>${fmt(1 / Tp)} ${T('ჰც', 'Hz')}</b></span><span>ω = <b>${fmt(om)} ${T('რად/წმ', 'rad/s')}</b></span>`;
+  const om = oOmega(O), Tp = TAU / om;
+  $('#oOM').textContent = `${fmt(O.m)} კგ`;
+  $('#oOK').textContent = `${O.k} ნ/მ`;
+  $('#oOL').textContent = `${fmt(O.L)} მ`;
+  $('#oRead').innerHTML = `<span>ω = <b>${fmt(om)}</b></span><span>T = <b>${fmt(Tp)} წმ</b></span>`;
 }
 
 /* =========================================================
-   SCENE 7 — periodic processes
+   topic 3 — periodic processes
    ========================================================= */
 const PR = { tab: 'day' };
 const LAT = 41.72 * Math.PI / 180;
@@ -1004,20 +1431,19 @@ function dayLen(n) {
   return 2 * Math.acos(Math.max(-1, Math.min(1, c))) * 180 / Math.PI / 15;
 }
 const dayModel = n => 12.18 + 3.03 * Math.sin(TAU * (n - 80) / 365);
-const MON_KA = ['იან', 'თებ', 'მარ', 'აპრ', 'მაი', 'ივნ', 'ივლ', 'აგვ', 'სექ', 'ოქტ', 'ნოე', 'დეკ'];
-const MON_EN = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-const MON_FULL_KA = ['იანვარი', 'თებერვალი', 'მარტი', 'აპრილი', 'მაისი', 'ივნისი', 'ივლისი', 'აგვისტო', 'სექტემბერი', 'ოქტომბერი', 'ნოემბერი', 'დეკემბერი'];
+const MON = ['იან', 'თებ', 'მარ', 'აპრ', 'მაი', 'ივნ', 'ივლ', 'აგვ', 'სექ', 'ოქტ', 'ნოე', 'დეკ'];
+const MON_FULL = ['იანვარი', 'თებერვალი', 'მარტი', 'აპრილი', 'მაისი', 'ივნისი', 'ივლისი', 'აგვისტო', 'სექტემბერი', 'ოქტომბერი', 'ნოემბერი', 'დეკემბერი'];
 const MDAYS = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 const MSTART = MDAYS.reduce((a, d, i) => (a.push(a[i] + d), a), [0]);
 function dateOf(n) { let m = 0; while (m < 11 && n > MSTART[m + 1]) m++; return [n - MSTART[m], m]; }
-function hm(hh) { let H = Math.floor(hh), M = Math.round((hh - H) * 60); if (M === 60) { H++; M = 0; } return `${H} ${T('სთ', 'h')} ${String(M).padStart(2, '0')} ${T('წთ', 'min')}`; }
+function hm(hh) { let H = Math.floor(hh), M = Math.round((hh - H) * 60); if (M === 60) { H++; M = 0; } return `${H} სთ ${String(M).padStart(2, '0')} წთ`; }
 const TODAY = (() => { const d = new Date(); const s = new Date(d.getFullYear(), 0, 0); return Math.min(365, Math.max(1, Math.floor((d - s) / 864e5))); })();
 let prClock = 0;
 function drawPer(g, w, h, t, dt) {
   prClock += dt;
   if (PR.tab === 'day') drawDay(g, w, h);
   else if (PR.tab === 'ac') drawAC(g, w, h);
-  else drawWheel(g, w, h);
+  else drawWheel(g, w, h, (prClock * 1.25) % 20, false);
 }
 function drawDay(g, w, h) {
   const x0 = F * 2.6, x1 = w - F * 0.6, y0 = F * 2.3, y1 = h - F * 1.8;
@@ -1027,80 +1453,70 @@ function drawDay(g, w, h) {
     g.strokeStyle = C.grid; line(g, x0, Y(v), x1, Y(v));
     text(g, String(v), x0 - F * 0.4, Y(v), { align: 'right', font: FMONO, size: F * 0.62 });
   }
-  text(g, T('სთ', 'h'), x0 - F * 0.4, y0 - F * 0.9, { align: 'right', size: F * 0.62 });
-  const months = lang === 'ka' ? MON_KA : MON_EN;
+  text(g, 'სთ', x0 - F * 0.4, y0 - F * 0.9, { align: 'right', size: F * 0.62 });
   for (let m = 0; m < 12; m++) {
     g.strokeStyle = C.grid; line(g, X(MSTART[m] + 1), y0, X(MSTART[m] + 1), y1);
-    text(g, months[m], X(MSTART[m] + 1 + MDAYS[m] / 2), y1 + F * 0.7, { align: 'center', size: F * 0.6 });
+    text(g, MON[m], X(MSTART[m] + 1 + MDAYS[m] / 2), y1 + F * 0.7, { align: 'center', size: F * 0.6 });
   }
-  // midline D and amplitude
-  g.strokeStyle = alpha(C.tri, 0.8); g.lineWidth = Math.max(1.5, LW * 0.6); dash(g, true); line(g, x0, Y(12.18), x1, Y(12.18)); dash(g, false);
-  text(g, 'D = 12.2', x1, Y(12.18) + F * 0.6, { align: 'right', color: C.tri, size: F * 0.62, weight: 600, font: FMONO });
-  // model curve
+  g.strokeStyle = alpha(C.violet, 0.9); g.lineWidth = Math.max(1.5, LW * 0.6); dash(g, true); line(g, x0, Y(12.18), x1, Y(12.18)); dash(g, false);
+  text(g, 'D = 12.2', x1, Y(12.18) + F * 0.6, { align: 'right', color: C.violet, size: F * 0.64, weight: 600, font: FMONO });
+  arrow(g, X(172) + F * 2.2, Y(12.18), X(172) + F * 2.2, Y(15.21) + LW, C.sin);
+  text(g, 'A = 3.0', X(172) + F * 2.6, Y(13.7), { color: C.sin, size: F * 0.64, weight: 600, font: FMONO });
   g.strokeStyle = C.sin; g.lineWidth = LW * 1.4;
   curve(g, x0, x1, x => Y(dayModel(1 + (x - x0) / (x1 - x0) * 364)));
-  // computed points
   for (let n = 4; n <= 365; n += 9) dot(g, X(n), Y(dayLen(n)), Math.max(2.2, F * 0.14), C.cos);
-  // extremes
-  text(g, `21 ${T('ივნ', 'Jun')}: ${hm(dayLen(172))}`, X(172), Y(dayLen(172)) - F * 0.7, { align: 'center', size: F * 0.62, color: C.ink, weight: 600 });
-  text(g, `21 ${T('დეკ', 'Dec')}: ${hm(dayLen(355))}`, X(355) - F * 0.2, Y(dayLen(355)) + F * 0.8, { align: 'right', size: F * 0.62, color: C.ink, weight: 600 });
-  // today
+  dot(g, X(80), Y(dayModel(80)), LW * 2.6, C.tri);
+  text(g, 't₀ = 80', X(80) + F * 0.5, Y(dayModel(80)) + F * 0.8, { color: C.tri, size: F * 0.64, weight: 600, font: FMONO });
+  text(g, `max: ${hm(dayLen(172))}`, X(172), Y(dayLen(172)) - F * 0.7, { align: 'center', size: F * 0.62, color: C.ink, weight: 600 });
+  text(g, `min: ${hm(dayLen(355))}`, X(355) - F * 0.2, Y(dayLen(355)) + F * 0.8, { align: 'right', size: F * 0.62, color: C.ink, weight: 600 });
   const tx = X(TODAY);
-  g.strokeStyle = C.tri; g.lineWidth = Math.max(1.5, LW * 0.7); line(g, tx, y0, tx, y1);
-  dot(g, tx, Y(dayLen(TODAY)), LW * 2.4, C.tri);
+  g.strokeStyle = alpha(C.muted, 0.6); g.lineWidth = 1; dash(g, true); line(g, tx, y0, tx, y1); dash(g, false);
   const [dd, mm] = dateOf(TODAY);
-  const lab = `${T('დღეს', 'today')} (${dd} ${lang === 'ka' ? MON_FULL_KA[mm] : MON_EN[mm]}): ${hm(dayLen(TODAY))}`;
-  const lw = measureW(g, lab, F * 0.64);
-  const lx = Math.min(Math.max(tx, x0 + lw / 2), x1 - lw / 2);
-  text(g, lab, lx, y0 - F * 0.5, { align: 'center', size: F * 0.64, color: C.tri, weight: 600 });
-  // legend
+  const lab = `დღეს (${dd} ${MON_FULL[mm]}): ${hm(dayLen(TODAY))}`;
+  const lw = measureW(g, lab, F * 0.62), lx = Math.min(Math.max(tx, x0 + lw / 2), x1 - lw / 2);
+  text(g, lab, lx, y0 - F * 0.5, { align: 'center', size: F * 0.62, color: C.muted, weight: 600 });
   dot(g, x0 + F * 0.4, y0 - F * 1.6, Math.max(2.2, F * 0.14), C.cos);
-  text(g, T('ასტრონომიული გამოთვლა', 'astronomical calculation'), x0 + F * 0.8, y0 - F * 1.6, { size: F * 0.6 });
-  const lx2 = x0 + F * 1.2 + measureW(g, T('ასტრონომიული გამოთვლა', 'astronomical calculation'), F * 0.6) + F;
+  text(g, 'ზუსტი გამოთვლა', x0 + F * 0.8, y0 - F * 1.6, { size: F * 0.6 });
+  const lx2 = x0 + F * 1.2 + measureW(g, 'ზუსტი გამოთვლა', F * 0.6) + F;
   g.strokeStyle = C.sin; g.lineWidth = LW * 1.4; line(g, lx2, y0 - F * 1.6, lx2 + F * 1.1, y0 - F * 1.6);
-  text(g, T('სინუსოიდური მოდელი', 'sine model'), lx2 + F * 1.5, y0 - F * 1.6, { size: F * 0.6 });
+  text(g, 'ჩვენი ფორმულა', lx2 + F * 1.5, y0 - F * 1.6, { size: F * 0.6 });
 }
 function drawAC(g, w, h) {
   const pad = F * 0.6, R = Math.min(h * 0.33, w * 0.17), cx = pad + R * 1.1, cy = h * 0.5;
-  const x0 = cx + R * 1.5, x1 = w - pad, tMax = 40, X = ms => x0 + ms / tMax * (x1 - x0), Y = u => cy - u / 311 * R;
+  const x0 = cx + R * 1.5 + F, x1 = w - pad, tMax = 40, X = ms => x0 + ms / tMax * (x1 - x0), Y = u => cy - u / 311 * R;
   const ms = (prClock * 8) % tMax, th = TAU * 50 * ms / 1000;
-  // grid
   g.lineWidth = 1; dash(g, false);
   for (let m = 0; m <= tMax; m += 10) { g.strokeStyle = C.grid; line(g, X(m), Y(350), X(m), Y(-350)); text(g, String(m), X(m), Y(-350) + F * 0.6, { align: 'center', size: F * 0.6, font: FMONO }); }
-  text(g, T('მწმ', 'ms'), x1, Y(-350) + F * 1.5, { align: 'right', size: F * 0.6 });
-  for (const u of [311, 0, -311]) { g.strokeStyle = u ? alpha(C.sin, 0.35) : C.line; dash(g, !!u); line(g, x0, Y(u), x1, Y(u)); dash(g, false); text(g, (u > 0 ? '+' : '') + String(u).replace('-', '−') + T(' ვ', ' V'), x0 - F * 0.3, Y(u), { align: 'right', size: F * 0.6, font: FMONO }); }
-  // generator
+  text(g, 'მწმ', x1, Y(-350) + F * 1.5, { align: 'right', size: F * 0.6 });
+  for (const u of [311, 0, -311]) { g.strokeStyle = u ? alpha(C.sin, 0.35) : C.line; dash(g, !!u); line(g, x0, Y(u), x1, Y(u)); dash(g, false); text(g, (u > 0 ? '+' : '') + String(u).replace('-', '−'), x0 - F * 0.3, Y(u), { align: 'right', size: F * 0.6, font: FMONO }); }
   g.strokeStyle = C.line; g.lineWidth = LW; ring(g, cx, cy, R);
   g.fillStyle = alpha(C.cos, 0.12); g.beginPath(); g.arc(cx, cy, R, 0, TAU); g.fill();
   const px = cx + R * Math.cos(th), py = cy - R * Math.sin(th);
   g.strokeStyle = C.ink; g.lineWidth = LW * 1.2; line(g, cx, cy, px, py);
-  text(g, T('გენერატორი', 'generator'), cx, cy + R + F * 0.8, { align: 'center', size: F * 0.62 });
-  // curve
-  g.strokeStyle = alpha(C.sin, 0.3); g.lineWidth = LW * 1.2; curve(g, x0, x1, x => Y(311 * Math.sin(TAU * 50 * ((x - x0) / (x1 - x0) * tMax) / 1000)));
-  g.strokeStyle = C.sin; g.lineWidth = LW * 1.5; curve(g, x0, X(ms), x => Y(311 * Math.sin(TAU * 50 * ((x - x0) / (x1 - x0) * tMax) / 1000)));
+  text(g, 'გენერატორი', cx, cy + R + F * 0.8, { align: 'center', size: F * 0.62 });
+  const fu = x => Y(311 * Math.sin(TAU * 50 * ((x - x0) / (x1 - x0) * tMax) / 1000));
+  g.strokeStyle = alpha(C.sin, 0.3); g.lineWidth = LW * 1.2; curve(g, x0, x1, fu);
+  g.strokeStyle = C.sin; g.lineWidth = LW * 1.5; curve(g, x0, X(ms), fu);
   const u = 311 * Math.sin(th);
   g.strokeStyle = alpha(C.sin, 0.7); g.lineWidth = Math.max(1.5, LW * 0.6); dash(g, true); line(g, px, py, X(ms), Y(u)); dash(g, false);
   dot(g, X(ms), Y(u), LW * 2.4, C.sin); dot(g, px, py, LW * 2.4, C.ink);
-  bracketH(g, X(0), X(20), Y(311) - F * 1.0, `T = 20 ${T('მწმ', 'ms')}`, C.cos);
-  text(g, `U = ${Math.round(u)} ${T('ვ', 'V')}`.replace('-', '−'), x1, Y(-311) - F * 0.6, { align: 'right', font: FMONO, size: F * 0.7, color: C.ink, weight: 600 });
+  bracketH(g, X(0), X(20), Y(311) - F * 1.0, 'T = 20 მწმ', C.cos);
+  text(g, `U = ${Math.round(u)} ვ`.replace('-', '−'), x1, Y(-311) - F * 0.6, { align: 'right', font: FMONO, size: F * 0.7, color: C.ink, weight: 600 });
 }
-function drawWheel(g, w, h) {
-  const pad = F * 0.6, gy = h - F * 1.9, top = F * 1.6, s = (gy - top) / 52;
+function drawWheel(g, w, h, tm, mark) {
+  const pad = F * 0.6, gy = h - F * 1.9, top = F * 1.6, s = Math.min((gy - top) / 52, (w * 0.44 - pad - F * 2.2) / 50);
   const R = 25 * s, cx = pad + F * 2.2 + R, cy = gy - 26 * s;
-  const x0 = cx + R + F * 2.2, x1 = w - pad, tMax = 20, X = m => x0 + m / tMax * (x1 - x0), Y = hh => gy - hh * s;
-  const tm = (prClock * 1.25) % tMax, a = -Math.PI / 2 + TAU * tm / 10;
+  const x0 = cx + R + F * 2.4, x1 = w - pad, tMax = 20, X = m => x0 + m / tMax * (x1 - x0), Y = hh => gy - hh * s;
+  const a = -Math.PI / 2 + TAU * tm / 10;
   g.lineWidth = 1; dash(g, false);
   for (let m = 0; m <= tMax; m += 5) { g.strokeStyle = C.grid; line(g, X(m), Y(0), X(m), Y(52)); text(g, String(m), X(m), gy + F * 0.6, { align: 'center', size: F * 0.6, font: FMONO }); }
-  text(g, T('წთ', 'min'), x1, gy + F * 1.4, { align: 'right', size: F * 0.6 });
+  text(g, 'წთ', x1, gy + F * 1.4, { align: 'right', size: F * 0.6 });
   for (const hh of [1, 26, 51]) {
-    g.strokeStyle = hh === 26 ? alpha(C.tri, 0.8) : alpha(C.sin, 0.35); dash(g, true); line(g, x0, Y(hh), x1, Y(hh)); dash(g, false);
-    text(g, hh + T(' მ', ' m'), x0 - F * 0.3, Y(hh), { align: 'right', size: F * 0.6, font: FMONO, color: hh === 26 ? C.tri : C.muted });
+    g.strokeStyle = hh === 26 ? alpha(C.violet, 0.9) : alpha(C.sin, 0.35); dash(g, true); line(g, x0, Y(hh), x1, Y(hh)); dash(g, false);
+    text(g, hh + ' მ', x0 - F * 0.3, Y(hh), { align: 'right', size: F * 0.6, font: FMONO, color: hh === 26 ? C.violet : C.muted });
   }
-  // ground
   g.strokeStyle = C.muted; g.lineWidth = LW; line(g, pad, gy, x1, gy);
-  // supports
   g.strokeStyle = C.line; g.lineWidth = LW * 1.2; line(g, cx, cy, cx - R * 0.45, gy); line(g, cx, cy, cx + R * 0.45, gy);
-  // wheel
   g.strokeStyle = C.ink; g.lineWidth = LW; ring(g, cx, cy, R); ring(g, cx, cy, R * 0.12);
   const N = 8, cab = Math.max(F * 0.55, R * 0.13);
   for (let i = 0; i < N; i++) {
@@ -1108,59 +1524,166 @@ function drawWheel(g, w, h) {
     g.strokeStyle = alpha(C.ink, 0.35); g.lineWidth = 1; line(g, cx, cy, qx, qy);
     g.fillStyle = i === 0 ? C.sin : alpha(C.cos, 0.6);
     g.beginPath(); if (g.roundRect) g.roundRect(qx - cab / 2, qy, cab, cab * 0.85, cab * 0.2); else g.rect(qx - cab / 2, qy, cab, cab * 0.85); g.fill();
-    g.strokeStyle = C.ink; g.lineWidth = 1; line(g, qx, qy, qx, qy + cab * 0.1);
   }
-  // height curve
+  g.strokeStyle = C.sin; g.lineWidth = LW * 1.1; line(g, cx, cy, cx, cy - R);
+  text(g, 'A = 25', cx + F * 0.3, cy - R * 0.55, { color: C.sin, size: F * 0.6, weight: 600, font: FMONO });
   const hf = m => 26 - 25 * Math.cos(TAU * m / 10);
   g.strokeStyle = alpha(C.sin, 0.3); g.lineWidth = LW * 1.2; curve(g, x0, x1, x => Y(hf((x - x0) / (x1 - x0) * tMax)));
   g.strokeStyle = C.sin; g.lineWidth = LW * 1.5; curve(g, x0, X(tm), x => Y(hf((x - x0) / (x1 - x0) * tMax)));
   const qx = cx + R * Math.cos(a), qy = cy - R * Math.sin(a), hh = hf(tm);
   g.strokeStyle = alpha(C.sin, 0.7); g.lineWidth = Math.max(1.5, LW * 0.6); dash(g, true); line(g, qx, qy, X(tm), Y(hh)); dash(g, false);
   dot(g, X(tm), Y(hh), LW * 2.4, C.sin);
-  bracketH(g, X(0), X(10), Y(51) - F * 0.9, `T = 10 ${T('წთ', 'min')}`, C.cos);
-  text(g, `h = ${fmt(hh, 1)} ${T('მ', 'm')}`, x1, Y(1) - F * 0.7, { align: 'right', font: FMONO, size: F * 0.7, color: C.ink, weight: 600 });
+  if (mark) {
+    g.strokeStyle = C.tri; g.lineWidth = Math.max(1.5, LW * 0.7); dash(g, true); line(g, X(tm), Y(hh), X(tm), Y(0)); dash(g, false);
+    text(g, `t = ${fmt(tm, 0)} წთ`, X(tm) + F * 0.3, gy - F * 0.6, { color: C.tri, size: F * 0.64, weight: 600 });
+    text(g, `h ≈ ${fmt(hh, 1)} მ`, X(tm) + F * 0.5, Y(hh) - F * 0.7, { color: C.ink, size: F * 0.8, weight: 700, font: FMONO });
+  } else {
+    bracketH(g, X(0), X(10), Y(51) - F * 0.9, 'T = 10 წთ', C.cos);
+    text(g, `h = ${fmt(hh, 1)} მ`, x1, Y(1) - F * 0.7, { align: 'right', font: FMONO, size: F * 0.7, color: C.ink, weight: 600 });
+  }
 }
+let p3Clock = 0;
+function drawP3(g, w, h, t, dt) { p3Clock += dt; const tm = paused ? 3 : Math.min(3, p3Clock * 0.9); drawWheel(g, w, h, tm, tm >= 3); }
 
 /* =========================================================
-   SCENE 8 — outro: three waves and their sum
+   problems and discussion questions (one source for slides and phones)
    ========================================================= */
-function drawOutro(g, w, h, t) {
-  const cy = h * 0.5, a = h * 0.13, x0 = 0, x1 = w;
-  const waves = [[C.sin, 1.0, 1.0, 0], [C.cos, 0.6, 2.0, 1.1], [C.tri, 0.4, 3.0, 2.3]];
-  const lam = Math.max(w / 2.5, F * 12);
-  waves.forEach(([col, amp, k, p]) => {
-    g.strokeStyle = alpha(col, 0.55); g.lineWidth = LW;
-    curve(g, x0, x1, x => cy - a * amp * Math.sin(TAU * k * x / lam - t * k * 0.8 + p), 3);
+const QUIZ = [
+  { id: 'p1', type: 'num', title: 'ამოცანა 1 · გიტარის ორი სიმი', q: 'ერთი სიმი ჟღერს 440 ჰც, მეორე 446 ჰც სიხშირით. რამდენჯერ გაძლიერდება ხმა ერთ წამში?', ans: 6, tol: 0.01, unit: '-ჯერ', why: 'ცემის სიხშირე = |f₁ − f₂| = |446 − 440| = 6.' },
+  { id: 'd1', type: 'mc', title: 'განხილვა 1', q: 'რა მოუვა ბგერის გრაფიკს, თუ სიხშირეს გავაორმაგებთ? როგორ შეიცვლება ხმა?',
+    opts: ['ტალღა ორჯერ მაღალი გახდება, ხმა გაძლიერდება', 'ტალღები ორჯერ ვიწრო გახდება, ტონი ოქტავით აიწევს', 'ტალღა მარჯვნივ გადაიწევს, ხმა არ შეიცვლება', 'გრაფიკი არ შეიცვლება'], correct: 1,
+    why: 'f ორჯერ იზრდება, ამიტომ პერიოდი T = 1/f ორჯერ მცირდება და გრაფიკი გვერდზე იკუმშება. ამპლიტუდა იგივე რჩება, ამიტომ ხმა არ ძლიერდება, ტონი კი ოქტავით მაღლა ადის (440 → 880 ჰც).' },
+  { id: 'p2', type: 'num', title: 'ამოცანა 2 · ზამბარა', q: 'ტვირთის მასაა 0.5 კგ, ზამბარის სიხისტე 20 ნ/მ. რას უდრის რხევის პერიოდი (წამებში)?', ans: 0.99, tol: 0.03, unit: 'წმ', why: 'ω = √(20/0.5) ≈ 6.32 რად/წმ, T = 2π/ω ≈ 0.99 წმ.' },
+  { id: 'd2', type: 'mc', title: 'განხილვა 2', q: 'რა მოუვა რხევის პერიოდს, თუ ტვირთის მასას 4-ჯერ გავზრდით?',
+    opts: ['4-ჯერ გაიზრდება', '2-ჯერ გაიზრდება', 'არ შეიცვლება', '2-ჯერ შემცირდება'], correct: 1,
+    why: 'T = 2π√(m/k). თუ m-ს 4-ჯერ გავზრდით, ფესვი 2-ჯერ გაიზრდება (√4 = 2), ამიტომ პერიოდიც 2-ჯერ იზრდება: 0.99 წმ → 1.99 წმ.' },
+  { id: 'p3', type: 'num', title: 'ამოცანა 3 · ეშმაკის ბორბალი', q: 'h(t) = 26 − 25·cos(2πt/10). რა სიმაღლეზეა კაბინა მე-3 წუთზე (მეტრებში)?', ans: 33.7, tol: 0.4, unit: 'მ', why: '2π·3/10 = 0.6π = 108°, cos 108° ≈ −0.309, h = 26 + 25·0.309 ≈ 33.7 მ.' },
+  { id: 'd3', type: 'mc', title: 'განხილვა 3', q: 'რა მოუვა ბორბლის გრაფიკს, თუ პერიოდს გავაორმაგებთ (ერთი ბრუნი 20 წუთში)?',
+    opts: ['გრაფიკი ორჯერ მაღალი გახდება', 'ტალღა გვერდზე ორჯერ გაიჭიმება, სიმაღლე არ შეიცვლება', 'გრაფიკი ქვემოთ ჩაიწევს', 'ტალღები ორჯერ ვიწრო გახდება'], correct: 1,
+    why: 'T მნიშვნელშია (2πt/20), ამიტომ ტალღები ორჯერ განიერი ხდება და კაბინა ორჯერ ნელა მოძრაობს. A = 25 და D = 26 არ იცვლება, ამიტომ უმაღლესი წერტილი ისევ 51 მ-ია.' }
+];
+const QBY = Object.fromEntries(QUIZ.map(q => [q.id, q]));
+const QS = {}; QUIZ.forEach(q => QS[q.id] = { revealed: false });
+function makeCompare(cfg) {
+  const st = { p: 0 };
+  return function (g, w, h, t, dt) {
+    const rev = QS[cfg.quiz].revealed;
+    st.p = rev ? Math.min(1, st.p + (dt ? dt * 0.9 : 1)) : 0;
+    const L0 = F * 2.8, R0 = F * 0.8, top = F * 2.8, bot = F * 1.9;
+    const X = x => L0 + (x - cfg.x0) / (cfg.x1 - cfg.x0) * (w - L0 - R0);
+    const Y = v => (h - bot) - (v - cfg.y0) / (cfg.y1 - cfg.y0) * ((h - bot) - top);
+    g.lineWidth = 1; dash(g, false);
+    cfg.xt.forEach(x => { g.strokeStyle = C.grid; line(g, X(x), Y(cfg.y0), X(x), Y(cfg.y1)); text(g, String(x), X(x), Y(cfg.y0) + F * 0.65, { align: 'center', font: FMONO, size: F * 0.6 }); });
+    cfg.yt.forEach(v => { g.strokeStyle = v === 0 ? C.line : C.grid; line(g, X(cfg.x0), Y(v), X(cfg.x1), Y(v)); text(g, String(v).replace('-', '−'), X(cfg.x0) - F * 0.3, Y(v), { align: 'right', font: FMONO, size: F * 0.6 }); });
+    text(g, cfg.xl, X(cfg.x1), Y(cfg.y0) + F * 1.45, { align: 'right', size: F * 0.6 });
+    const P = px => cfg.x0 + (px - X(cfg.x0)) / (X(cfg.x1) - X(cfg.x0)) * (cfg.x1 - cfg.x0);
+    g.strokeStyle = cfg.a.col(); g.lineWidth = LW * 1.5; curve(g, X(cfg.x0), X(cfg.x1), px => Y(cfg.a.f(P(px))), 1.5);
+    if (st.p > 0) { g.strokeStyle = cfg.b.col(); g.lineWidth = LW * 1.5; curve(g, X(cfg.x0), X(cfg.x0) + st.p * (X(cfg.x1) - X(cfg.x0)), px => Y(cfg.b.f(P(px))), 1.5); }
+    const ly1 = F * 0.75, ly2 = F * 1.85;
+    g.strokeStyle = cfg.a.col(); g.lineWidth = LW * 1.4; line(g, L0, ly1, L0 + F * 1.1, ly1);
+    text(g, cfg.a.lab, L0 + F * 1.5, ly1, { color: cfg.a.col(), size: F * 0.68, weight: 600 });
+    g.strokeStyle = rev ? cfg.b.col() : C.line; line(g, L0, ly2, L0 + F * 1.1, ly2);
+    text(g, rev ? cfg.b.lab : cfg.b.labQ, L0 + F * 1.5, ly2, { color: rev ? cfg.b.col() : C.muted, size: F * 0.68, weight: 600 });
+  };
+}
+const LETTERS = ['ა', 'ბ', 'გ', 'დ'];
+function buildMC(box, q, onPick) {
+  box.innerHTML = '';
+  q.opts.forEach((o, i) => {
+    const b = document.createElement('button'); b.className = 'opt'; b.type = 'button';
+    const lb = document.createElement('b'); lb.textContent = LETTERS[i] + ')';
+    const tx = document.createElement('span'); tx.textContent = o;
+    b.append(lb, tx);
+    b.addEventListener('click', () => {
+      $$('.opt', box).forEach(x => x.classList.remove('wrong'));
+      if (i !== q.correct) b.classList.add('wrong');
+      $$('.opt', box)[q.correct].classList.add('correct');
+      if (onPick) onPick(i === q.correct);
+    });
+    box.appendChild(b);
   });
-  g.strokeStyle = C.ink; g.lineWidth = LW * 1.4;
-  curve(g, x0, x1, x => cy - a * waves.reduce((s, [, amp, k, p]) => s + amp * Math.sin(TAU * k * x / lam - t * k * 0.8 + p), 0), 2);
+}
+let uid = 0;
+function buildNum(box, q) {
+  const id = 'in-' + q.id + '-' + (++uid);
+  box.innerHTML = `<label for="${id}">თქვენი პასუხი:</label><input id="${id}" type="text" inputmode="decimal" autocomplete="off"><span></span><button class="btn" type="button">შემოწმება</button><span class="fb" aria-live="polite"></span>`;
+  box.children[2].textContent = q.unit;
+  const inp = $('input', box), fb = $('.fb', box);
+  const check = () => {
+    const v = parseFloat(inp.value.replace(',', '.').replace('−', '-'));
+    if (isNaN(v)) { fb.className = 'fb no'; fb.textContent = 'ჩაწერეთ რიცხვი.'; return; }
+    const ok = Math.abs(v - q.ans) <= q.tol + 1e-9;
+    fb.className = 'fb ' + (ok ? 'ok' : 'no');
+    fb.textContent = ok ? `სწორია! ${q.why}` : 'არასწორია, სცადეთ თავიდან.';
+  };
+  $('button', box).addEventListener('click', check);
+  inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); check(); } });
+}
+function setReveal(id, on) {
+  QS[id].revealed = on;
+  const q = QBY[id]; if (!q || q.type !== 'mc') return;
+  $$(`.slide .opts[data-quiz="${id}"]`).forEach(box => {
+    $$('.opt', box).forEach((o, i) => { if (!on) o.classList.remove('correct', 'wrong'); else if (i === q.correct) o.classList.add('correct'); });
+  });
+}
+function initQuizSlides() {
+  $$('.slide .opts[data-quiz]').forEach(box => buildMC(box, QBY[box.dataset.quiz], () => revealAll(box.closest('.slide'))));
+  $$('.slide .why[data-quiz]').forEach(el => { el.textContent = QBY[el.dataset.quiz].why; });
+  $$('.slide .numchk[data-quiz]').forEach(box => buildNum(box, QBY[box.dataset.quiz]));
+  const svg = `<svg viewBox="-3 -3 ${QR_N + 6} ${QR_N + 6}" shape-rendering="crispEdges" role="img" aria-label="QR კოდი პასუხების გვერდისთვის"><rect x="-3" y="-3" width="${QR_N + 6}" height="${QR_N + 6}" fill="#fff"/><path d="${QR_PATH}" fill="#000"/></svg>`;
+  $$('.qr .code').forEach(el => { el.innerHTML = svg; });
+}
+function buildSheet() {
+  const list = $('#sheetList'); if (list.childElementCount) return;
+  QUIZ.forEach(q => {
+    const c = document.createElement('div'); c.className = 'scard';
+    const h = document.createElement('h2'); h.textContent = q.title;
+    const qq = document.createElement('div'); qq.className = 'q'; qq.textContent = q.q;
+    const box = document.createElement('div');
+    c.append(h, qq, box);
+    if (q.type === 'mc') {
+      box.className = 'opts';
+      const why = document.createElement('div'); why.className = 'why'; why.hidden = true; why.textContent = q.why;
+      buildMC(box, q, () => { why.hidden = false; });
+      c.appendChild(why);
+    } else { box.className = 'numchk'; buildNum(box, q); }
+    list.appendChild(c);
+  });
 }
 
 /* ---------- wiring controls ---------- */
-bindRange('cA', v => { P1.A = v; updCircle(); });
-bindRange('cF', v => { P1.f = v; updCircle(); });
-bindRange('cP', v => { P1.ph = v * Math.PI / 180; updCircle(); });
+bindRange('tA', v => { TRI.deg = v; TRI.spin = false; const sb = $('#tSpin'); setPressed(sb, false); sb.textContent = '▶ დავატრიალოთ'; $('#oTA').textContent = `${v}°`; });
+$('#tSpin').addEventListener('click', e => { TRI.spin = !TRI.spin; setPressed(e.currentTarget, TRI.spin); e.currentTarget.textContent = TRI.spin ? '■ გავაჩეროთ' : '▶ დავატრიალოთ'; });
+$$('[data-deg]').forEach(b => b.addEventListener('click', () => { TRI.spin = false; const sb = $('#tSpin'); setPressed(sb, false); sb.textContent = '▶ დავატრიალოთ'; TRI.deg = +b.dataset.deg; syncTri(); }));
+
+const trA = bindRange('trA', v => { TR.A = v; updTransform(); });
+const trW = bindRange('trW', v => { TR.w = v; updTransform(); });
+const trP = bindRange('trP', v => { TR.p = v * Math.PI / 12; updTransform(); });
+$$('[data-tr]').forEach(b => b.addEventListener('click', () => { const [a, w, p] = b.dataset.tr.split(',').map(Number); setRange(trA, a); setRange(trW, w); setRange(trP, p); }));
+
+bindRange('scS', v => { SC.s = v * Math.PI / 12; SC.target = null; $('#oScS').textContent = fmtPi(SC.s); });
+$('#scGo').addEventListener('click', () => { SC.target = Math.PI / 2; if (paused) { SC.s = SC.target; SC.target = null; syncSC(); } });
+$('#scZero').addEventListener('click', () => { SC.target = null; SC.s = 0; syncSC(); });
 
 const sF = bindRange('sF', v => { S.f = fFromSlider(v); updSound(); });
 bindRange('sV', v => { S.vol = v; updSound(); });
 $$('[data-note]').forEach(b => b.addEventListener('click', () => { S.f = parseFloat(b.dataset.note); sF.value = sliderFromF(S.f); fill(sF); updSound(); }));
 $('#sPlay').addEventListener('click', () => { S.tone ? stopSound() : startSound(); });
-function startSound() { S.tone = AUD.tone(S.f, S.vol * 0.22); setPressed($('#sPlay'), !!S.tone); setPlayLabel($('#sPlay'), !!S.tone); }
-function stopSound() { AUD.stop(S.tone); S.tone = null; setPressed($('#sPlay'), false); setPlayLabel($('#sPlay'), false); }
+function startSound() { S.tone = AUD.tone(S.f, S.vol * 0.22); const b = $('#sPlay'); setPressed(b, !!S.tone); b.textContent = S.tone ? '■ გაჩერება' : '▶ მოსმენა'; }
+function stopSound() { AUD.stop(S.tone); S.tone = null; const b = $('#sPlay'); setPressed(b, false); b.textContent = '▶ მოსმენა'; }
 
 bindRange('bD', v => { B.d = v; updBeats(); });
-$('#bPlay').addEventListener('click', () => { B.tones ? stopBeats() : startBeats(); });
-function startBeats() {
+$('#bPlay').addEventListener('click', e => { B.tones ? stopBeats(B, e.currentTarget) : startBeats(B, e.currentTarget); });
+$('#pbPlay').addEventListener('click', e => { BP.tones ? stopBeats(BP, e.currentTarget) : startBeats(BP, e.currentTarget); });
+$('#seqPlay').addEventListener('click', () => {
   const c = AUD.ensure(); if (!c) return;
-  const when = c.currentTime + 0.05;
-  B.tones = [AUD.tone(B.f1, 0.12, when), AUD.tone(B.f1 + B.d, 0.12, when)]; B.t0 = when;
-  setPressed($('#bPlay'), true); setPlayLabel($('#bPlay'), true);
-}
-function stopBeats() { if (B.tones) B.tones.forEach(tn => AUD.stop(tn)); B.tones = null; setPressed($('#bPlay'), false); setPlayLabel($('#bPlay'), false); }
-function setPlayLabel(btn, on) {
-  btn.querySelector('.ka').textContent = on ? '■ გაჩერება' : '▶ მოსმენა';
-  btn.querySelector('.en').textContent = on ? '■ Stop' : '▶ Play';
-}
+  const t0 = c.currentTime + 0.05;
+  [[440, t0], [880, t0 + 1.1]].forEach(([f, s]) => {
+    const o = c.createOscillator(), gn = c.createGain(); o.frequency.value = f;
+    gn.gain.setValueAtTime(0, s); gn.gain.linearRampToValueAtTime(0.2, s + 0.03); gn.gain.setValueAtTime(0.2, s + 0.85); gn.gain.linearRampToValueAtTime(0, s + 0.95);
+    o.connect(gn); gn.connect(AUD.master); o.start(s); o.stop(s + 1);
+  });
+});
 
 bindRange('lL', v => { L.nm = v; updLight(); });
 
@@ -1183,55 +1706,101 @@ $$('[data-tab]').forEach(b => b.addEventListener('click', () => {
   $$('[data-pane]').forEach(p => p.hidden = p.dataset.pane !== PR.tab);
 }));
 
-function updateAllReadouts() { updCircle(); updSound(); updBeats(); updLight(); updOsc(); }
+$$('.mean').forEach(m => {
+  const btns = $$('.mt button', m), panes = $$('.mp', m);
+  btns.forEach((b, i) => b.addEventListener('click', () => {
+    btns.forEach((x, j) => x.setAttribute('aria-selected', j === i ? 'true' : 'false'));
+    panes.forEach((p, j) => p.hidden = j !== i);
+  }));
+});
 
-/* ---------- slides & navigation ---------- */
+const teacher = $('#teacher');
+const savedTeacher = store.get('trig-teacher');
+if (savedTeacher && !teacher.textContent.trim()) teacher.textContent = savedTeacher;
+teacher.addEventListener('input', () => store.set('trig-teacher', teacher.textContent.trim()));
+teacher.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); teacher.blur(); } });
+
+function updateAllReadouts() { syncTri(); updTransform(); syncSC(); updSound(); updBeats(); updLight(); updOsc(); }
+
+/* ---------- slides, steps & navigation ---------- */
 const slides = $$('.slide');
+const SCENE_FN = {
+  hero: drawHero, outro: drawOutro, triangle: drawTriangle, unroll: drawUnroll, transform: drawTransform, sincos: drawSinCos,
+  sound: drawSound, beats: makeBeats(B), light: drawLight, p1: makeBeats(BP),
+  d1: makeCompare({ quiz: 'd1', x0: 0, x1: 10, y0: -1.3, y1: 1.3, xt: [0, 2, 4, 6, 8, 10], yt: [-1, 0, 1], xl: 't, მწმ',
+    a: { f: x => Math.sin(TAU * 0.44 * x), col: () => C.sin, lab: 'f = 440 ჰც, T ≈ 2.27 მწმ' },
+    b: { f: x => Math.sin(TAU * 0.88 * x), col: () => C.cos, lab: '2f = 880 ჰც, T ≈ 1.14 მწმ', labQ: '2f = 880 ჰც: ?' } }),
+  osc: makeOsc(O), p2: makeOsc(OP),
+  d2: makeCompare({ quiz: 'd2', x0: 0, x1: 4, y0: -1.3, y1: 1.3, xt: [0, 1, 2, 3, 4], yt: [-1, 0, 1], xl: 't, წმ',
+    a: { f: x => Math.cos(TAU * x / 0.9935), col: () => C.sin, lab: 'm = 0.5 კგ, T ≈ 0.99 წმ' },
+    b: { f: x => Math.cos(TAU * x / 1.987), col: () => C.cos, lab: '4m = 2 კგ, T ≈ 1.99 წმ', labQ: '4m = 2 კგ: ?' } }),
+  per: drawPer, p3: drawP3,
+  d3: makeCompare({ quiz: 'd3', x0: 0, x1: 20, y0: 0, y1: 55, xt: [0, 5, 10, 15, 20], yt: [1, 26, 51], xl: 't, წთ',
+    a: { f: x => 26 - 25 * Math.cos(TAU * x / 10), col: () => C.sin, lab: 'T = 10 წთ' },
+    b: { f: x => 26 - 25 * Math.cos(TAU * x / 20), col: () => C.cos, lab: 'T = 20 წთ', labQ: 'T = 20 წთ: ?' } })
+};
 const scenes = new Map();
-function addScene(i, id, fn) { const v = new Viz($('#' + id), fn); scenes.set(i, (scenes.get(i) || []).concat(v)); }
+slides.forEach((s, i) => $$('canvas[data-scene]', s).forEach(c => scenes.set(i, (scenes.get(i) || []).concat(new Viz(c, SCENE_FN[c.dataset.scene])))));
+
+const stepsOf = sl => $$('.step', sl);
+function showStep(el, on) { el.classList.toggle('shown', on); if (el.dataset.quiz) setReveal(el.dataset.quiz, on); }
+function updStepBtn(sl) { const b = $('[data-next-step]', sl); if (b) b.disabled = !stepsOf(sl).some(s => !s.classList.contains('shown')); }
+function revealNext(sl) { const h = stepsOf(sl).find(s => !s.classList.contains('shown')); if (h) { showStep(h, true); updStepBtn(sl); return true; } return false; }
+function revealAll(sl) { stepsOf(sl).forEach(s => showStep(s, true)); updStepBtn(sl); }
+function resetSteps(sl, all) { stepsOf(sl).forEach(s => showStep(s, all)); if (!all) $$('.opt', sl).forEach(o => o.classList.remove('correct', 'wrong')); updStepBtn(sl); }
+$$('[data-next-step]').forEach(b => b.addEventListener('click', () => { revealNext(b.closest('.slide')); b.blur(); }));
+
 let current = 0;
 function buildProgress() {
   const p = $('#prog'); p.innerHTML = '';
   slides.forEach((s, i) => {
     const b = document.createElement('button');
-    const nm = lang === 'ka' ? s.dataset.nameKa : s.dataset.nameEn;
-    b.title = `${i + 1}. ${nm}`; b.setAttribute('aria-label', b.title);
+    b.title = `${i + 1}. ${s.dataset.name}`; b.setAttribute('aria-label', b.title);
     b.className = i === current ? 'on' : i < current ? 'done' : '';
     b.addEventListener('click', () => { go(i); b.blur(); });
     p.appendChild(b);
   });
   $('#count').textContent = `${current + 1} / ${slides.length}`;
 }
+function stopAllAudio() { stopSound(); stopBeats(B, $('#bPlay')); stopBeats(BP, $('#pbPlay')); }
 function go(i, fromHash) {
   i = Math.max(0, Math.min(slides.length - 1, i));
   if (i === current && slides[i].classList.contains('active')) return;
-  const prev = current;
+  const prevI = current;
   slides.forEach((s, k) => { s.classList.toggle('active', k === i); s.classList.toggle('back', k < i); });
   current = i;
-  if (prev !== i) { stopSound(); stopBeats(); }
-  if (i === 5) O.t = 0;
+  if (prevI !== i) stopAllAudio();
+  const sl = slides[i];
+  if (sl.hasAttribute('data-steps')) resetSteps(sl, prevI > i);
+  const cv = $('canvas[data-scene]', sl), sc = cv && cv.dataset.scene;
+  if (sc === 'osc') O.t = 0; else if (sc === 'p2') OP.t = 0; else if (sc === 'p3') p3Clock = 0; else if (sc === 'unroll') unClock = 0;
   buildProgress();
   if (!fromHash) { try { history.replaceState(null, '', '#slide-' + (i + 1)); } catch (e) {} }
   (scenes.get(i) || []).forEach(v => v.resize());
 }
-const next = () => go(current + 1), prev = () => go(current - 1);
+function next() { const sl = slides[current]; if (sl.hasAttribute('data-steps') && revealNext(sl)) return; go(current + 1); }
+function prev() {
+  const sl = slides[current];
+  if (sl.hasAttribute('data-steps')) {
+    const shown = stepsOf(sl).filter(s => s.classList.contains('shown'));
+    if (shown.length) {
+      showStep(shown[shown.length - 1], false);
+      if (shown.length === 1) $$('.opt', sl).forEach(o => o.classList.remove('correct', 'wrong'));
+      updStepBtn(sl); return;
+    }
+  }
+  go(current - 1);
+}
 $('#nNext').addEventListener('click', e => { next(); e.currentTarget.blur(); });
 $('#nPrev').addEventListener('click', e => { prev(); e.currentTarget.blur(); });
 
-// pause
 let paused = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const pauseIcon = '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>';
 const playIcon = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l12.5-7.5z"/></svg>';
-function setPaused(p) { paused = p; $('#nPause').innerHTML = p ? playIcon : pauseIcon; $('#nPause').setAttribute('aria-label', p ? 'Play animation' : 'Pause animation'); }
+function setPaused(p) { paused = p; $('#nPause').innerHTML = p ? playIcon : pauseIcon; $('#nPause').setAttribute('aria-label', p ? 'ანიმაციის გაგრძელება' : 'ანიმაციის პაუზა'); }
 $('#nPause').addEventListener('click', e => { setPaused(!paused); e.currentTarget.blur(); });
-
-// theme
 $('#nTheme').addEventListener('click', e => { toggleTheme(); e.currentTarget.blur(); });
 function toggleTheme() { const d = !isDark(); root.dataset.theme = d ? 'dark' : 'light'; store.set('trig-theme', root.dataset.theme); readColors(); updLight(); }
-// language
-$('#nLang').addEventListener('click', e => { toggleLang(); e.currentTarget.blur(); });
-function toggleLang() { lang = lang === 'ka' ? 'en' : 'ka'; store.set('trig-lang', lang); applyLang(); }
-// fullscreen
 const canFS = !!(root.requestFullscreen || root.webkitRequestFullscreen);
 if (!canFS) $('#nFull').hidden = true;
 function toggleFS() {
@@ -1242,17 +1811,19 @@ function toggleFS() {
   } catch (e) {}
 }
 $('#nFull').addEventListener('click', e => { toggleFS(); e.currentTarget.blur(); });
-// help
 const help = $('#help');
 function showHelp(v) { help.hidden = !v; if (v) $('#helpClose').focus(); }
 $('#nHelp').addEventListener('click', () => showHelp(true));
 $('#helpClose').addEventListener('click', () => showHelp(false));
 help.addEventListener('click', e => { if (e.target === help) showHelp(false); });
 
-// keyboard
+let sheetOpen = false;
 document.addEventListener('keydown', e => {
-  if (e.ctrlKey || e.metaKey || e.altKey) return;
-  const tag = (document.activeElement && document.activeElement.tagName) || '';
+  if (sheetOpen || e.ctrlKey || e.metaKey || e.altKey) return;
+  const ae = document.activeElement;
+  if (ae && ae.isContentEditable) return;
+  const tag = (ae && ae.tagName) || '';
+  if (tag === 'INPUT' && ae.type === 'text') return;
   const inCtl = tag === 'INPUT' || tag === 'BUTTON' || tag === 'SELECT';
   const k = e.key;
   if (!help.hidden) { if (k === 'Escape' || k === '?') { showHelp(false); e.preventDefault(); } return; }
@@ -1263,70 +1834,69 @@ document.addEventListener('keydown', e => {
   else if (k === 'ArrowLeft' || k === 'ArrowUp' || k === 'Backspace') { prev(); e.preventDefault(); }
   else if (k === 'Home') { go(0); e.preventDefault(); }
   else if (k === 'End') { go(slides.length - 1); e.preventDefault(); }
-  else if (/^[1-9]$/.test(k)) go(parseInt(k, 10) - 1);
   else if (k === 'f' || k === 'F' || k === 'ფ') toggleFS();
   else if (k === 't' || k === 'T' || k === 'ტ') toggleTheme();
-  else if (k === 'l' || k === 'L' || k === 'ლ') toggleLang();
   else if (k === 'p' || k === 'P' || k === 'პ' || k === 'k' || k === 'K') setPaused(!paused);
   else if (k === '?') showHelp(true);
-  else if (k === 'Escape' && document.activeElement) document.activeElement.blur();
+  else if (k === 'Escape' && ae) ae.blur();
 });
-// drop focus from sliders after mouse use, so arrow keys go back to slide navigation
 document.addEventListener('pointerup', e => { const el = e.target.closest && e.target.closest('input[type=range], button'); if (el && e.pointerType === 'mouse') setTimeout(() => el.blur(), 0); });
 
-// swipe
-let sx = 0, sy = 0, st = 0, swiping = false;
+let sx = 0, sy = 0, st0 = 0, swiping = false;
 const stage = $('#stage');
 stage.addEventListener('touchstart', e => {
-  if (e.target.closest('input, button, label, .tblwrap')) { swiping = false; return; }
-  const t = e.touches[0]; sx = t.clientX; sy = t.clientY; st = Date.now(); swiping = true;
+  if (e.target.closest('input, button, label, .tblwrap, [contenteditable]')) { swiping = false; return; }
+  const tt = e.touches[0]; sx = tt.clientX; sy = tt.clientY; st0 = Date.now(); swiping = true;
 }, { passive: true });
 stage.addEventListener('touchend', e => {
   if (!swiping) return; swiping = false;
-  const t = e.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy;
-  if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.6 && Date.now() - st < 800) (dx < 0 ? next : prev)();
+  const tt = e.changedTouches[0], dx = tt.clientX - sx, dy = tt.clientY - sy;
+  if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.6 && Date.now() - st0 < 800) (dx < 0 ? next : prev)();
 }, { passive: true });
 
-// idle: dim the nav bar and hide the cursor during the talk
 let idleT;
-function wake() { document.body.classList.remove('idle'); clearTimeout(idleT); idleT = setTimeout(() => { if (help.hidden) document.body.classList.add('idle'); }, 3500); }
+function wake() { document.body.classList.remove('idle'); clearTimeout(idleT); idleT = setTimeout(() => { if (help.hidden && !sheetOpen) document.body.classList.add('idle'); }, 3500); }
 ['mousemove', 'pointerdown', 'keydown', 'touchstart'].forEach(ev => document.addEventListener(ev, wake, { passive: true }));
 
-// keep the screen awake while presenting
 let wakeLock = null;
 async function keepAwake() { try { if ('wakeLock' in navigator && !wakeLock && document.visibilityState === 'visible') { wakeLock = await navigator.wakeLock.request('screen'); wakeLock.addEventListener('release', () => { wakeLock = null; }); } } catch (e) {} }
 document.addEventListener('pointerdown', keepAwake, { once: true });
 document.addEventListener('keydown', keepAwake, { once: true });
-document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') keepAwake(); else { stopSound(); stopBeats(); } });
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') keepAwake(); else stopAllAudio(); });
 
-window.addEventListener('hashchange', () => { const m = /^#slide-(\d+)$/.exec(location.hash); if (m) go(parseInt(m[1], 10) - 1, true); });
+/* ---------- routing: #slide-N for the deck, #answers for phones ---------- */
+function route(fromLoad) {
+  const hsh = location.hash;
+  if (hsh === '#answers') {
+    sheetOpen = true; stopAllAudio(); buildSheet();
+    $('#deck').hidden = true; $('#sheet').hidden = false; document.body.classList.add('sheet'); document.body.classList.remove('idle');
+    return;
+  }
+  if (sheetOpen) { sheetOpen = false; $('#deck').hidden = false; $('#sheet').hidden = true; document.body.classList.remove('sheet'); measure(); scenes.forEach(vs => vs.forEach(v => v.resize())); }
+  const m = /^#slide-(\d+)$/.exec(hsh);
+  if (m) go(parseInt(m[1], 10) - 1, true); else if (fromLoad) go(0, true);
+}
+window.addEventListener('hashchange', () => route(false));
 window.addEventListener('resize', measure);
 
 /* ---------- boot ---------- */
 readColors(); measure();
-addScene(0, 'cvHero', drawHero);
-addScene(1, 'cvCircle', drawCircle);
-addScene(2, 'cvSound', drawSound);
-addScene(3, 'cvBeats', drawBeats);
-addScene(4, 'cvLight', drawLight);
-addScene(5, 'cvOsc', drawOsc);
-addScene(6, 'cvPer', drawPer);
-addScene(7, 'cvOutro', drawOutro);
-applyLang();
+initQuizSlides();
+updateAllReadouts();
 setPaused(paused);
-const m0 = /^#slide-(\d+)$/.exec(location.hash);
-current = -1; go(m0 ? parseInt(m0[1], 10) - 1 : 0, true);
-if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { measure(); });
+current = -1; route(true);
+if (current < 0) current = 0;
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
 wake();
 
 let simT = 0, last = performance.now();
-function frame(now) {
+function loop(now) {
   const dt = Math.min(0.05, Math.max(0, (now - last) / 1000)); last = now;
   const d = paused ? 0 : dt; simT += d;
-  (scenes.get(current) || []).forEach(v => v.render(simT, d));
-  requestAnimationFrame(frame);
+  if (!sheetOpen) (scenes.get(current) || []).forEach(v => v.render(simT, d));
+  requestAnimationFrame(loop);
 }
-requestAnimationFrame(frame);
+requestAnimationFrame(loop);
 })();
 </script>
 
