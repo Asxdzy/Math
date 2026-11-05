@@ -95,6 +95,9 @@ ul.pts li::before{content:""; position:absolute; left:.15em; top:.6em; width:.42
 .mean .mt button{border:0; background:transparent; padding:.42em .7em; cursor:pointer; color:var(--muted); font-weight:600; border-bottom:.16em solid transparent; margin-bottom:-1px}
 .mean .mt button[aria-selected="true"]{color:var(--ink); border-bottom-color:var(--tri)}
 .mean .mp{padding:.5em .85em .6em}
+.mean .mp + .mp{border-top:1px solid var(--line)}
+.mean h4{margin:0 0 .2em; font-size:.86em; font-weight:700; color:var(--tri)}
+.mean .mp + .mp h4{color:var(--cos)}
 .mean .mp p{max-width:none}
 
 /* controls */
@@ -151,6 +154,11 @@ ol.steps li.final::before{content:"✓"; color:var(--tri)}
 
 /* cover & agenda */
 .slide.cover .head{align-self:end}
+.cover-info{display:grid; gap:1.2em; max-width:36em; border-top:.14em solid var(--sin); padding-top:1.1em}
+.ci-label{font-size:.66em; letter-spacing:.14em; color:var(--muted); font-weight:700; margin-bottom:.45em}
+.ci-names{display:grid; grid-template-columns:repeat(auto-fit, minmax(10.5em, 1fr)); gap:.4em 1.8em; font-family:var(--f-display); font-size:1.3em; font-weight:600; line-height:1.25}
+.ci-row{display:flex; flex-wrap:wrap; gap:1em 2.6em; border-top:1px solid var(--line); padding-top:1em}
+.ci-val{font-size:1.12em; font-weight:600}
 .cover-meta{display:grid; grid-template-columns:auto 1fr; gap:.5em 1.4em; margin:0; font-size:.98em; max-width:34em}
 .cover-meta dt{color:var(--muted); font-size:.82em; padding-top:.12em; white-space:nowrap}
 .cover-meta dd{margin:0; font-weight:500}
@@ -237,19 +245,22 @@ body.idle .nav{opacity:.18}
 <!-- 1 · COVER -->
 <section class="slide cover active" data-name="ყდა">
   <div class="head">
-    <div class="eyebrow">მათემატიკის პროექტი</div>
-    <h1 style="margin-top:.2em">ტრიგონომეტრიის გამოყენება</h1>
+    <h1>ტრიგონომეტრიის გამოყენება</h1>
   </div>
-  <div class="body" style="padding-top:.6em">
-    <dl class="cover-meta">
-      <dt>ავტორები</dt>
-      <dd class="names"><span>საბა ბერუაშვილი</span><span>თორნიკე ზირაქაშვილი</span><span>ირაკლი ბრეგვაძე</span><span>გაბრიელ ნიორაძე</span></dd>
-      <dt>კლასი</dt><dd>10 გ</dd>
-      <dt>სკოლა</dt><dd>№112 საჯარო სკოლა</dd>
-      <dt>მასწავლებელი</dt><dd><span id="teacher">ნინო ბარამიძე</span></dd>
-    </dl>
+  <div class="body" style="padding-top:.9em">
+    <div class="cover-info">
+      <div>
+        <div class="ci-label">ჯგუფის წევრები</div>
+        <div class="ci-names"><span>საბა ბერუაშვილი</span><span>თორნიკე ზირაქაშვილი</span><span>ირაკლი ბრეგვაძე</span><span>გაბრიელ ნიორაძე</span></div>
+      </div>
+      <div class="ci-row">
+        <div><div class="ci-label">კლასი</div><div class="ci-val">10 გ</div></div>
+        <div><div class="ci-label">სკოლა</div><div class="ci-val">№112 საჯარო სკოლა</div></div>
+        <div><div class="ci-label">მასწავლებელი</div><div class="ci-val"><span id="teacher">ნინო ბარამიძე</span></div></div>
+      </div>
+    </div>
   </div>
-  <div class="viz"><canvas data-scene="hero" aria-label="წრეზე მბრუნავი წერტილი ხაზავს სინუსოიდას"></canvas></div>
+  <div class="viz"><canvas data-scene="hero" aria-label="წრეწირზე მბრუნავი წერტილი ხაზავს სინუსოიდას"></canvas></div>
 </section>
 
 <!-- 2 · AGENDA -->
@@ -259,10 +270,10 @@ body.idle .nav{opacity:.18}
     <h2>რას ვიხილავთ</h2>
   </div>
   <div class="body" style="gap:.9em">
-    <p class="lead">ტრიგონომეტრიას ძირითადად სამკუთხედებთან ვიყენებთ, მაგრამ სინუსი და კოსინუსი ბევრ სხვა რამესაც აღწერს: ყველაფერს, რაც დროში მეორდება. ჯერ ავხსნით მათემატიკას, შემდეგ ვნახავთ, სად გამოიყენება ის.</p>
+    <p class="lead">ტრიგონომეტრიას ძირითადად სამკუთხედებთან ვიყენებთ, მაგრამ სინუსი და კოსინუსი ბევრ სხვა რამესაც აღწერს: ყველაფერს, რაც დროში მეორდება. ჯერ ავხსნით მათემატიკურად, შემდეგ ვნახავთ, სად გამოიყენება.</p>
     <div class="cols">
       <div class="col"><h3>მათემატიკური საფუძველი</h3>
-        <ol class="agenda"><li>რა არის სინუსი ერთეულოვან წრეზე</li><li>როგორ იქცევა წრე ტალღად</li><li>რას აკეთებს A, ω და φ ფორმულაში</li><li>სინუსი თუ კოსინუსი?</li></ol></div>
+        <ol class="agenda"><li>რა არის სინუსი ერთეულოვან წრეწირზე</li><li>როგორ იქცევა წრეწირი ტალღად</li><li>რას აკეთებს A, ω და φ ფორმულაში</li><li>სინუსი თუ კოსინუსი?</li></ol></div>
       <div class="col"><h3>გამოყენება</h3>
         <ol class="agenda apps"><li>ბგერითი და სინათლის ტალღები</li><li>რხევითი მოძრაობა</li><li>სხვადასხვა პერიოდული პროცესის აღწერა</li></ol></div>
     </div>
@@ -280,17 +291,17 @@ body.idle .nav{opacity:.18}
     <h2>რა არის სინუსი?</h2>
   </div>
   <div class="body">
-    <p>ავიღოთ წრე, რომლის რადიუსია 1 (ერთეულოვანი წრე). მასზე წერტილი P მოვაბრუნოთ <i class="vP">α</i> კუთხით. P-დან ღერძზე დავუშვათ მართობი და მივიღებთ მართკუთხა სამკუთხედს.</p>
-    <div class="formula">sin <i class="vP">α</i> = <span class="frac w"><span>მოპირდაპირე კათეტი</span><span>ჰიპოტენუზა</span></span> = <span class="frac"><span><i class="vA">y</i></span><span>1</span></span> = <i class="vA">y</i></div>
+    <p>ავიღოთ წრეწირი, რომლის რადიუსია 1 (ერთეულოვანი წრეწირი) და ცენტრი A წერტილშია. წრეწირზე წერტილი B მოვაბრუნოთ <i class="vP">α</i> კუთხით. B-დან Ox ღერძზე დავუშვათ მართობი BC და მივიღებთ მართკუთხა სამკუთხედს ABC (∠C = 90°).</p>
+    <div class="formula">sin <i class="vP">α</i> = <span class="frac"><span class="vA">BC</span><span>AB</span></span> = <span class="frac"><span class="vA">BC</span><span>1</span></span> = <span class="vA">BC</span> = <i class="vA">y</i></div>
     <dl class="legend">
-      <dt class="vP">α</dt><dd>კუთხე, რამდენით მოვაბრუნეთ წერტილი</dd>
-      <dt class="vA">sin α</dt><dd>წერტილის <b>სიმაღლე</b> (y კოორდინატი)</dd>
-      <dt class="vW">cos α</dt><dd>წერტილის მანძილი <b>გვერდზე</b> (x კოორდინატი)</dd>
+      <dt class="vP">α = ∠A</dt><dd>კუთხე, რამდენით მოვაბრუნეთ წერტილი</dd>
+      <dt>AB = 1</dt><dd><b>ჰიპოტენუზა</b>, წრეწირის რადიუსი</dd>
+      <dt class="vA">BC = sin α</dt><dd><b>მოპირდაპირე კათეტი</b>, B წერტილის სიმაღლე (y)</dd>
+      <dt class="vW">AC = cos α</dt><dd><b>მიმდებარე კათეტი</b>, B წერტილის მანძილი გვერდზე (x)</dd>
     </dl>
     <div class="mean">
-      <div class="mt" role="tablist"><button role="tab" aria-selected="true">რას ნიშნავს ეს?</button><button role="tab" aria-selected="false">უფრო ღრმად</button></div>
-      <div class="mp"><p>სინუსი გვეუბნება, რამდენად მაღლაა წერტილი, როცა ის α კუთხით მოვაბრუნეთ. 0°-ზე სიმაღლე 0-ია, 90°-ზე წერტილი ყველაზე მაღლაა (sin 90° = 1), წრის ქვედა ნახევარში კი სიმაღლე და სინუსი უარყოფითია.</p></div>
-      <div class="mp" hidden><p>კათეტებია sin α და cos α, ჰიპოტენუზა 1, ამიტომ პითაგორას თეორემით <b>sin²α + cos²α = 1</b>. რადგან წერტილი წრეზეა, −1 ≤ sin α ≤ 1. ეს განმარტება 90°-ზე მეტი კუთხეებისთვისაც მუშაობს, სადაც ჩვეულებრივი სამკუთხედი აღარ გამოდგება.</p></div>
+      <div class="mp"><h4>რას ნიშნავს ეს?</h4><p>სინუსი გვეუბნება, რამდენად მაღლაა B წერტილი, როცა ის α კუთხით მოვაბრუნეთ. 0°-ზე სიმაღლე 0-ია, 90°-ზე B ყველაზე მაღლაა (sin 90° = 1), წრეწირის ქვედა ნახევარში კი სიმაღლე და სინუსი უარყოფითია.</p></div>
+      <div class="mp"><h4>უფრო ღრმად</h4><p>ზოგადად, ნებისმიერ მართკუთხა სამკუთხედში ABC (∠C = 90°): sin A = BC/AB, cos A = AC/AB. ერთეულოვან წრეწირზე AB = 1, ამიტომ sin α = BC და cos α = AC. პითაგორას თეორემით BC² + AC² = AB², ანუ <b>sin²α + cos²α = 1</b>. ეს განმარტება 90°-ზე მეტი კუთხეებისთვისაც მუშაობს.</p></div>
     </div>
     <div class="ctls">
       <label for="tA">კუთხე <i>α</i></label>
@@ -300,17 +311,17 @@ body.idle .nav{opacity:.18}
         <button class="btn" data-deg="30">30°</button><button class="btn" data-deg="90">90°</button><button class="btn" data-deg="150">150°</button><button class="btn" data-deg="240">240°</button></div>
     </div>
   </div>
-  <div class="viz"><canvas data-scene="triangle" aria-label="ერთეულოვანი წრე და მართკუთხა სამკუთხედი"></canvas></div>
+  <div class="viz"><canvas data-scene="triangle" aria-label="ერთეულოვანი წრეწირი და მართკუთხა სამკუთხედი ABC"></canvas></div>
 </section>
 
 <!-- 4 · CIRCLE TO WAVE -->
 <section class="slide" data-name="წრიდან ტალღამდე">
   <div class="head">
     <div class="eyebrow">მათემატიკური საფუძველი · 2</div>
-    <h2>როგორ იქცევა წრე ტალღად</h2>
+    <h2>როგორ იქცევა წრეწირი ტალღად</h2>
   </div>
   <div class="body">
-    <p>წერტილი წრეზე დავატრიალოთ და ყოველ მომენტში მისი სიმაღლე გრაფიკზე გადავიტანოთ. ჰორიზონტალურ ღერძზე კუთხეა, ვერტიკალურზე სიმაღლე. მივიღებთ ტალღას, რომელსაც <b>სინუსოიდა</b> ჰქვია.</p>
+    <p>წერტილი წრეწირზე დავატრიალოთ და ყოველ მომენტში მისი სიმაღლე გრაფიკზე გადავიტანოთ. ჰორიზონტალურ ღერძზე კუთხეა, ვერტიკალურზე სიმაღლე. მივიღებთ ტალღას, რომელსაც <b>სინუსოიდა</b> ჰქვია.</p>
     <div class="formula"><i>y</i> = sin <i>x</i></div>
     <dl class="legend">
       <dt class="vA">A</dt><dd><b>ამპლიტუდა</b>: ტალღის უდიდესი სიმაღლე შუა ხაზიდან. აქ A = 1.</dd>
@@ -318,12 +329,11 @@ body.idle .nav{opacity:.18}
       <dt class="vW">f = 1/T</dt><dd><b>სიხშირე</b>: რამდენჯერ მეორდება ტალღა ერთ წამში (ჰერცი, ჰც).</dd>
     </dl>
     <div class="mean">
-      <div class="mt" role="tablist"><button role="tab" aria-selected="true">რას ნიშნავს ეს?</button><button role="tab" aria-selected="false">უფრო ღრმად</button></div>
-      <div class="mp"><p>ერთი სრული ბრუნის შემდეგ წერტილი იმავე ადგილას ბრუნდება და ყველაფერი თავიდან იწყება, ამიტომ ტალღაც მეორდება. ასეთ ფუნქციას <b>პერიოდული</b> ეწოდება.</p></div>
-      <div class="mp" hidden><p>ნებისმიერი x-ისთვის sin(x + 2π) = sin x, ამიტომ 2π სინუსის უმცირესი პერიოდია. კუთხეს რადიანებში ვზომავთ: 360° = 2π რად. რადიანი მოსახერხებელია, რადგან ერთეულოვან წრეზე რკალის სიგრძე ზუსტად კუთხის ტოლია.</p></div>
+      <div class="mp"><h4>რას ნიშნავს ეს?</h4><p>ერთი სრული ბრუნის შემდეგ წერტილი იმავე ადგილას ბრუნდება და ყველაფერი თავიდან იწყება, ამიტომ ტალღაც მეორდება. ასეთ ფუნქციას <b>პერიოდული</b> ეწოდება.</p></div>
+      <div class="mp"><h4>უფრო ღრმად</h4><p>ნებისმიერი x-ისთვის sin(x + 2π) = sin x, ამიტომ 2π სინუსის უმცირესი პერიოდია. კუთხეს რადიანებში ვზომავთ: 360° = 2π რად. რადიანი მოსახერხებელია, რადგან ერთეულოვან წრეწირზე რკალის სიგრძე ზუსტად კუთხის ტოლია.</p></div>
     </div>
   </div>
-  <div class="viz"><canvas data-scene="unroll" aria-label="წრე და სინუსოიდის გრაფიკი"></canvas></div>
+  <div class="viz"><canvas data-scene="unroll" aria-label="წრეწირი და სინუსოიდის გრაფიკი"></canvas></div>
 </section>
 
 <!-- 5 · A, ω, φ -->
@@ -349,9 +359,8 @@ body.idle .nav{opacity:.18}
     </div>
     <div class="readout" id="trRead"></div>
     <div class="mean">
-      <div class="mt" role="tablist"><button role="tab" aria-selected="true">რას ნიშნავს ეს?</button><button role="tab" aria-selected="false">უფრო ღრმად</button></div>
-      <div class="mp"><p>A ტალღის სიმაღლეა, ω აჩვენებს, რამდენად ხშირად მეორდება, φ კი საიდან იწყება. ამ სამი რიცხვით ნებისმიერ სინუსოიდას ავაგებთ.</p></div>
-      <div class="mp" hidden><p>ωx + φ = ω(x + φ/ω), ამიტომ გრაფიკი φ/ω-ით იწევს და არა φ-ით. „+“ ნიშანი მარცხნივ წევს, რადგან იგივე მნიშვნელობა ახლა უფრო ადრე, ნაკლებ x-ზე მიიღება. პერიოდი გამოდის ωT = 2π ტოლობიდან.</p></div>
+      <div class="mp"><h4>რას ნიშნავს ეს?</h4><p>A ტალღის სიმაღლეა, ω აჩვენებს, რამდენად ხშირად მეორდება, φ კი საიდან იწყება. ამ სამი რიცხვით ნებისმიერ სინუსოიდას ავაგებთ.</p></div>
+      <div class="mp"><h4>უფრო ღრმად</h4><p>ωx + φ = ω(x + φ/ω), ამიტომ გრაფიკი φ/ω-ით იწევს და არა φ-ით. „+“ ნიშანი მარცხნივ წევს, რადგან იგივე მნიშვნელობა ახლა უფრო ადრე, ნაკლებ x-ზე მიიღება. პერიოდი გამოდის ωT = 2π ტოლობიდან.</p></div>
     </div>
   </div>
   <div class="viz"><canvas data-scene="transform" aria-label="y = A sin(ωx + φ) გრაფიკი"></canvas></div>
@@ -366,6 +375,10 @@ body.idle .nav{opacity:.18}
   <div class="body">
     <p>კოსინუსის გრაფიკი სინუსის გრაფიკის ასლია, უბრალოდ π/2-ით (90°-ით) მარცხნივაა გადაწეული. ამიტომ ორივე ერთი ფორმის ტალღაა და ორივეს <b>სინუსოიდა</b> ჰქვია. „კოსინუსოიდა“ ცალკე ფორმა არ არის.</p>
     <div class="formula"><span class="vW">cos</span> <i>x</i> = <span class="vA">sin</span>(<i>x</i> + <span class="vP">π/2</span>)</div>
+    <dl class="legend">
+      <dt class="vA">sin α</dt><dd>წერტილის <b>ორდინატა</b>, ანუ გეგმილი <b>Oy</b> ღერძზე. R რადიუსის წრეწირზე y = R · sin α, ამიტომ სიმაღლე sin α-ს პროპორციულია.</dd>
+      <dt class="vW">cos α</dt><dd>წერტილის <b>აბსცისა</b>, ანუ გეგმილი <b>Ox</b> ღერძზე: x = R · cos α, ამიტომ მანძილი გვერდზე cos α-ს პროპორციულია.</dd>
+    </dl>
     <ul class="pts">
       <li>მოძრაობა იწყება შუა ხაზიდან → <b class="vA">sin</b></li>
       <li>იწყება უმაღლესი წერტილიდან → <b class="vW">cos</b> (ზამბარა, რომელიც ავწიეთ და გავუშვით)</li>
@@ -378,9 +391,8 @@ body.idle .nav{opacity:.18}
       <div class="full"><button class="btn" id="scGo">▶ გადავწიოთ π/2-ით</button><button class="btn" id="scZero">↺ თავიდან</button></div>
     </div>
     <div class="mean">
-      <div class="mt" role="tablist"><button role="tab" aria-selected="true">რას ნიშნავს ეს?</button><button role="tab" aria-selected="false">უფრო ღრმად</button></div>
-      <div class="mp"><p>სინუსი და კოსინუსი ერთი და იგივე ტალღაა. განსხვავება მხოლოდ ისაა, საიდან დავიწყეთ დროის ათვლა. ვირჩევთ იმას, რომლითაც ფორმულა უფრო მარტივი გამოდის.</p></div>
-      <div class="mp" hidden><p>ჯამის ფორმულით: sin(x + π/2) = sin x · cos π/2 + cos x · sin π/2 = cos x. სახელიც აქედან მოდის: cosinus არის ლათინური complementi sinus, ანუ „დამატებითი კუთხის სინუსი“: cos α = sin(90° − α). სიტყვა „სინუსი“ ინდური jyā-დან (მშვილდის ლარი) მოდის, რომელიც არაბულის გავლით ლათინურად sinus-ად (ნაკეცი) ითარგმნა.</p></div>
+      <div class="mp"><h4>რას ნიშნავს ეს?</h4><p>სინუსი და კოსინუსი ერთი და იგივე ტალღაა. განსხვავება მხოლოდ ისაა, საიდან დავიწყეთ დროის ათვლა. ვირჩევთ იმას, რომლითაც ფორმულა უფრო მარტივი გამოდის.</p></div>
+      <div class="mp"><h4>უფრო ღრმად</h4><p>ჯამის ფორმულით: sin(x + π/2) = sin x · cos π/2 + cos x · sin π/2 = cos x. სახელიც აქედან მოდის: cosinus არის ლათინური complementi sinus, ანუ „დამატებითი კუთხის სინუსი“: cos α = sin(90° − α). სიტყვა „სინუსი“ ინდური jyā-დან (მშვილდის ლარი) მოდის, რომელიც არაბულის გავლით ლათინურად sinus-ად (ნაკეცი) ითარგმნა.</p></div>
     </div>
   </div>
   <div class="viz"><canvas data-scene="sincos" aria-label="სინუსის და კოსინუსის გრაფიკები"></canvas></div>
@@ -404,7 +416,7 @@ body.idle .nav{opacity:.18}
       <div class="full">
         <button class="btn play" id="sPlay" aria-pressed="false">▶ მოსმენა</button>
         <span class="muted small">ნოტები:</span>
-        <button class="btn" data-note="261.63">დო</button><button class="btn" data-note="329.63">მი</button><button class="btn" data-note="392">სოლ</button><button class="btn" data-note="440">ლა</button><button class="btn" data-note="880">ლა²</button>
+        <button class="btn" data-note="261.63">დო</button><button class="btn" data-note="329.63">მი</button><button class="btn" data-note="392">სოლ</button><button class="btn" data-note="440">ლა</button>
       </div>
       <label for="sF">სიხშირე <i class="vW">f</i></label>
       <input type="range" id="sF" min="0" max="1" step="0.001" value="0.6667" style="--acc:var(--cos)">
@@ -415,9 +427,8 @@ body.idle .nav{opacity:.18}
     </div>
     <div class="readout" id="sRead"></div>
     <div class="mean">
-      <div class="mt" role="tablist"><button role="tab" aria-selected="true">რას ნიშნავს ეს?</button><button role="tab" aria-selected="false">უფრო ღრმად</button></div>
-      <div class="mp"><p>წვრილ ხმას (სასტვენს) ბევრი ვიწრო ტალღა აქვს, ბოხ ხმას (დოლს) ცოტა და განიერი. ჩართეთ ბგერა და გაზარდეთ სიხშირე: გრაფიკი შეიკუმშება და ხმა აიწევს.</p></div>
-      <div class="mp" hidden><p>ოქტავით მაღალი ნოტის სიხშირე ზუსტად ორჯერ მეტია: ლა 440 ჰც → ლა 880 ჰც. ოქტავაში 12 ნახევარტონია და ყოველი მომდევნო ნოტი წინაზე 2<sup>1/12</sup> ≈ 1.059-ჯერ მაღალია, ანუ ნოტების სიხშირეები გეომეტრიულ პროგრესიას ქმნის.</p></div>
+      <div class="mp"><h4>რას ნიშნავს ეს?</h4><p>წვრილ ხმას (სასტვენს) ბევრი ვიწრო ტალღა აქვს, ბოხ ხმას (დოლს) ცოტა და განიერი. ჩართეთ ბგერა და გაზარდეთ სიხშირე: გრაფიკი შეიკუმშება და ხმა აიწევს.</p></div>
+      <div class="mp"><h4>უფრო ღრმად</h4><p>ოქტავით მაღალი ნოტის სიხშირე ზუსტად ორჯერ მეტია: ლა 440 ჰც → ლა 880 ჰც. ოქტავაში 12 ნახევარტონია და ყოველი მომდევნო ნოტი წინაზე 2<sup>1/12</sup> ≈ 1.059-ჯერ მაღალია, ანუ ნოტების სიხშირეები გეომეტრიულ პროგრესიას ქმნის.</p></div>
     </div>
   </div>
   <div class="viz"><canvas data-scene="sound" aria-label="ჰაერის ნაწილაკები და წნევის ტალღა"></canvas><div class="note">ანიმაცია შენელებულია</div></div>
@@ -441,9 +452,8 @@ body.idle .nav{opacity:.18}
       <output id="oBD"></output>
     </div>
     <div class="mean">
-      <div class="mt" role="tablist"><button role="tab" aria-selected="true">რას ნიშნავს ეს?</button><button role="tab" aria-selected="false">უფრო ღრმად</button></div>
-      <div class="mp"><p>ორი ტალღა ხან ერთად ადის და ერთმანეთს აძლიერებს, ხან ერთი ადის, მეორე ჩადის და ერთმანეთს აქრობენ. <span class="vA">sin</span>-ის ნაწილი ტონია, <span class="vP">cos</span>-ის ნაწილი (მწვანე ხაზი) ხმის სიძლიერეს ნელა ცვლის.</p></div>
-      <div class="mp" hidden><p>ფორმულა გამოდის sin(x + y) + sin(x − y) = 2 sin x cos y ტოლობიდან. cos(πΔf·t)-ის პერიოდია 2/Δf, მაგრამ ყური სიძლიერეს გრძნობს, ანუ |cos|-ს, რომლის პერიოდი ორჯერ მოკლეა: 1/Δf. ამიტომ წამში Δf = |f₁ − f₂| ცემა გვესმის.</p></div>
+      <div class="mp"><h4>რას ნიშნავს ეს?</h4><p>ორი ტალღა ხან ერთად ადის და ერთმანეთს აძლიერებს, ხან ერთი ადის, მეორე ჩადის და ერთმანეთს აქრობენ. <span class="vA">sin</span>-ის ნაწილი ტონია, <span class="vP">cos</span>-ის ნაწილი (მწვანე ხაზი) ხმის სიძლიერეს ნელა ცვლის.</p></div>
+      <div class="mp"><h4>უფრო ღრმად</h4><p>ფორმულა გამოდის sin(x + y) + sin(x − y) = 2 sin x cos y ტოლობიდან. cos(πΔf·t)-ის პერიოდია 2/Δf, მაგრამ ყური სიძლიერეს გრძნობს, ანუ |cos|-ს, რომლის პერიოდი ორჯერ მოკლეა: 1/Δf. ამიტომ წამში Δf = |f₁ − f₂| ცემა გვესმის.</p></div>
     </div>
   </div>
   <div class="viz"><canvas data-scene="beats" aria-label="ორი ტალღა და მათი ჯამი"></canvas><div class="note">რხევები გრაფიკზე შენელებულია, ცემის რიტმი რეალურია</div></div>
@@ -470,9 +480,8 @@ body.idle .nav{opacity:.18}
     </div>
     <div class="readout" id="lRead"></div>
     <div class="mean">
-      <div class="mt" role="tablist"><button role="tab" aria-selected="true">რას ნიშნავს ეს?</button><button role="tab" aria-selected="false">უფრო ღრმად</button></div>
-      <div class="mp"><p>თუ დროს „გავაჩერებთ“, სივრცეში სინუსოიდას დავინახავთ. თუ ერთ წერტილს ვუყურებთ, იქ ველი დროში ირხევა. წითელს ყველაზე გრძელი ტალღა აქვს (≈ 700 ნმ), იისფერს ყველაზე მოკლე (≈ 400 ნმ). 1 ნმ = 0.000001 მმ.</p></div>
-      <div class="mp" hidden><p>ტალღის ერთი და იგივე წერტილი (kx − ωt = const) მოძრაობს კანონით x = (ω/k)·t + const, ანუ სიჩქარით v = ω/k = λf. სინათლისთვის v = c ≈ 3·10⁸ მ/წმ, ამიტომ f = c/λ.</p></div>
+      <div class="mp"><h4>რას ნიშნავს ეს?</h4><p>თუ დროს „გავაჩერებთ“, სივრცეში სინუსოიდას დავინახავთ. თუ ერთ წერტილს ვუყურებთ, იქ ველი დროში ირხევა. წითელს ყველაზე გრძელი ტალღა აქვს (≈ 700 ნმ), იისფერს ყველაზე მოკლე (≈ 400 ნმ). 1 ნმ = 0.000001 მმ.</p></div>
+      <div class="mp"><h4>უფრო ღრმად</h4><p>ტალღის ერთი და იგივე წერტილი (kx − ωt = const) მოძრაობს კანონით x = (ω/k)·t + const, ანუ სიჩქარით v = ω/k = λf. სინათლისთვის v = c ≈ 3·10⁸ მ/წმ, ამიტომ f = c/λ.</p></div>
     </div>
   </div>
   <div class="viz"><canvas data-scene="light" aria-label="ელექტრომაგნიტური ტალღა და სპექტრი"></canvas></div>
@@ -513,9 +522,8 @@ body.idle .nav{opacity:.18}
       </div>
     </div>
     <div class="mean">
-      <div class="mt" role="tablist"><button role="tab" aria-selected="true">რას ნიშნავს ეს?</button><button role="tab" aria-selected="false">უფრო ღრმად</button></div>
-      <div class="mp"><p>მძიმე ტვირთი ნელა ირხევა, მაგარი ზამბარა სწრაფად, გრძელი ქანქარა ნელა ქანაობს. ჰაერის წინააღმდეგობა რხევას ნელ-ნელა აქრობს.</p></div>
-      <div class="mp" hidden><p>ჰაერის წინააღმდეგობით ფორმულა ხდება x = A·e<sup>−βt</sup>·cos(ωt): კოსინუსი მრავლდება კლებად ფუნქციაზე, ამიტომ ამპლიტუდა მცირდება, პერიოდი კი თითქმის არ იცვლება. ქანქარის ფორმულა ზუსტია მცირე გადახრისას, როცა sin θ ≈ θ.</p></div>
+      <div class="mp"><h4>რას ნიშნავს ეს?</h4><p>მძიმე ტვირთი ნელა ირხევა, მაგარი ზამბარა სწრაფად, გრძელი ქანქარა ნელა ქანაობს. ჰაერის წინააღმდეგობა რხევას ნელ-ნელა აქრობს.</p></div>
+      <div class="mp"><h4>უფრო ღრმად</h4><p>ჰაერის წინააღმდეგობით ფორმულა ხდება x = A·e<sup>−βt</sup>·cos(ωt): კოსინუსი მრავლდება კლებად ფუნქციაზე, ამიტომ ამპლიტუდა მცირდება, პერიოდი კი თითქმის არ იცვლება. ქანქარის ფორმულა ზუსტია მცირე გადახრისას, როცა sin θ ≈ θ.</p></div>
     </div>
   </div>
   <div class="viz"><canvas data-scene="osc" aria-label="ზამბარა ან ქანქარა და მისი გრაფიკი"></canvas></div>
@@ -564,9 +572,8 @@ body.idle .nav{opacity:.18}
       <div class="formula sm" style="margin-top:.4em"><i>h</i>(<i>t</i>) = <span class="vD">26</span> + <span class="vA">25</span> · sin<span class="frac"><span>2π(<i>t</i> − <span class="vP">2.5</span>)</span><span class="vW">10</span></span> = <span class="vD">26</span> − <span class="vA">25</span> · cos<span class="frac"><span>2π<i>t</i></span><span class="vW">10</span></span></div>
     </div>
     <div class="mean">
-      <div class="mt" role="tablist"><button role="tab" aria-selected="true">რას ნიშნავს ეს?</button><button role="tab" aria-selected="false">უფრო ღრმად</button></div>
-      <div class="mp"><p>D შუა ხაზია, A რამდენით შორდება მას, T რამდენ ხანში მეორდება, t₀ კი გრაფიკს გვერდზე წევს, რომ სწორ დროს დაიწყოს.</p></div>
-      <div class="mp" hidden><p>რეალური მონაცემები ზუსტ სინუსოიდას არ ემთხვევა, მაგრამ მასთან ძალიან ახლოსაა. ასეთ მიახლოებას მათემატიკური მოდელირება ჰქვია. ბორბლის ორი ფორმულა ტოლია, რადგან 2.5 წუთი პერიოდის მეოთხედია, ანუ π/2-ით წანაცვლება.</p></div>
+      <div class="mp"><h4>რას ნიშნავს ეს?</h4><p>D შუა ხაზია, A რამდენით შორდება მას, T რამდენ ხანში მეორდება, t₀ კი გრაფიკს გვერდზე წევს, რომ სწორ დროს დაიწყოს.</p></div>
+      <div class="mp"><h4>უფრო ღრმად</h4><p>რეალური მონაცემები ზუსტ სინუსოიდას არ ემთხვევა, მაგრამ მასთან ძალიან ახლოსაა. ასეთ მიახლოებას მათემატიკური მოდელირება ჰქვია. ბორბლის ორი ფორმულა ტოლია, რადგან 2.5 წუთი პერიოდის მეოთხედია, ანუ π/2-ით წანაცვლება.</p></div>
     </div>
   </div>
   <div class="viz"><canvas data-scene="per" aria-label="პერიოდული პროცესის გრაფიკი"></canvas></div>
@@ -848,7 +855,7 @@ function drawOutro(g, w, h, t) {
 const TRI = { deg: 35, spin: false };
 function drawTriangle(g, w, h, t, dt) {
   if (TRI.spin && dt) { TRI.deg = (TRI.deg + dt * 24) % 360; syncTri(); }
-  const panelW = F * 9;
+  const panelW = F * 11;
   const side = w - panelW > h * 0.95;
   const R = side ? Math.min(h * 0.38, (w - panelW) * 0.38) : Math.min(h * 0.34, w * 0.38);
   const cx = side ? (w - panelW) / 2 + F * 0.5 : w / 2, cy = side ? h / 2 : h * 0.46;
@@ -880,8 +887,10 @@ function drawTriangle(g, w, h, t, dt) {
   if (Math.abs(sa) > 0.08) mathText(g, 'sin α', px + (ca >= 0 ? F * 0.35 : -F * 0.35), cy - R * sa / 2, { color: C.sin, size: F * 0.85, align: ca >= 0 ? 'left' : 'right', weight: 600 });
   if (Math.abs(ca) > 0.08) mathText(g, 'cos α', cx + R * ca / 2, cy + (sa >= 0 ? F * 0.8 : -F * 0.8), { color: C.cos, size: F * 0.85, align: 'center', weight: 600 });
   dot(g, px, py, LW * 2.6, C.ink);
-  mathText(g, 'P', cx + (R + F * 0.8) * ca, cy - (R + F * 0.8) * sa, { size: F * 0.85, align: 'center' });
-  const vals = [[`α = ${Math.round(TRI.deg)}°`, C.tri], [`sin α = ${fmt(sa)}`, C.sin], [`cos α = ${fmt(ca)}`, C.cos]];
+  mathText(g, 'B', cx + (R + F * 0.8) * ca, cy - (R + F * 0.8) * sa, { size: F * 0.95, align: 'center', weight: 600 });
+  mathText(g, 'A', cx - F * 0.55, cy + (sa >= 0 ? F * 0.75 : -F * 0.75), { size: F * 0.95, align: 'center', weight: 600 });
+  if (Math.abs(ca) > 0.12) mathText(g, 'C', px + (ca >= 0 ? F * 0.5 : -F * 0.5), cy + (sa >= 0 ? F * 0.8 : -F * 0.8), { size: F * 0.95, align: 'center', weight: 600 });
+  const vals = [[`α = ${Math.round(TRI.deg)}°`, C.tri], [`BC = sin α = ${fmt(sa)}`, C.sin], [`AC = cos α = ${fmt(ca)}`, C.cos]];
   if (side) {
     const x = w - panelW + F * 0.6; let y = h * 0.5 - F * 2.6;
     vals.forEach(([s, c]) => { mathText(g, s, x, y, { color: c, size: F * 1.05, weight: 600 }); y += F * 1.6; });
