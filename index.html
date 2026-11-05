@@ -268,7 +268,7 @@ body.idle .nav{opacity:.18}
     </div>
     <div class="key"><span class="muted">ფორმულებში ფერები:</span>
       <span><i class="vA">A</i> სიმაღლე (ამპლიტუდა)</span><span><i class="vW">ω, T</i> სიგანე (სიხშირე, პერიოდი)</span><span><i class="vP">φ</i> წანაცვლება, კუთხე</span><span><i class="vD">D</i> შუა ხაზი</span></div>
-    <p class="hint">ყოველ თემას მოჰყვება ამოცანა და კითხვა კლასისთვის. პასუხის შეყვანა ტელეფონითაც შეიძლება. · გადართვა: <kbd>←</kbd> <kbd>→</kbd> ან <kbd>Space</kbd> · სრული ეკრანი: <kbd>F</kbd></p>
+    <p class="hint">გადართვა: <kbd>←</kbd> <kbd>→</kbd> ან <kbd>Space</kbd> · სრული ეკრანი: <kbd>F</kbd></p>
   </div>
   <div class="viz"><canvas data-scene="outro" aria-hidden="true"></canvas></div>
 </section>
@@ -478,44 +478,6 @@ body.idle .nav{opacity:.18}
   <div class="viz"><canvas data-scene="light" aria-label="ელექტრომაგნიტური ტალღა და სპექტრი"></canvas></div>
 </section>
 
-<!-- 10 · PROBLEM 1 -->
-<section class="slide" data-name="ამოცანა 1" data-steps>
-  <div class="head">
-    <div class="eyebrow"><b>თემა 1</b> ამოცანა</div>
-    <h2>ამოცანა: გიტარის ორი სიმი</h2>
-  </div>
-  <div class="body">
-    <p class="problem">ერთი სიმი ჟღერს 440 ჰც, მეორე 446 ჰც სიხშირით. დაწერეთ ჯამური ტალღის ფორმულა. რამდენჯერ გაძლიერდება ხმა ერთ წამში?</p>
-    <ol class="steps">
-      <li class="step"><div>ორი ბგერის ჯამი:<span class="formula">y = sin(2π·440<i>t</i>) + sin(2π·446<i>t</i>)</span></div></li>
-      <li class="step"><div>ჯამის ნამრავლად გარდაქმნით:<span class="formula">y = <span class="vP">2 cos(π(440 − 446)<i>t</i>)</span> · <span class="vA">sin(π(440 + 446)<i>t</i>)</span></span></div></li>
-      <li class="step"><div>გავამარტივოთ (cos ლუწი ფუნქციაა):<span class="formula">y = <span class="vP">2 cos(6π<i>t</i>)</span> · <span class="vA">sin(886π<i>t</i>)</span></span></div></li>
-      <li class="step"><div>ხმის სიძლიერე |cos(6π<i>t</i>)|-ზეა დამოკიდებული. მისი პერიოდია π/(6π) = 1/6 წმ.</div></li>
-      <li class="step final"><div><b>პასუხი: ხმა წამში 6-ჯერ ძლიერდება, ტონი კი (440 + 446)/2 = 443 ჰც-ია.</b></div></li>
-    </ol>
-    <div class="tabs"><button class="btn" data-next-step>შემდეგი ნაბიჯი ▸</button><button class="btn play" id="pbPlay" aria-pressed="false">▶ მოსმენა</button></div>
-    <div class="numchk" data-quiz="p1"></div>
-  </div>
-  <div class="viz"><canvas data-scene="p1" aria-label="440 და 446 ჰც ტალღების ჯამი"></canvas>
-    <div class="qr"><span class="code"></span><span><b>უპასუხეთ ტელეფონით</b>დაასკანერეთ კოდი და შეიყვანეთ პასუხი</span></div></div>
-</section>
-
-<!-- 11 · DISCUSSION 1 -->
-<section class="slide" data-name="განხილვა 1" data-steps>
-  <div class="head">
-    <div class="eyebrow"><b>თემა 1</b> განხილვა</div>
-    <h2>კითხვა კლასს</h2>
-  </div>
-  <div class="body">
-    <p class="question">რა მოუვა ბგერის გრაფიკს, თუ სიხშირეს გავაორმაგებთ? როგორ შეიცვლება ხმა?</p>
-    <div class="opts" data-quiz="d1"></div>
-    <div class="step why" data-quiz="d1"></div>
-    <div class="tabs"><button class="btn" data-next-step>პასუხის ჩვენება</button><button class="btn play" id="seqPlay">▶ მოვუსმინოთ: 440 ჰც → 880 ჰც</button></div>
-  </div>
-  <div class="viz"><canvas data-scene="d1" aria-label="სიხშირე f და 2f"></canvas>
-    <div class="qr"><span class="code"></span><span><b>უპასუხეთ ტელეფონით</b>დაასკანერეთ კოდი და აირჩიეთ პასუხი</span></div></div>
-</section>
-
 <!-- 12 · OSCILLATION -->
 <section class="slide" data-name="რხევა">
   <div class="head">
@@ -557,43 +519,6 @@ body.idle .nav{opacity:.18}
     </div>
   </div>
   <div class="viz"><canvas data-scene="osc" aria-label="ზამბარა ან ქანქარა და მისი გრაფიკი"></canvas></div>
-</section>
-
-<!-- 13 · PROBLEM 2 -->
-<section class="slide" data-name="ამოცანა 2" data-steps>
-  <div class="head">
-    <div class="eyebrow"><b>თემა 2</b> ამოცანა</div>
-    <h2>ამოცანა: ზამბარა</h2>
-  </div>
-  <div class="body">
-    <p class="problem">ზამბარაზე დაკიდებულია 0.5 კგ ტვირთი, ზამბარის სიხისტეა 20 ნ/მ. ტვირთი 10 სმ-ით ავწიეთ და გავუშვით. დაწერეთ მოძრაობის ფორმულა და იპოვეთ პერიოდი.</p>
-    <ol class="steps">
-      <li class="step"><div>კუთხური სიხშირე:<span class="formula"><i class="vW">ω</i> = √(<i>k</i>/<i>m</i>) = √(20/0.5) = √40 ≈ <span class="vW">6.32</span> რად/წმ</span></div></li>
-      <li class="step"><div>ტვირთი უმაღლესი წერტილიდან გავუშვით, ამიტომ ვწერთ cos-ს, <i class="vA">A</i> = 0.1 მ:<span class="formula"><i>x</i>(<i>t</i>) = <span class="vA">0.1</span> · cos(<span class="vW">6.32</span><i>t</i>)</span></div></li>
-      <li class="step"><div>პერიოდი:<span class="formula"><i class="vW">T</i> = 2π/<i class="vW">ω</i> = 2π/6.32 ≈ 0.99 წმ</span></div></li>
-      <li class="step final"><div><b>პასუხი: ტვირთი ერთ სრულ რხევას დაახლოებით 1 წამში ასრულებს.</b></div></li>
-    </ol>
-    <div class="tabs"><button class="btn" data-next-step>შემდეგი ნაბიჯი ▸</button></div>
-    <div class="numchk" data-quiz="p2"></div>
-  </div>
-  <div class="viz"><canvas data-scene="p2" aria-label="0.5 კგ ტვირთი ზამბარაზე"></canvas>
-    <div class="qr"><span class="code"></span><span><b>უპასუხეთ ტელეფონით</b>დაასკანერეთ კოდი და შეიყვანეთ პასუხი</span></div></div>
-</section>
-
-<!-- 14 · DISCUSSION 2 -->
-<section class="slide" data-name="განხილვა 2" data-steps>
-  <div class="head">
-    <div class="eyebrow"><b>თემა 2</b> განხილვა</div>
-    <h2>კითხვა კლასს</h2>
-  </div>
-  <div class="body">
-    <p class="question">რა მოუვა რხევის პერიოდს, თუ ტვირთის მასას 4-ჯერ გავზრდით?</p>
-    <div class="opts" data-quiz="d2"></div>
-    <div class="step why" data-quiz="d2"></div>
-    <div class="tabs"><button class="btn" data-next-step>პასუხის ჩვენება</button></div>
-  </div>
-  <div class="viz"><canvas data-scene="d2" aria-label="მასა m და 4m"></canvas>
-    <div class="qr"><span class="code"></span><span><b>უპასუხეთ ტელეფონით</b>დაასკანერეთ კოდი და აირჩიეთ პასუხი</span></div></div>
 </section>
 
 <!-- 15 · PERIODIC PROCESSES -->
@@ -647,44 +572,6 @@ body.idle .nav{opacity:.18}
   <div class="viz"><canvas data-scene="per" aria-label="პერიოდული პროცესის გრაფიკი"></canvas></div>
 </section>
 
-<!-- 16 · PROBLEM 3 -->
-<section class="slide" data-name="ამოცანა 3" data-steps>
-  <div class="head">
-    <div class="eyebrow"><b>თემა 3</b> ამოცანა</div>
-    <h2>ამოცანა: ეშმაკის ბორბალი</h2>
-  </div>
-  <div class="body">
-    <p class="problem">ბორბლის რადიუსია 25 მ, ცენტრი 26 მ სიმაღლეზეა, ერთი ბრუნი 10 წუთი გრძელდება. კაბინა მოძრაობას ქვემოდან იწყებს. რა სიმაღლეზე იქნება კაბინა მე-3 წუთზე?</p>
-    <ol class="steps">
-      <li class="step"><div>ფორმულა (წინა სლაიდიდან):<span class="formula"><i>h</i>(<i>t</i>) = <span class="vD">26</span> − <span class="vA">25</span> · cos(2π<i>t</i>/<span class="vW">10</span>)</span></div></li>
-      <li class="step"><div>ჩავსვათ <i>t</i> = 3, კუთხე იქნება:<span class="formula">2π · 3/10 = 0.6π = <span class="vP">108°</span></span></div></li>
-      <li class="step"><div>კოსინუსი:<span class="formula">cos 108° ≈ −0.309</span></div></li>
-      <li class="step"><div>სიმაღლე:<span class="formula"><i>h</i>(3) = 26 − 25 · (−0.309) = 26 + 7.7 ≈ 33.7 მ</span></div></li>
-      <li class="step final"><div><b>პასუხი: მე-3 წუთზე კაბინა დაახლოებით 33.7 მ სიმაღლეზეა.</b></div></li>
-    </ol>
-    <div class="tabs"><button class="btn" data-next-step>შემდეგი ნაბიჯი ▸</button></div>
-    <div class="numchk" data-quiz="p3"></div>
-  </div>
-  <div class="viz"><canvas data-scene="p3" aria-label="ეშმაკის ბორბალი მე-3 წუთზე"></canvas>
-    <div class="qr"><span class="code"></span><span><b>უპასუხეთ ტელეფონით</b>დაასკანერეთ კოდი და შეიყვანეთ პასუხი</span></div></div>
-</section>
-
-<!-- 17 · DISCUSSION 3 -->
-<section class="slide" data-name="განხილვა 3" data-steps>
-  <div class="head">
-    <div class="eyebrow"><b>თემა 3</b> განხილვა</div>
-    <h2>კითხვა კლასს</h2>
-  </div>
-  <div class="body">
-    <p class="question">რა მოუვა ბორბლის გრაფიკს, თუ პერიოდს გავაორმაგებთ (ერთი ბრუნი 20 წუთში)?</p>
-    <div class="opts" data-quiz="d3"></div>
-    <div class="step why" data-quiz="d3"></div>
-    <div class="tabs"><button class="btn" data-next-step>პასუხის ჩვენება</button></div>
-  </div>
-  <div class="viz"><canvas data-scene="d3" aria-label="პერიოდი 10 და 20 წუთი"></canvas>
-    <div class="qr"><span class="code"></span><span><b>უპასუხეთ ტელეფონით</b>დაასკანერეთ კოდი და აირჩიეთ პასუხი</span></div></div>
-</section>
-
 <!-- 18 · SUMMARY -->
 <section class="slide wide" data-name="შეჯამება">
   <div class="head">
@@ -717,7 +604,7 @@ body.idle .nav{opacity:.18}
 <nav class="nav" id="nav" aria-label="სლაიდები">
   <button class="ib" id="nPrev" aria-label="წინა სლაიდი"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
   <div class="prog" id="prog"></div>
-  <span class="count" id="count">1 / 18</span>
+  <span class="count" id="count">1 / 12</span>
   <button class="ib" id="nNext" aria-label="შემდეგი სლაიდი"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></button>
   <span class="sep hide-sm"></span>
   <button class="ib" id="nPause" aria-label="ანიმაციის პაუზა" title="P"></button>
@@ -727,28 +614,18 @@ body.idle .nav{opacity:.18}
 </nav>
 </div>
 
-<section class="sheet-view" id="sheet" hidden>
-  <div>
-    <div class="eyebrow">ტრიგონომეტრიის გამოყენება</div>
-    <h1>კითხვები კლასს</h1>
-    <p class="muted" style="margin-top:.4em">აირჩიეთ ან ჩაწერეთ პასუხი. პასუხი მაშინვე შემოწმდება.</p>
-  </div>
-  <div id="sheetList" style="display:grid; gap:1em"></div>
-  <p><a class="btn" href="#slide-1">← პრეზენტაციის ნახვა</a></p>
-</section>
-
 <div class="help" id="help" hidden>
   <div class="card" role="dialog" aria-modal="true" aria-labelledby="helpT">
     <h3 id="helpT">მართვა</h3>
     <dl>
-      <dt><kbd>→</kbd> <kbd>Space</kbd> <kbd>PgDn</kbd></dt><dd>შემდეგი ნაბიჯი ან სლაიდი</dd>
+      <dt><kbd>→</kbd> <kbd>Space</kbd> <kbd>PgDn</kbd></dt><dd>შემდეგი სლაიდი</dd>
       <dt><kbd>←</kbd> <kbd>PgUp</kbd></dt><dd>უკან</dd>
       <dt><kbd>Home</kbd> <kbd>End</kbd></dt><dd>პირველი / ბოლო სლაიდი</dd>
       <dt><kbd>F</kbd></dt><dd>სრული ეკრანი</dd>
       <dt><kbd>P</kbd></dt><dd>ანიმაციის პაუზა</dd>
       <dt><kbd>T</kbd></dt><dd>ღია / მუქი ფონი</dd>
     </dl>
-    <p class="small muted" style="margin-top:.8em">ამოცანებში <kbd>→</kbd> ჯერ შემდეგ ნაბიჯს აჩვენებს, მერე გადადის შემდეგ სლაიდზე. ტელეფონზე სლაიდები თითის გასმით გადაირთვება.</p>
+    <p class="small muted" style="margin-top:.8em">ტელეფონზე სლაიდები თითის გასმით გადაირთვება.</p>
     <button class="btn" id="helpClose" style="margin-top:.6em">დახურვა</button>
   </div>
 </div>
@@ -764,8 +641,6 @@ const store = {
   get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } },
   set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
 };
-const QR_N = 33;
-const QR_PATH = 'M0,0h1v1h-1zM1,0h1v1h-1zM2,0h1v1h-1zM3,0h1v1h-1zM4,0h1v1h-1zM5,0h1v1h-1zM6,0h1v1h-1zM8,0h1v1h-1zM9,0h1v1h-1zM10,0h1v1h-1zM14,0h1v1h-1zM17,0h1v1h-1zM18,0h1v1h-1zM21,0h1v1h-1zM22,0h1v1h-1zM26,0h1v1h-1zM27,0h1v1h-1zM28,0h1v1h-1zM29,0h1v1h-1zM30,0h1v1h-1zM31,0h1v1h-1zM32,0h1v1h-1zM0,1h1v1h-1zM6,1h1v1h-1zM8,1h1v1h-1zM9,1h1v1h-1zM10,1h1v1h-1zM11,1h1v1h-1zM17,1h1v1h-1zM18,1h1v1h-1zM19,1h1v1h-1zM20,1h1v1h-1zM22,1h1v1h-1zM24,1h1v1h-1zM26,1h1v1h-1zM32,1h1v1h-1zM0,2h1v1h-1zM2,2h1v1h-1zM3,2h1v1h-1zM4,2h1v1h-1zM6,2h1v1h-1zM8,2h1v1h-1zM9,2h1v1h-1zM15,2h1v1h-1zM19,2h1v1h-1zM20,2h1v1h-1zM21,2h1v1h-1zM22,2h1v1h-1zM26,2h1v1h-1zM28,2h1v1h-1zM29,2h1v1h-1zM30,2h1v1h-1zM32,2h1v1h-1zM0,3h1v1h-1zM2,3h1v1h-1zM3,3h1v1h-1zM4,3h1v1h-1zM6,3h1v1h-1zM10,3h1v1h-1zM12,3h1v1h-1zM17,3h1v1h-1zM26,3h1v1h-1zM28,3h1v1h-1zM29,3h1v1h-1zM30,3h1v1h-1zM32,3h1v1h-1zM0,4h1v1h-1zM2,4h1v1h-1zM3,4h1v1h-1zM4,4h1v1h-1zM6,4h1v1h-1zM8,4h1v1h-1zM9,4h1v1h-1zM10,4h1v1h-1zM13,4h1v1h-1zM14,4h1v1h-1zM15,4h1v1h-1zM19,4h1v1h-1zM21,4h1v1h-1zM22,4h1v1h-1zM23,4h1v1h-1zM26,4h1v1h-1zM28,4h1v1h-1zM29,4h1v1h-1zM30,4h1v1h-1zM32,4h1v1h-1zM0,5h1v1h-1zM6,5h1v1h-1zM9,5h1v1h-1zM11,5h1v1h-1zM13,5h1v1h-1zM17,5h1v1h-1zM18,5h1v1h-1zM23,5h1v1h-1zM26,5h1v1h-1zM32,5h1v1h-1zM0,6h1v1h-1zM1,6h1v1h-1zM2,6h1v1h-1zM3,6h1v1h-1zM4,6h1v1h-1zM5,6h1v1h-1zM6,6h1v1h-1zM8,6h1v1h-1zM10,6h1v1h-1zM12,6h1v1h-1zM14,6h1v1h-1zM16,6h1v1h-1zM18,6h1v1h-1zM20,6h1v1h-1zM22,6h1v1h-1zM24,6h1v1h-1zM26,6h1v1h-1zM27,6h1v1h-1zM28,6h1v1h-1zM29,6h1v1h-1zM30,6h1v1h-1zM31,6h1v1h-1zM32,6h1v1h-1zM9,7h1v1h-1zM12,7h1v1h-1zM13,7h1v1h-1zM22,7h1v1h-1zM24,7h1v1h-1zM0,8h1v1h-1zM3,8h1v1h-1zM4,8h1v1h-1zM5,8h1v1h-1zM6,8h1v1h-1zM7,8h1v1h-1zM8,8h1v1h-1zM12,8h1v1h-1zM13,8h1v1h-1zM14,8h1v1h-1zM15,8h1v1h-1zM16,8h1v1h-1zM17,8h1v1h-1zM20,8h1v1h-1zM22,8h1v1h-1zM23,8h1v1h-1zM24,8h1v1h-1zM25,8h1v1h-1zM28,8h1v1h-1zM30,8h1v1h-1zM31,8h1v1h-1zM32,8h1v1h-1zM0,9h1v1h-1zM1,9h1v1h-1zM2,9h1v1h-1zM7,9h1v1h-1zM10,9h1v1h-1zM11,9h1v1h-1zM14,9h1v1h-1zM15,9h1v1h-1zM18,9h1v1h-1zM19,9h1v1h-1zM21,9h1v1h-1zM22,9h1v1h-1zM23,9h1v1h-1zM28,9h1v1h-1zM29,9h1v1h-1zM30,9h1v1h-1zM31,9h1v1h-1zM1,10h1v1h-1zM2,10h1v1h-1zM6,10h1v1h-1zM8,10h1v1h-1zM9,10h1v1h-1zM11,10h1v1h-1zM12,10h1v1h-1zM14,10h1v1h-1zM15,10h1v1h-1zM16,10h1v1h-1zM20,10h1v1h-1zM23,10h1v1h-1zM26,10h1v1h-1zM28,10h1v1h-1zM29,10h1v1h-1zM30,10h1v1h-1zM31,10h1v1h-1zM32,10h1v1h-1zM1,11h1v1h-1zM4,11h1v1h-1zM8,11h1v1h-1zM10,11h1v1h-1zM14,11h1v1h-1zM15,11h1v1h-1zM17,11h1v1h-1zM19,11h1v1h-1zM22,11h1v1h-1zM23,11h1v1h-1zM25,11h1v1h-1zM27,11h1v1h-1zM30,11h1v1h-1zM31,11h1v1h-1zM0,12h1v1h-1zM1,12h1v1h-1zM2,12h1v1h-1zM3,12h1v1h-1zM6,12h1v1h-1zM7,12h1v1h-1zM9,12h1v1h-1zM10,12h1v1h-1zM11,12h1v1h-1zM12,12h1v1h-1zM13,12h1v1h-1zM14,12h1v1h-1zM15,12h1v1h-1zM16,12h1v1h-1zM19,12h1v1h-1zM20,12h1v1h-1zM21,12h1v1h-1zM23,12h1v1h-1zM26,12h1v1h-1zM3,13h1v1h-1zM5,13h1v1h-1zM7,13h1v1h-1zM8,13h1v1h-1zM9,13h1v1h-1zM10,13h1v1h-1zM13,13h1v1h-1zM16,13h1v1h-1zM18,13h1v1h-1zM21,13h1v1h-1zM23,13h1v1h-1zM24,13h1v1h-1zM25,13h1v1h-1zM26,13h1v1h-1zM30,13h1v1h-1zM0,14h1v1h-1zM1,14h1v1h-1zM3,14h1v1h-1zM4,14h1v1h-1zM6,14h1v1h-1zM10,14h1v1h-1zM14,14h1v1h-1zM16,14h1v1h-1zM17,14h1v1h-1zM19,14h1v1h-1zM20,14h1v1h-1zM26,14h1v1h-1zM29,14h1v1h-1zM1,15h1v1h-1zM2,15h1v1h-1zM9,15h1v1h-1zM10,15h1v1h-1zM11,15h1v1h-1zM13,15h1v1h-1zM15,15h1v1h-1zM18,15h1v1h-1zM20,15h1v1h-1zM22,15h1v1h-1zM23,15h1v1h-1zM24,15h1v1h-1zM25,15h1v1h-1zM29,15h1v1h-1zM30,15h1v1h-1zM32,15h1v1h-1zM0,16h1v1h-1zM1,16h1v1h-1zM3,16h1v1h-1zM6,16h1v1h-1zM8,16h1v1h-1zM9,16h1v1h-1zM12,16h1v1h-1zM13,16h1v1h-1zM14,16h1v1h-1zM22,16h1v1h-1zM25,16h1v1h-1zM26,16h1v1h-1zM27,16h1v1h-1zM28,16h1v1h-1zM1,17h1v1h-1zM2,17h1v1h-1zM4,17h1v1h-1zM8,17h1v1h-1zM10,17h1v1h-1zM11,17h1v1h-1zM13,17h1v1h-1zM14,17h1v1h-1zM17,17h1v1h-1zM18,17h1v1h-1zM19,17h1v1h-1zM20,17h1v1h-1zM22,17h1v1h-1zM26,17h1v1h-1zM28,17h1v1h-1zM30,17h1v1h-1zM32,17h1v1h-1zM0,18h1v1h-1zM4,18h1v1h-1zM5,18h1v1h-1zM6,18h1v1h-1zM7,18h1v1h-1zM8,18h1v1h-1zM10,18h1v1h-1zM13,18h1v1h-1zM15,18h1v1h-1zM17,18h1v1h-1zM19,18h1v1h-1zM23,18h1v1h-1zM25,18h1v1h-1zM27,18h1v1h-1zM29,18h1v1h-1zM30,18h1v1h-1zM32,18h1v1h-1zM0,19h1v1h-1zM1,19h1v1h-1zM3,19h1v1h-1zM5,19h1v1h-1zM7,19h1v1h-1zM8,19h1v1h-1zM10,19h1v1h-1zM11,19h1v1h-1zM14,19h1v1h-1zM15,19h1v1h-1zM16,19h1v1h-1zM19,19h1v1h-1zM20,19h1v1h-1zM24,19h1v1h-1zM28,19h1v1h-1zM29,19h1v1h-1zM30,19h1v1h-1zM32,19h1v1h-1zM1,20h1v1h-1zM5,20h1v1h-1zM6,20h1v1h-1zM7,20h1v1h-1zM8,20h1v1h-1zM10,20h1v1h-1zM12,20h1v1h-1zM13,20h1v1h-1zM16,20h1v1h-1zM17,20h1v1h-1zM19,20h1v1h-1zM21,20h1v1h-1zM24,20h1v1h-1zM27,20h1v1h-1zM29,20h1v1h-1zM0,21h1v1h-1zM3,21h1v1h-1zM4,21h1v1h-1zM5,21h1v1h-1zM9,21h1v1h-1zM12,21h1v1h-1zM13,21h1v1h-1zM16,21h1v1h-1zM19,21h1v1h-1zM25,21h1v1h-1zM26,21h1v1h-1zM27,21h1v1h-1zM28,21h1v1h-1zM29,21h1v1h-1zM30,21h1v1h-1zM0,22h1v1h-1zM2,22h1v1h-1zM5,22h1v1h-1zM6,22h1v1h-1zM8,22h1v1h-1zM9,22h1v1h-1zM11,22h1v1h-1zM13,22h1v1h-1zM15,22h1v1h-1zM17,22h1v1h-1zM18,22h1v1h-1zM21,22h1v1h-1zM23,22h1v1h-1zM26,22h1v1h-1zM28,22h1v1h-1zM30,22h1v1h-1zM31,22h1v1h-1zM32,22h1v1h-1zM0,23h1v1h-1zM2,23h1v1h-1zM3,23h1v1h-1zM4,23h1v1h-1zM8,23h1v1h-1zM10,23h1v1h-1zM11,23h1v1h-1zM16,23h1v1h-1zM17,23h1v1h-1zM19,23h1v1h-1zM24,23h1v1h-1zM25,23h1v1h-1zM26,23h1v1h-1zM27,23h1v1h-1zM28,23h1v1h-1zM30,23h1v1h-1zM31,23h1v1h-1zM0,24h1v1h-1zM1,24h1v1h-1zM3,24h1v1h-1zM4,24h1v1h-1zM6,24h1v1h-1zM7,24h1v1h-1zM8,24h1v1h-1zM12,24h1v1h-1zM14,24h1v1h-1zM15,24h1v1h-1zM16,24h1v1h-1zM19,24h1v1h-1zM20,24h1v1h-1zM23,24h1v1h-1zM24,24h1v1h-1zM25,24h1v1h-1zM26,24h1v1h-1zM27,24h1v1h-1zM28,24h1v1h-1zM31,24h1v1h-1zM8,25h1v1h-1zM9,25h1v1h-1zM10,25h1v1h-1zM11,25h1v1h-1zM14,25h1v1h-1zM15,25h1v1h-1zM18,25h1v1h-1zM24,25h1v1h-1zM28,25h1v1h-1zM30,25h1v1h-1zM31,25h1v1h-1zM0,26h1v1h-1zM1,26h1v1h-1zM2,26h1v1h-1zM3,26h1v1h-1zM4,26h1v1h-1zM5,26h1v1h-1zM6,26h1v1h-1zM8,26h1v1h-1zM9,26h1v1h-1zM13,26h1v1h-1zM15,26h1v1h-1zM16,26h1v1h-1zM17,26h1v1h-1zM18,26h1v1h-1zM19,26h1v1h-1zM20,26h1v1h-1zM23,26h1v1h-1zM24,26h1v1h-1zM26,26h1v1h-1zM28,26h1v1h-1zM30,26h1v1h-1zM0,27h1v1h-1zM6,27h1v1h-1zM8,27h1v1h-1zM12,27h1v1h-1zM13,27h1v1h-1zM14,27h1v1h-1zM18,27h1v1h-1zM19,27h1v1h-1zM22,27h1v1h-1zM23,27h1v1h-1zM24,27h1v1h-1zM28,27h1v1h-1zM29,27h1v1h-1zM30,27h1v1h-1zM31,27h1v1h-1zM32,27h1v1h-1zM0,28h1v1h-1zM2,28h1v1h-1zM3,28h1v1h-1zM4,28h1v1h-1zM6,28h1v1h-1zM8,28h1v1h-1zM9,28h1v1h-1zM10,28h1v1h-1zM12,28h1v1h-1zM13,28h1v1h-1zM15,28h1v1h-1zM19,28h1v1h-1zM20,28h1v1h-1zM21,28h1v1h-1zM22,28h1v1h-1zM23,28h1v1h-1zM24,28h1v1h-1zM25,28h1v1h-1zM26,28h1v1h-1zM27,28h1v1h-1zM28,28h1v1h-1zM31,28h1v1h-1zM0,29h1v1h-1zM2,29h1v1h-1zM3,29h1v1h-1zM4,29h1v1h-1zM6,29h1v1h-1zM8,29h1v1h-1zM12,29h1v1h-1zM13,29h1v1h-1zM16,29h1v1h-1zM17,29h1v1h-1zM19,29h1v1h-1zM21,29h1v1h-1zM22,29h1v1h-1zM23,29h1v1h-1zM24,29h1v1h-1zM25,29h1v1h-1zM27,29h1v1h-1zM30,29h1v1h-1zM31,29h1v1h-1zM32,29h1v1h-1zM0,30h1v1h-1zM2,30h1v1h-1zM3,30h1v1h-1zM4,30h1v1h-1zM6,30h1v1h-1zM9,30h1v1h-1zM10,30h1v1h-1zM11,30h1v1h-1zM13,30h1v1h-1zM15,30h1v1h-1zM18,30h1v1h-1zM19,30h1v1h-1zM21,30h1v1h-1zM22,30h1v1h-1zM25,30h1v1h-1zM27,30h1v1h-1zM28,30h1v1h-1zM31,30h1v1h-1zM32,30h1v1h-1zM0,31h1v1h-1zM6,31h1v1h-1zM9,31h1v1h-1zM14,31h1v1h-1zM15,31h1v1h-1zM19,31h1v1h-1zM22,31h1v1h-1zM23,31h1v1h-1zM24,31h1v1h-1zM26,31h1v1h-1zM27,31h1v1h-1zM28,31h1v1h-1zM29,31h1v1h-1zM30,31h1v1h-1zM31,31h1v1h-1zM32,31h1v1h-1zM0,32h1v1h-1zM1,32h1v1h-1zM2,32h1v1h-1zM3,32h1v1h-1zM4,32h1v1h-1zM5,32h1v1h-1zM6,32h1v1h-1zM8,32h1v1h-1zM9,32h1v1h-1zM10,32h1v1h-1zM11,32h1v1h-1zM15,32h1v1h-1zM17,32h1v1h-1zM19,32h1v1h-1zM22,32h1v1h-1zM23,32h1v1h-1zM24,32h1v1h-1zM26,32h1v1h-1zM27,32h1v1h-1zM28,32h1v1h-1zM29,32h1v1h-1z';
 
 /* ---------- theme ---------- */
 const savedTheme = store.get('trig-theme');
@@ -1183,7 +1058,6 @@ function updSound() {
    topic 1 — beats (beats slide and problem 1)
    ========================================================= */
 const B = { f1: 440, d: 2, tones: null, t0: 0, clock: 0 };
-const BP = { f1: 440, d: 6, tones: null, t0: 0, clock: 0 };
 function makeBeats(st) {
   return function (g, w, h, t, dt) {
     if (st.tones && AUD.ctx) st.clock = AUD.ctx.currentTime - st.t0; else st.clock += dt;
@@ -1320,7 +1194,6 @@ function updLight() {
    topic 2 — spring / pendulum (slide and problem 2)
    ========================================================= */
 const O = { mode: 'spring', m: 0.5, k: 20, L: 1, damp: false, t: 0 };
-const OP = { mode: 'spring', m: 0.5, k: 20, L: 1, damp: false, t: 0 };
 const BETA = 0.3, G = 9.81;
 const oOmega = o => (o.mode === 'spring' ? Math.sqrt(o.k / o.m) : Math.sqrt(G / o.L));
 const oX = (o, tt) => (tt < 0 ? NaN : Math.cos(oOmega(o) * tt) * (o.damp ? Math.exp(-BETA * tt) : 1));
@@ -1541,114 +1414,6 @@ function drawWheel(g, w, h, tm, mark) {
     text(g, `h = ${fmt(hh, 1)} მ`, x1, Y(1) - F * 0.7, { align: 'right', font: FMONO, size: F * 0.7, color: C.ink, weight: 600 });
   }
 }
-let p3Clock = 0;
-function drawP3(g, w, h, t, dt) { p3Clock += dt; const tm = paused ? 3 : Math.min(3, p3Clock * 0.9); drawWheel(g, w, h, tm, tm >= 3); }
-
-/* =========================================================
-   problems and discussion questions (one source for slides and phones)
-   ========================================================= */
-const QUIZ = [
-  { id: 'p1', type: 'num', title: 'ამოცანა 1 · გიტარის ორი სიმი', q: 'ერთი სიმი ჟღერს 440 ჰც, მეორე 446 ჰც სიხშირით. რამდენჯერ გაძლიერდება ხმა ერთ წამში?', ans: 6, tol: 0.01, unit: '-ჯერ', why: 'ცემის სიხშირე = |f₁ − f₂| = |446 − 440| = 6.' },
-  { id: 'd1', type: 'mc', title: 'განხილვა 1', q: 'რა მოუვა ბგერის გრაფიკს, თუ სიხშირეს გავაორმაგებთ? როგორ შეიცვლება ხმა?',
-    opts: ['ტალღა ორჯერ მაღალი გახდება, ხმა გაძლიერდება', 'ტალღები ორჯერ ვიწრო გახდება, ტონი ოქტავით აიწევს', 'ტალღა მარჯვნივ გადაიწევს, ხმა არ შეიცვლება', 'გრაფიკი არ შეიცვლება'], correct: 1,
-    why: 'f ორჯერ იზრდება, ამიტომ პერიოდი T = 1/f ორჯერ მცირდება და გრაფიკი გვერდზე იკუმშება. ამპლიტუდა იგივე რჩება, ამიტომ ხმა არ ძლიერდება, ტონი კი ოქტავით მაღლა ადის (440 → 880 ჰც).' },
-  { id: 'p2', type: 'num', title: 'ამოცანა 2 · ზამბარა', q: 'ტვირთის მასაა 0.5 კგ, ზამბარის სიხისტე 20 ნ/მ. რას უდრის რხევის პერიოდი (წამებში)?', ans: 0.99, tol: 0.03, unit: 'წმ', why: 'ω = √(20/0.5) ≈ 6.32 რად/წმ, T = 2π/ω ≈ 0.99 წმ.' },
-  { id: 'd2', type: 'mc', title: 'განხილვა 2', q: 'რა მოუვა რხევის პერიოდს, თუ ტვირთის მასას 4-ჯერ გავზრდით?',
-    opts: ['4-ჯერ გაიზრდება', '2-ჯერ გაიზრდება', 'არ შეიცვლება', '2-ჯერ შემცირდება'], correct: 1,
-    why: 'T = 2π√(m/k). თუ m-ს 4-ჯერ გავზრდით, ფესვი 2-ჯერ გაიზრდება (√4 = 2), ამიტომ პერიოდიც 2-ჯერ იზრდება: 0.99 წმ → 1.99 წმ.' },
-  { id: 'p3', type: 'num', title: 'ამოცანა 3 · ეშმაკის ბორბალი', q: 'h(t) = 26 − 25·cos(2πt/10). რა სიმაღლეზეა კაბინა მე-3 წუთზე (მეტრებში)?', ans: 33.7, tol: 0.4, unit: 'მ', why: '2π·3/10 = 0.6π = 108°, cos 108° ≈ −0.309, h = 26 + 25·0.309 ≈ 33.7 მ.' },
-  { id: 'd3', type: 'mc', title: 'განხილვა 3', q: 'რა მოუვა ბორბლის გრაფიკს, თუ პერიოდს გავაორმაგებთ (ერთი ბრუნი 20 წუთში)?',
-    opts: ['გრაფიკი ორჯერ მაღალი გახდება', 'ტალღა გვერდზე ორჯერ გაიჭიმება, სიმაღლე არ შეიცვლება', 'გრაფიკი ქვემოთ ჩაიწევს', 'ტალღები ორჯერ ვიწრო გახდება'], correct: 1,
-    why: 'T მნიშვნელშია (2πt/20), ამიტომ ტალღები ორჯერ განიერი ხდება და კაბინა ორჯერ ნელა მოძრაობს. A = 25 და D = 26 არ იცვლება, ამიტომ უმაღლესი წერტილი ისევ 51 მ-ია.' }
-];
-const QBY = Object.fromEntries(QUIZ.map(q => [q.id, q]));
-const QS = {}; QUIZ.forEach(q => QS[q.id] = { revealed: false });
-function makeCompare(cfg) {
-  const st = { p: 0 };
-  return function (g, w, h, t, dt) {
-    const rev = QS[cfg.quiz].revealed;
-    st.p = rev ? Math.min(1, st.p + (dt ? dt * 0.9 : 1)) : 0;
-    const L0 = F * 2.8, R0 = F * 0.8, top = F * 2.8, bot = F * 1.9;
-    const X = x => L0 + (x - cfg.x0) / (cfg.x1 - cfg.x0) * (w - L0 - R0);
-    const Y = v => (h - bot) - (v - cfg.y0) / (cfg.y1 - cfg.y0) * ((h - bot) - top);
-    g.lineWidth = 1; dash(g, false);
-    cfg.xt.forEach(x => { g.strokeStyle = C.grid; line(g, X(x), Y(cfg.y0), X(x), Y(cfg.y1)); text(g, String(x), X(x), Y(cfg.y0) + F * 0.65, { align: 'center', font: FMONO, size: F * 0.6 }); });
-    cfg.yt.forEach(v => { g.strokeStyle = v === 0 ? C.line : C.grid; line(g, X(cfg.x0), Y(v), X(cfg.x1), Y(v)); text(g, String(v).replace('-', '−'), X(cfg.x0) - F * 0.3, Y(v), { align: 'right', font: FMONO, size: F * 0.6 }); });
-    text(g, cfg.xl, X(cfg.x1), Y(cfg.y0) + F * 1.45, { align: 'right', size: F * 0.6 });
-    const P = px => cfg.x0 + (px - X(cfg.x0)) / (X(cfg.x1) - X(cfg.x0)) * (cfg.x1 - cfg.x0);
-    g.strokeStyle = cfg.a.col(); g.lineWidth = LW * 1.5; curve(g, X(cfg.x0), X(cfg.x1), px => Y(cfg.a.f(P(px))), 1.5);
-    if (st.p > 0) { g.strokeStyle = cfg.b.col(); g.lineWidth = LW * 1.5; curve(g, X(cfg.x0), X(cfg.x0) + st.p * (X(cfg.x1) - X(cfg.x0)), px => Y(cfg.b.f(P(px))), 1.5); }
-    const ly1 = F * 0.75, ly2 = F * 1.85;
-    g.strokeStyle = cfg.a.col(); g.lineWidth = LW * 1.4; line(g, L0, ly1, L0 + F * 1.1, ly1);
-    text(g, cfg.a.lab, L0 + F * 1.5, ly1, { color: cfg.a.col(), size: F * 0.68, weight: 600 });
-    g.strokeStyle = rev ? cfg.b.col() : C.line; line(g, L0, ly2, L0 + F * 1.1, ly2);
-    text(g, rev ? cfg.b.lab : cfg.b.labQ, L0 + F * 1.5, ly2, { color: rev ? cfg.b.col() : C.muted, size: F * 0.68, weight: 600 });
-  };
-}
-const LETTERS = ['ა', 'ბ', 'გ', 'დ'];
-function buildMC(box, q, onPick) {
-  box.innerHTML = '';
-  q.opts.forEach((o, i) => {
-    const b = document.createElement('button'); b.className = 'opt'; b.type = 'button';
-    const lb = document.createElement('b'); lb.textContent = LETTERS[i] + ')';
-    const tx = document.createElement('span'); tx.textContent = o;
-    b.append(lb, tx);
-    b.addEventListener('click', () => {
-      $$('.opt', box).forEach(x => x.classList.remove('wrong'));
-      if (i !== q.correct) b.classList.add('wrong');
-      $$('.opt', box)[q.correct].classList.add('correct');
-      if (onPick) onPick(i === q.correct);
-    });
-    box.appendChild(b);
-  });
-}
-let uid = 0;
-function buildNum(box, q) {
-  const id = 'in-' + q.id + '-' + (++uid);
-  box.innerHTML = `<label for="${id}">თქვენი პასუხი:</label><input id="${id}" type="text" inputmode="decimal" autocomplete="off"><span></span><button class="btn" type="button">შემოწმება</button><span class="fb" aria-live="polite"></span>`;
-  box.children[2].textContent = q.unit;
-  const inp = $('input', box), fb = $('.fb', box);
-  const check = () => {
-    const v = parseFloat(inp.value.replace(',', '.').replace('−', '-'));
-    if (isNaN(v)) { fb.className = 'fb no'; fb.textContent = 'ჩაწერეთ რიცხვი.'; return; }
-    const ok = Math.abs(v - q.ans) <= q.tol + 1e-9;
-    fb.className = 'fb ' + (ok ? 'ok' : 'no');
-    fb.textContent = ok ? `სწორია! ${q.why}` : 'არასწორია, სცადეთ თავიდან.';
-  };
-  $('button', box).addEventListener('click', check);
-  inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); check(); } });
-}
-function setReveal(id, on) {
-  QS[id].revealed = on;
-  const q = QBY[id]; if (!q || q.type !== 'mc') return;
-  $$(`.slide .opts[data-quiz="${id}"]`).forEach(box => {
-    $$('.opt', box).forEach((o, i) => { if (!on) o.classList.remove('correct', 'wrong'); else if (i === q.correct) o.classList.add('correct'); });
-  });
-}
-function initQuizSlides() {
-  $$('.slide .opts[data-quiz]').forEach(box => buildMC(box, QBY[box.dataset.quiz], () => revealAll(box.closest('.slide'))));
-  $$('.slide .why[data-quiz]').forEach(el => { el.textContent = QBY[el.dataset.quiz].why; });
-  $$('.slide .numchk[data-quiz]').forEach(box => buildNum(box, QBY[box.dataset.quiz]));
-  const svg = `<svg viewBox="-3 -3 ${QR_N + 6} ${QR_N + 6}" shape-rendering="crispEdges" role="img" aria-label="QR კოდი პასუხების გვერდისთვის"><rect x="-3" y="-3" width="${QR_N + 6}" height="${QR_N + 6}" fill="#fff"/><path d="${QR_PATH}" fill="#000"/></svg>`;
-  $$('.qr .code').forEach(el => { el.innerHTML = svg; });
-}
-function buildSheet() {
-  const list = $('#sheetList'); if (list.childElementCount) return;
-  QUIZ.forEach(q => {
-    const c = document.createElement('div'); c.className = 'scard';
-    const h = document.createElement('h2'); h.textContent = q.title;
-    const qq = document.createElement('div'); qq.className = 'q'; qq.textContent = q.q;
-    const box = document.createElement('div');
-    c.append(h, qq, box);
-    if (q.type === 'mc') {
-      box.className = 'opts';
-      const why = document.createElement('div'); why.className = 'why'; why.hidden = true; why.textContent = q.why;
-      buildMC(box, q, () => { why.hidden = false; });
-      c.appendChild(why);
-    } else { box.className = 'numchk'; buildNum(box, q); }
-    list.appendChild(c);
-  });
-}
 
 /* ---------- wiring controls ---------- */
 bindRange('tA', v => { TRI.deg = v; TRI.spin = false; const sb = $('#tSpin'); setPressed(sb, false); sb.textContent = '▶ დავატრიალოთ'; $('#oTA').textContent = `${v}°`; });
@@ -1673,17 +1438,6 @@ function stopSound() { AUD.stop(S.tone); S.tone = null; const b = $('#sPlay'); s
 
 bindRange('bD', v => { B.d = v; updBeats(); });
 $('#bPlay').addEventListener('click', e => { B.tones ? stopBeats(B, e.currentTarget) : startBeats(B, e.currentTarget); });
-$('#pbPlay').addEventListener('click', e => { BP.tones ? stopBeats(BP, e.currentTarget) : startBeats(BP, e.currentTarget); });
-$('#seqPlay').addEventListener('click', () => {
-  const c = AUD.ensure(); if (!c) return;
-  const t0 = c.currentTime + 0.05;
-  [[440, t0], [880, t0 + 1.1]].forEach(([f, s]) => {
-    const o = c.createOscillator(), gn = c.createGain(); o.frequency.value = f;
-    gn.gain.setValueAtTime(0, s); gn.gain.linearRampToValueAtTime(0.2, s + 0.03); gn.gain.setValueAtTime(0.2, s + 0.85); gn.gain.linearRampToValueAtTime(0, s + 0.95);
-    o.connect(gn); gn.connect(AUD.master); o.start(s); o.stop(s + 1);
-  });
-});
-
 bindRange('lL', v => { L.nm = v; updLight(); });
 
 bindRange('oM', v => { O.m = v; O.t = 0; updOsc(); });
@@ -1725,18 +1479,9 @@ function updateAllReadouts() { syncTri(); updTransform(); syncSC(); updSound(); 
 const slides = $$('.slide');
 const SCENE_FN = {
   hero: drawHero, outro: drawOutro, triangle: drawTriangle, unroll: drawUnroll, transform: drawTransform, sincos: drawSinCos,
-  sound: drawSound, beats: makeBeats(B), light: drawLight, p1: makeBeats(BP),
-  d1: makeCompare({ quiz: 'd1', x0: 0, x1: 10, y0: -1.3, y1: 1.3, xt: [0, 2, 4, 6, 8, 10], yt: [-1, 0, 1], xl: 't, მწმ',
-    a: { f: x => Math.sin(TAU * 0.44 * x), col: () => C.sin, lab: 'f = 440 ჰც, T ≈ 2.27 მწმ' },
-    b: { f: x => Math.sin(TAU * 0.88 * x), col: () => C.cos, lab: '2f = 880 ჰც, T ≈ 1.14 მწმ', labQ: '2f = 880 ჰც: ?' } }),
-  osc: makeOsc(O), p2: makeOsc(OP),
-  d2: makeCompare({ quiz: 'd2', x0: 0, x1: 4, y0: -1.3, y1: 1.3, xt: [0, 1, 2, 3, 4], yt: [-1, 0, 1], xl: 't, წმ',
-    a: { f: x => Math.cos(TAU * x / 0.9935), col: () => C.sin, lab: 'm = 0.5 კგ, T ≈ 0.99 წმ' },
-    b: { f: x => Math.cos(TAU * x / 1.987), col: () => C.cos, lab: '4m = 2 კგ, T ≈ 1.99 წმ', labQ: '4m = 2 კგ: ?' } }),
-  per: drawPer, p3: drawP3,
-  d3: makeCompare({ quiz: 'd3', x0: 0, x1: 20, y0: 0, y1: 55, xt: [0, 5, 10, 15, 20], yt: [1, 26, 51], xl: 't, წთ',
-    a: { f: x => 26 - 25 * Math.cos(TAU * x / 10), col: () => C.sin, lab: 'T = 10 წთ' },
-    b: { f: x => 26 - 25 * Math.cos(TAU * x / 20), col: () => C.cos, lab: 'T = 20 წთ', labQ: 'T = 20 წთ: ?' } })
+  sound: drawSound, beats: makeBeats(B), light: drawLight,
+  osc: makeOsc(O),
+  per: drawPer
 };
 const scenes = new Map();
 slides.forEach((s, i) => $$('canvas[data-scene]', s).forEach(c => scenes.set(i, (scenes.get(i) || []).concat(new Viz(c, SCENE_FN[c.dataset.scene])))));
@@ -1761,7 +1506,7 @@ function buildProgress() {
   });
   $('#count').textContent = `${current + 1} / ${slides.length}`;
 }
-function stopAllAudio() { stopSound(); stopBeats(B, $('#bPlay')); stopBeats(BP, $('#pbPlay')); }
+function stopAllAudio() { stopSound(); stopBeats(B, $('#bPlay')); }
 function go(i, fromHash) {
   i = Math.max(0, Math.min(slides.length - 1, i));
   if (i === current && slides[i].classList.contains('active')) return;
@@ -1772,7 +1517,7 @@ function go(i, fromHash) {
   const sl = slides[i];
   if (sl.hasAttribute('data-steps')) resetSteps(sl, prevI > i);
   const cv = $('canvas[data-scene]', sl), sc = cv && cv.dataset.scene;
-  if (sc === 'osc') O.t = 0; else if (sc === 'p2') OP.t = 0; else if (sc === 'p3') p3Clock = 0; else if (sc === 'unroll') unClock = 0;
+  if (sc === 'osc') O.t = 0; else if (sc === 'unroll') unClock = 0;
   buildProgress();
   if (!fromHash) { try { history.replaceState(null, '', '#slide-' + (i + 1)); } catch (e) {} }
   (scenes.get(i) || []).forEach(v => v.resize());
@@ -1863,15 +1608,9 @@ document.addEventListener('pointerdown', keepAwake, { once: true });
 document.addEventListener('keydown', keepAwake, { once: true });
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') keepAwake(); else stopAllAudio(); });
 
-/* ---------- routing: #slide-N for the deck, #answers for phones ---------- */
+/* ---------- routing: #slide-N ---------- */
 function route(fromLoad) {
   const hsh = location.hash;
-  if (hsh === '#answers') {
-    sheetOpen = true; stopAllAudio(); buildSheet();
-    $('#deck').hidden = true; $('#sheet').hidden = false; document.body.classList.add('sheet'); document.body.classList.remove('idle');
-    return;
-  }
-  if (sheetOpen) { sheetOpen = false; $('#deck').hidden = false; $('#sheet').hidden = true; document.body.classList.remove('sheet'); measure(); scenes.forEach(vs => vs.forEach(v => v.resize())); }
   const m = /^#slide-(\d+)$/.exec(hsh);
   if (m) go(parseInt(m[1], 10) - 1, true); else if (fromLoad) go(0, true);
 }
@@ -1880,7 +1619,6 @@ window.addEventListener('resize', measure);
 
 /* ---------- boot ---------- */
 readColors(); measure();
-initQuizSlides();
 updateAllReadouts();
 setPaused(paused);
 current = -1; route(true);
